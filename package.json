@@ -1,0 +1,21 @@
+{
+  "name": "rb2-migration",
+  "version": "1.0.0",
+  "description": "node scripts for migrating data from redbox 1.x to 2.0",
+  "main": "src/migrate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "redbox",
+    "opendata",
+    "migration"
+  ],
+  "author": "Mike Lynch <mike@mikelynch.org> (http://mikelynch.org)",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "aws-sign2": "^0.7.0",
+    "request": "^2.85.0",
+    "solr-client": "^0.7.0"
+  }
+}
