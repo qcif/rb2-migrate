@@ -5,14 +5,7 @@
 // support folder in redbox-portal for load testing harness
 /////////
 
-const solr = require('solr-client');
 
-// const URL = 'https://etc.mikelynch.org/json/index.json';
-
-const URL = 'https://test-redbox.research.uts.edu.au/solr/fascinator/select?q=(item_type:object)'
-
-
-https://test-redbox.research.uts.edu.au/redbox/verNum1.9/dashboard/getRecords.script?packageType=dmpt&pageNum=1'
 
 var HOST = 'https://test-redbox.research.uts.edu.au';
 var PORT = 443;
