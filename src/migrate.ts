@@ -21,7 +21,10 @@ async function main(): Promise<void> {
     const apiKey = config.get('Redbox.apiKey');
     const rb = new ReDBox(baseURL, apiKey);
     const results = await rb.search('dmpt');
-    console.log(results);
+    console.log("Got " + results.length);
+    for( var i in results ) {
+	console.log(results[i]);
+    }
 }
 
 

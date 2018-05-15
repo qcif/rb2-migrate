@@ -16,11 +16,14 @@
   "license": "GPL-3.0",
   "dependencies": {
     "@types/config": "0.0.34",
+    "@types/qs": "^6.5.1",
     "@types/request": "^2.47.0",
     "@types/request-promise": "^4.1.41",
     "aws-sign2": "^0.7.0",
     "axios": "^0.18.0",
+    "axios-debug-log": "^0.4.0",
     "config": "^1.30.0",
+    "qs": "^6.5.2",
     "request": "^2.85.0",
     "request-promise": "^4.2.2"
   }
