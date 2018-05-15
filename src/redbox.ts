@@ -2,11 +2,11 @@
 // A class which connects to a ReDBox instance via its API
 // Uses the axios module to do the https connection
 
-require('axios-debug-log');
 
 import axios from 'axios';
 import { AxiosInstance } from 'axios';
 const qs = require('qs');
+//import { Spinner } from 'cli-spinner';
 
 /**
     Class for working with the ReDBox API
@@ -18,6 +18,7 @@ export class ReDBox {
     baseURL: string;
     apiKey: string;
     ai: AxiosInstance;
+//    spinner: Spinner;
 
     /* using a custom serialiser because axios' default 
        URL-encodes the solr query string for search */
@@ -56,6 +57,16 @@ export class ReDBox {
 	}
     }
 
+    async info(): Promise<Object> {
+	try {
+	    let resp = await this.apiget('/info');
+	    return resp;
+	} catch(e) {
+	    console.log(e);
+	    return {};
+	}
+    }
+
     /* search returns a list of all the items in the
        ReDBox of the specified type */
  
@@ -74,6 +85,7 @@ export class ReDBox {
 	    let docs = response["docs"];
 	    let ndocs = docs.length
 	    let list = docs.map(d => d.id);
+	    console.log("Received " + start);
 	    if( start + ndocs < numFound ) {
 		let rest = await this.search(ptype, start + ndocs);
 		return list.concat(rest);
