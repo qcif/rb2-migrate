@@ -85,6 +85,18 @@ export class ReDBox {
 	    return [];
 	}
     }
+
+    async recordmeta(oid: string): Promise<Object|undefined> {
+	try {
+	    let response = await this.apiget('recordmetadata/' + oid);
+	    return response;
+	} catch(e) {
+	    console.log("Error " + e);
+	    return undefined;
+	}
+    }
+	
+    
 }
 
 
