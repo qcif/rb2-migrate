@@ -19,7 +19,7 @@ async function main(packagetype?:string): Promise<void> {
 	var spinner = new Spinner("Searching for " + packagetype);
 	spinner.setSpinnerString(17);
 	spinner.start();
-	rb.sethook(s => spinner.setSpinnerTitle(s));
+	rb.setprogress(s => spinner.setSpinnerTitle(s));
 	const results = await rb.search(packagetype);
 	let n = results.length;
 	for( var i in results ) {

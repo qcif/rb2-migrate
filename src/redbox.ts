@@ -18,7 +18,7 @@ export class ReDBox {
     baseURL: string;
     apiKey: string;
     ai: AxiosInstance;
-    hook: ((any) => any)|undefined;
+    progress: ((message: string) => void)|undefined;
     
     /* using a custom serialiser because axios' default 
        URL-encodes the solr query string for search */
@@ -36,15 +36,19 @@ export class ReDBox {
 		return qs.stringify(params, { encode: false });
 	    }
 	});
-	this.hook = undefined;
+	this.progress = undefined;
     }
 
-    sethook(hook: (any) => any): void {
-	this.hook = hook;
+    // set a progress hook which will get called with messages
+    // by "long" operations like search - this is used for the
+    // cli-spinner in migrate.ts
+    
+    setprogress(pf: (message: string) => void): void {
+	this.progress = pf;
     }
 
-    removehook():void {
-	this.hook = undefined;
+    removeprogress():void {
+	this.progress = undefined;
     }
 
     async apiget(path: string, params?: Object): Promise<Object|undefined> {
@@ -87,8 +91,8 @@ export class ReDBox {
 	}
 
 	try {
-	    if( this.hook ) {
-		this.hook(util.format("Searching for %s: %d", ptype, start));
+	    if( this.progress ) {
+		this.progress(util.format("Searching for %s: %d", ptype, start));
 	    }
 	    let params = { q: q, start: start };
 	    let resp = await this.apiget('search', params);
