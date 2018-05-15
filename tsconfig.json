@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+	"lib": [ "ES2015" ]
+    },
+    "files": [
+        "src/redbox.ts",
+	"src/migrate.ts"
+    ]
+}
