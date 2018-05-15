@@ -6,7 +6,8 @@ import axios from 'axios';
 import { ReDBox } from './redbox';
 import { ArgumentParser } from 'argparse';
 const config = require('config');
-
+const util = require('util');
+import { Spinner } from 'cli-spinner';
 
 
 
@@ -15,13 +16,18 @@ async function main(packagetype?:string): Promise<void> {
     const apiKey = config.get('Source.apiKey');
     const rb = new ReDBox(baseURL, apiKey);
     if( packagetype ) {
-	console.log("Searching for " + packagetype);
+	var spinner = new Spinner("Searching for " + packagetype);
+	spinner.setSpinnerString(17);
+	spinner.start();
+	rb.sethook(s => spinner.setSpinnerTitle(s));
 	const results = await rb.search(packagetype);
-	console.log("Got " + results.length + " objects");
+	let n = results.length;
 	for( var i in results ) {
 	    let md = await rb.recordmeta(results[i]);
-	    console.log(results[i], md["dc:title"]);
+	    spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
 	}
+	spinner.stop();
+	console.log("\n");
     } else {
 	const r = await rb.info();
 	console.log(r);

@@ -6,7 +6,7 @@
 import axios from 'axios';
 import { AxiosInstance } from 'axios';
 const qs = require('qs');
-//import { Spinner } from 'cli-spinner';
+const util = require('util');
 
 /**
     Class for working with the ReDBox API
@@ -18,8 +18,8 @@ export class ReDBox {
     baseURL: string;
     apiKey: string;
     ai: AxiosInstance;
-//    spinner: Spinner;
-
+    hook: ((any) => any)|undefined;
+    
     /* using a custom serialiser because axios' default 
        URL-encodes the solr query string for search */
     
@@ -36,6 +36,15 @@ export class ReDBox {
 		return qs.stringify(params, { encode: false });
 	    }
 	});
+	this.hook = undefined;
+    }
+
+    sethook(hook: (any) => any): void {
+	this.hook = hook;
+    }
+
+    removehook():void {
+	this.hook = undefined;
     }
 
     async apiget(path: string, params?: Object): Promise<Object|undefined> {
@@ -77,7 +86,10 @@ export class ReDBox {
 	    start = 0;
 	}
 
-	try { 
+	try {
+	    if( this.hook ) {
+		this.hook(util.format("Searching for %s: %d", ptype, start));
+	    }
 	    let params = { q: q, start: start };
 	    let resp = await this.apiget('search', params);
 	    let response = resp["response"];
@@ -85,7 +97,6 @@ export class ReDBox {
 	    let docs = response["docs"];
 	    let ndocs = docs.length
 	    let list = docs.map(d => d.id);
-	    console.log("Received " + start);
 	    if( start + ndocs < numFound ) {
 		let rest = await this.search(ptype, start + ndocs);
 		return list.concat(rest);
