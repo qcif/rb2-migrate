@@ -3,28 +3,36 @@
 //
 
 import axios from 'axios';
-import { ReDBox } from './redbox';
+import { Redbox } from './redbox';
 import { ArgumentParser } from 'argparse';
 const config = require('config');
 const util = require('util');
 import { Spinner } from 'cli-spinner';
 
 
+function connect(server: string): Redbox {
+    const baseURL = config.get('servers.' + server + '.url');
+    const apiKey = config.get('servers.' + server + '.apiKey');
+    return new Redbox(baseURL, apiKey);
+}
 
-async function main(packagetype?:string): Promise<void> {
-    const baseURL = config.get('Source.url');
-    const apiKey = config.get('Source.apiKey');
-    const rb = new ReDBox(baseURL, apiKey);
+
+async function main(source: string, dest: string, packagetype?:string): Promise<void> {
     if( packagetype ) {
 	var spinner = new Spinner("Searching for " + packagetype);
 	spinner.setSpinnerString(17);
 	spinner.start();
-	rb.setprogress(s => spinner.setSpinnerTitle(s));
-	const results = await rb.search(packagetype);
+	rbSource = connect(source);
+	rbDest = connect(dest);
+	rbSource.setprogress(s => spinner.setSpinnerTitle(s));
+	const results = await rbSource.search(packagetype);
 	let n = results.length;
 	for( var i in results ) {
-	    let md = await rb.recordmeta(results[i]);
+	    let md = await rbSource.recordmeta(results[i]);
 	    spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
+	    let resp = await rbDest.createrecord(md);
+	    console.log(resp);
+	    process.exit(-1);
 	}
 	spinner.stop();
 	console.log("\n");
@@ -48,11 +56,29 @@ parser.addArgument(
     }
 );
 
+parser.addArgument(
+    [ '-s', '--source'],
+    {
+	help: "source server - must match a value in config",
+	defaultValue: "Source"
+    }
+);
+
+parser.addArgument(
+    [ '-d', '--dest' ],
+    {
+	help: "destination server - must match a value in config",
+	defaultValue: "Dest"
+    }
+);
+    
+
+
 var args = parser.parseArgs();
 
 if( 'type' in args ){
-    main(args['type']);
+    main(args['source'], args['dest'], args['type']);
 } else {
-    main();
+    main(args['source']);
 }
 

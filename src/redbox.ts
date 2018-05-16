@@ -13,7 +13,9 @@ const util = require('util');
 
 */
 
-export class ReDBox {
+
+
+export class Redbox {
 
     baseURL: string;
     apiKey: string;
@@ -51,6 +53,8 @@ export class ReDBox {
 	this.progress = undefined;
     }
 
+    /* low-level method which is used by all the GET requests */
+    
     async apiget(path: string, params?: Object): Promise<Object|undefined> {
 	let url = path;
 	if( url[0] !== '/' ) {
@@ -70,6 +74,27 @@ export class ReDBox {
 	}
     }
 
+    /* low-level method used by POST requests */
+    
+    async apipost(path: string, payload: Object, params?: Object): Promise<Object|undefined> {
+	let url = path;
+	if( url[0] !== '/' ) {
+	    url = '/' + url;
+	}
+	try {
+	    let config = {};
+	    if( params ) {
+		config["params"] = params;
+	    }
+	    let response = await this.ai.post(url, payload, config);
+	    if( response.status === 200 ) {
+		return response.data;
+	    }
+	} catch ( e ) {
+	    return undefined;
+	}
+    }
+    
     async info(): Promise<Object> {
 	try {
 	    let resp = await this.apiget('/info');
@@ -81,7 +106,7 @@ export class ReDBox {
     }
 
     /* search returns a list of all the items in the
-       ReDBox of the specified type */
+       Redbox of the specified type */
  
     async search(ptype: string, start?:number): Promise<string[]> {
 	let q = 'packageType:' + ptype;
@@ -113,6 +138,9 @@ export class ReDBox {
 	}
     }
 
+    /* Returns the metadata for object oid, or undefined if it's not
+       found */
+    
     async recordmeta(oid: string): Promise<Object|undefined> {
 	try {
 	    let response = await this.apiget('recordmetadata/' + oid);
@@ -122,8 +150,36 @@ export class ReDBox {
 	    return undefined;
 	}
     }
-	
+
+    /* createrecord - add an object via the api.
+
+       @metadata -> object containing the metadata
+       @options -> object with the following options
+            oid -> to specify the oid
+            packageType -> to specify the packagetype
+            skipReindex -> skip the reindex process
+
+    **/
     
+    async createrecord(metadata: Object, options?: Object): Promise<Object|undefined> {
+	let url = '/object';
+	let params: Object = {};
+	if( options ) {
+	    if( 'packageType' in options ) {
+		url += '/' + options['packageType'];
+	    }
+	    if( 'oid' in options ) {
+		params['oid'] = options['oid'];
+	    }
+	    if( 'skipReindex' in options ) {
+		params['skipReindex'] = options['skipReindex'];
+	    }
+	}
+	let resp = await this.postapi(url, metadata, options);
+	return resp;
+    }
+
+
 }
 
 
