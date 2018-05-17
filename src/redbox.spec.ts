@@ -11,10 +11,15 @@ const fs = require('fs-extra');
 const config = require('config');
 
 const TEST19PTS = [ 'dmpt', 'dataset', 'self-submission' ];
+const TEST20PTS = [ 'rdmp', 'workspace', 'dataRecord', 'dataPublication' ];
+
+
 
 const FIXTURES = {
     'dmpt': './test/rdmp.json'
 };
+
+
 
 
 function rbconnect(server: string):Redbox {
@@ -40,19 +45,19 @@ describe('Redbox', function() {
 	const oids = await rb.search('dmpt');
         expect(oids).to.not.be.empty;
 	const oid = oids[0];
-	const md = await rb.recordmeta(oid);
+	const md = await rb.getObject(oid);
 	expect(md).to.not.be.null;
 	expect(md['oid']).to.equal(oid);
+	
     });
 
     it('can create a metadata object in 1.9', async () => {
 	const rb = rbconnect('Test1_9');
 	const mdf = await fs.readFile(FIXTURES['dmpt']);
-	const oid = await rb.createrecord(mdf, 'dmpt');
+	const oid = await rb.createObject(mdf, 'dmpt');
 	expect(oid).to.not.be.null;
-	const md2 = await rb.recordmeta(oid);
+	const md2 = await rb.getObject(oid);
 	expect(md2).to.not.be.null;
-	console.log("HERE IS THE CONTENT: " + mdf);
 	const md1 = JSON.parse(mdf);
 	expect(md2).to.deep.equal(md1);
     });

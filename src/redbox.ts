@@ -139,10 +139,10 @@ export class Redbox {
 	}
     }
 
-    /* Returns the metadata for object oid, or undefined if it's not
+    /* Returns the object oid, or undefined if it's not
        found */
     
-    async recordmeta(oid: string): Promise<Object|undefined> {
+    async getObject(oid: string): Promise<Object|undefined> {
 	try {
 	    let response = await this.apiget('recordmetadata/' + oid);
 	    return response;
@@ -151,18 +151,20 @@ export class Redbox {
 	    return undefined;
 	}
     }
+
    
     /* createrecord - add an object via the api.
 
        @metadata -> object containing the metadata
+       @packagetype -> has to match one of the values supported
+                       by this redbox instance
        @options -> object with the following options
             oid -> to specify the oid
-            packageType -> to specify the packagetype
             skipReindex -> skip the reindex process
 
     **/
     
-    async createrecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined> {
+    async createObject(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined> {
 	let url = '/object/' + packagetype;
 	let params: Object = {};
 	let resp = await this.apipost(url, metadata, options);
@@ -172,6 +174,28 @@ export class Redbox {
 	    return undefined;
 	}
     }
+
+    async getObjectMeta(oid: string): Promise<Object|undefined> {
+	try {
+	    let response = await this.apiget('objectmetadata/' + oid);
+	    return response;
+	} catch(e) {
+	    console.log("Error " + e);
+	    return undefined;
+	}
+    }
+
+
+    async setObjectMeta(oid: string, md: Object): Promise<Object|undefined> {
+	try {
+	    let response = await this.apipost('objectmetadata/' + oid, md);
+	    return response;
+	} catch(e) {
+	    console.log("Error " + e);
+	    return undefined;
+	}
+    }
+
 }
 
 
