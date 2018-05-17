@@ -17,6 +17,7 @@ const TEST19PTS = [ 'dmpt', 'dataset', 'self-submission' ];
 describe('Redboches', function() {
 
     it('can fetch lists of objects from 1.9', async () => {
+	this.timeout(10000);
 	const baseURL = config.get('servers.Test1_9.url');
 	const apiKey = config.get('servers.Test1_9.apiKey');
 	const rb = new Redbox(baseURL, apiKey);
