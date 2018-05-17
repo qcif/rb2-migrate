@@ -22,8 +22,8 @@ async function main(source: string, dest: string, packagetype?:string): Promise<
 	var spinner = new Spinner("Searching for " + packagetype);
 	spinner.setSpinnerString(17);
 	spinner.start();
-	rbSource = connect(source);
-	rbDest = connect(dest);
+	const rbSource = connect(source);
+	//const rbDest = connect(dest);
 	rbSource.setprogress(s => spinner.setSpinnerTitle(s));
 	const results = await rbSource.search(packagetype);
 	let n = results.length;
