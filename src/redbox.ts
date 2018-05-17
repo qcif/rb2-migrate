@@ -91,6 +91,7 @@ export class Redbox {
 		return response.data;
 	    }
 	} catch ( e ) {
+	    console.log("Post error " + String(e));
 	    return undefined;
 	}
     }
@@ -161,25 +162,16 @@ export class Redbox {
 
     **/
     
-    async createrecord(metadata: Object, options?: Object): Promise<Object|undefined> {
-	let url = '/object';
+    async createrecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined> {
+	let url = '/object/' + packagetype;
 	let params: Object = {};
-	if( options ) {
-	    if( 'packageType' in options ) {
-		url += '/' + options['packageType'];
-	    }
-	    if( 'oid' in options ) {
-		params['oid'] = options['oid'];
-	    }
-	    if( 'skipReindex' in options ) {
-		params['skipReindex'] = options['skipReindex'];
-	    }
-	}
 	let resp = await this.apipost(url, metadata, options);
-	return resp;
+	if( resp && 'oid' in resp ) {
+	    return resp['oid'];
+	} else {
+	    return undefined;
+	}
     }
-
-
 }
 
 

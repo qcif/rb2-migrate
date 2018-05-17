@@ -1,16 +1,20 @@
 //
 // Provisioner - (c) 2018 University of Technology Sydney
 //
-// Tests for Redbox.ts
+// Tests for Redbox API
 
-// Note that these tests aren't running because the 
 
 import { Redbox } from './redbox';
 import { expect } from 'chai';
 
+const fs = require('fs-extra');
 const config = require('config');
 
 const TEST19PTS = [ 'dmpt', 'dataset', 'self-submission' ];
+
+const FIXTURES = {
+    'dmpt': './test/rdmp.json'
+};
 
 
 function rbconnect(server: string):Redbox {
@@ -20,9 +24,9 @@ function rbconnect(server: string):Redbox {
 }
 
 describe('Redbox', function() {
+    this.timeout(10000);
 
     it('can fetch lists of objects from 1.9', async () => {
-	this.timeout(10000);
 	const rb = rbconnect('Test1_9');
 	for( var i in TEST19PTS ) {
 	    let pt = TEST19PTS[i];
@@ -32,7 +36,6 @@ describe('Redbox', function() {
     });
 
     it('can fetch a metadata object from 1.9', async () => {
-	this.timeout(10000);
 	const rb = rbconnect('Test1_9');
 	const oids = await rb.search('dmpt');
         expect(oids).to.not.be.empty;
@@ -40,6 +43,18 @@ describe('Redbox', function() {
 	const md = await rb.recordmeta(oid);
 	expect(md).to.not.be.null;
 	expect(md['oid']).to.equal(oid);
+    });
+
+    it('can create a metadata object in 1.9', async () => {
+	const rb = rbconnect('Test1_9');
+	const mdf = await fs.readFile(FIXTURES['dmpt']);
+	const oid = await rb.createrecord(mdf, 'dmpt');
+	expect(oid).to.not.be.null;
+	const md2 = await rb.recordmeta(oid);
+	expect(md2).to.not.be.null;
+	console.log("HERE IS THE CONTENT: " + mdf);
+	const md1 = JSON.parse(mdf);
+	expect(md2).to.deep.equal(md1);
     });
 
 });
