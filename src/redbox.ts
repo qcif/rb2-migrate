@@ -150,7 +150,7 @@ export class Redbox {
 	    return undefined;
 	}
     }
-
+   
     /* createrecord - add an object via the api.
 
        @metadata -> object containing the metadata
@@ -175,7 +175,7 @@ export class Redbox {
 		params['skipReindex'] = options['skipReindex'];
 	    }
 	}
-	let resp = await this.postapi(url, metadata, options);
+	let resp = await this.apipost(url, metadata, options);
 	return resp;
     }
 

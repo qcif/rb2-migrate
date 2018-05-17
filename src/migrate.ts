@@ -30,14 +30,15 @@ async function main(source: string, dest: string, packagetype?:string): Promise<
 	for( var i in results ) {
 	    let md = await rbSource.recordmeta(results[i]);
 	    spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
-	    let resp = await rbDest.createrecord(md);
-	    console.log(resp);
-	    process.exit(-1);
+	    //let resp = await rbDest.createrecord(md);
+	    //console.log(resp);
+	    //process.exit(-1);
 	}
 	spinner.stop();
 	console.log("\n");
     } else {
-	const r = await rb.info();
+	const rbSource = connect(source);
+	const r = await rbSource.info();
 	console.log(r);
     }
 }
@@ -79,6 +80,6 @@ var args = parser.parseArgs();
 if( 'type' in args ){
     main(args['source'], args['dest'], args['type']);
 } else {
-    main(args['source']);
+    main(args['source'], args['dest']);
 }
 
