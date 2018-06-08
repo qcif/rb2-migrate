@@ -4,6 +4,6 @@
     },
     "files": [
         "src/redbox.ts",
-       "src/migrate.ts"
+        "src/migrate.ts"
     ]
 }
