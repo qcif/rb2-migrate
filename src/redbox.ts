@@ -9,10 +9,11 @@ const qs = require('qs');
 const util = require('util');
 
 /**
-    Class for working with the ReDBox API
-
+    Class for working with the ReDBox APIs
 */
 
+
+/* common interface for RB 1.x and 2.0 */
 
 export interface Redbox {
   baseURL: string;
@@ -20,11 +21,14 @@ export interface Redbox {
 
   progress: ((message: string) => void)|undefined;
 
+  setProgress(pf: (message: string) => void): void;
+
   info(): Promise<Object>;
   search(oid: string, start?:number ): Promise<string[]>;
   createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined>;
+  getRecord(oid: string): Promise<Object|undefined>;
   getRecordMetadata(oid: string): Promise<Object|undefined>;
-  updateRecordMetadata(oid: string, metadata: Object): Promise<Object|undefined>
+  updateRecordMetadata(oid: string, metadata: Object): Promise<Object|undefined>;
 }
 
 
@@ -32,7 +36,7 @@ export interface Redbox {
 
 
 
-export class Redbox1 implements interface Redbox {
+export class Redbox1 implements Redbox {
 
   baseURL: string;
   apiKey: string;
@@ -62,7 +66,7 @@ export class Redbox1 implements interface Redbox {
   // by "long" operations like search - this is used for the
   // cli-spinner in migrate.ts
   
-  setprogress(pf: (message: string) => void): void {
+  setProgress(pf: (message: string) => void): void {
     this.progress = pf;
   }
   
@@ -156,21 +160,8 @@ export class Redbox1 implements interface Redbox {
     }
   }
   
-  /* Returns the object oid, or undefined if it's not
-     found */
-  
-  async getObject(oid: string): Promise<Object|undefined> {
-    try {
-      let response = await this.apiget('recordmetadata/' + oid);
-      return response;
-    } catch(e) {
-      console.log("Error " + e);
-      return undefined;
-    }
-  }
-  
-  
-  /* createrecord - add an object via the api.
+
+  /* createRecord - add an object via the api.
      
      @metadata -> object containing the metadata
      @packagetype -> has to match one of the values supported
@@ -181,7 +172,7 @@ export class Redbox1 implements interface Redbox {
      
   **/
   
-  async createObject(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined> {
+  async createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined> {
     let url = '/object/' + packagetype;
     let params: Object = {};
     let resp = await this.apipost(url, metadata, options);
@@ -191,8 +182,27 @@ export class Redbox1 implements interface Redbox {
       return undefined;
     }
   }
+
+  /* TODO - updated record */
+
+  /* Returns the record, or undefined if it's not
+     found */
   
-  async getObjectMeta(oid: string): Promise<Object|undefined> {
+  async getRecord(oid: string): Promise<Object|undefined> {
+    try {
+      let response = await this.apiget('recordmetadata/' + oid);
+      return response;
+    } catch(e) {
+      console.log("Error " + e);
+      return undefined;
+    }
+  }
+  
+  /* The record's metadata is metadata about the record, not the
+     metadata stored in the record (that's what getRecord returns)
+     */
+  
+  async getRecordMetadata(oid: string): Promise<Object|undefined> {
     try {
       let response = await this.apiget('objectmetadata/' + oid);
       return response;
@@ -203,7 +213,7 @@ export class Redbox1 implements interface Redbox {
   }
   
   
-  async setObjectMeta(oid: string, md: Object): Promise<Object|undefined> {
+  async updateRecordMetadata(oid: string, md: Object): Promise<Object|undefined> {
     try {
       let response = await this.apipost('objectmetadata/' + oid, md);
       return response;
@@ -213,7 +223,7 @@ export class Redbox1 implements interface Redbox {
     }
   }
 
-  async writeObjectDatastream(oid: string, dsid: string, data: any): Promise<Object> {
+  async writeDatastream(oid: string, dsid: string, data: any): Promise<Object> {
     try {
       let response = await this.apipost(
         'datastream/' + oid,
@@ -227,7 +237,7 @@ export class Redbox1 implements interface Redbox {
   }
 
 
-  async listObjectDatastreams(oid: string): Promise<Object> {
+  async listDatastreams(oid: string): Promise<Object> {
     try {
       let response = await this.apiget('datastream/' +oid + '/list');
       return response;
@@ -239,7 +249,7 @@ export class Redbox1 implements interface Redbox {
 
 
   
-  async readObjectDatastream(oid: string, dsid: string): Promise<any> {
+  async readDatastream(oid: string, dsid: string): Promise<any> {
     try {
       let response = await this.apiget('datastream/' + oid, { datastreamId: dsid });
       return response;

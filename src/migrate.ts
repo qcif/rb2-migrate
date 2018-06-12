@@ -3,7 +3,7 @@
 //
 
 import axios from 'axios';
-import { Redbox } from './redbox';
+import { Redbox, Redbox1 } from './redbox';
 import { ArgumentParser } from 'argparse';
 const fs = require('fs-extra');
 const config = require('config');
@@ -11,10 +11,10 @@ const util = require('util');
 import { Spinner } from 'cli-spinner';
 
 
-function connect(server: string): Redbox {
+function connect(server: string): Redbox1 {
   const baseURL = config.get('servers.' + server + '.url');
   const apiKey = config.get('servers.' + server + '.apiKey');
-  return new Redbox(baseURL, apiKey);
+  return new Redbox1(baseURL, apiKey);
 }
 
 
@@ -24,12 +24,12 @@ async function migrate(source: string, dest: string, packagetype:string, outfile
   spinner.start();
   const rbSource = connect(source);
   //const rbDest = connect(dest);
-  rbSource.setprogress(s => spinner.setSpinnerTitle(s));
+  rbSource.setProgress(s => spinner.setSpinnerTitle(s));
   const results = await rbSource.search(packagetype);
   let n = results.length;
   for( var i in results ) {
-    let md = await rbSource.getObjectMeta(results[i]);
-    let ds = await rbSource.listObjectDatastreams(results[i]);
+    let md = await rbSource.getRecordMetadata(results[i]);
+    let ds = await rbSource.listDatastreams(results[i]);
     spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
     if( outfile ) {
       await fs.appendFile(outfile, util.format("oid %s\n", results[i]));
