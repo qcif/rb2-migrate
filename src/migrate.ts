@@ -28,9 +28,9 @@ async function main(source: string, dest: string, packagetype?:string): Promise<
 	const results = await rbSource.search(packagetype);
 	let n = results.length;
 	for( var i in results ) {
-	    let md = await rbSource.recordmeta(results[i]);
+	    let md = await rbSource.getObjectMeta(results[i]);
 	    spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
-	    //let resp = await rbDest.createrecord(md);
+	    //let resp = await rbDest.createObject(md);
 	    //console.log(resp);
 	    //process.exit(-1);
 	}
