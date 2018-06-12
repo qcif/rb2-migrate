@@ -14,11 +14,25 @@ const util = require('util');
 */
 
 
+export interface Redbox {
+  baseURL: string;
+  apiKey: string;
+
+  progress: ((message: string) => void)|undefined;
+
+  info(): Promise<Object>;
+  search(oid: string, start?:number ): Promise<string[]>;
+  createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined>;
+  getRecordMetadata(oid: string): Promise<Object|undefined>;
+  updateRecordMetadata(oid: string, metadata: Object): Promise<Object|undefined>
+}
 
 
 
 
-export class Redbox19 {
+
+
+export class Redbox1 implements interface Redbox {
 
   baseURL: string;
   apiKey: string;
