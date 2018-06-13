@@ -280,6 +280,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
     super(cf);
     this.branding = cf['branding'];
     this.portal = cf['portal'];
+    this.baseURL += '/' + this.branding + '/' + this.portal + '/api';
   }  
 
   
@@ -305,7 +306,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   **/
   
   async createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined> {
-    let url = '/object/' + packagetype;
+    let url = '/records/metadata/' + packagetype;
     let params: Object = {};
     let resp = await this.apipost(url, metadata, options);
     if( resp && 'oid' in resp ) {
@@ -322,7 +323,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   
   async getRecord(oid: string): Promise<Object|undefined> {
     try {
-      let response = await this.apiget('recordmetadata/' + oid);
+      let response = await this.apiget('/records/metadata/' + oid);
       return response;
     } catch(e) {
       console.log("Error " + e);
@@ -347,7 +348,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   
   async updateRecordMetadata(oid: string, md: Object): Promise<Object|undefined> {
     try {
-      let response = await this.apipost('objectmetadata/' + oid, md);
+      let response = await this.apipost('/records/metadata/' + oid, md);
       return response;
     } catch(e) {
       console.log("Error " + e);

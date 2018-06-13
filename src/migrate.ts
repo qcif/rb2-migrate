@@ -12,43 +12,51 @@ import { Spinner } from 'cli-spinner';
 
 
 function connect(server: string): Redbox1 {
-  const baseURL = config.get('servers.' + server + '.url');
-  const apiKey = config.get('servers.' + server + '.apiKey');
   const cf = config.get('servers.' + server);
   return new Redbox1(cf);
 }
 
 
 async function migrate(source: string, dest: string, packagetype:string, outfile?:string): Promise<void> {
-  var spinner = new Spinner("Searching for " + packagetype);
-  spinner.setSpinnerString(17);
-  spinner.start();
-  const rbSource = connect(source);
-  //const rbDest = connect(dest);
-  rbSource.setProgress(s => spinner.setSpinnerTitle(s));
-  const results = await rbSource.search(packagetype);
-  let n = results.length;
-  for( var i in results ) {
-    let md = await rbSource.getRecordMetadata(results[i]);
-    let ds = await rbSource.listDatastreams(results[i]);
-    spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
-    if( outfile ) {
-      await fs.appendFile(outfile, util.format("oid %s\n", results[i]));
-      if( ds ) {
-        for( var j in ds ) {
-          await fs.appendFile(outfile, util.format("    datastream %s\n", ds[j]));
+  try {
+    console.log("About to connect");
+    const rbSource = connect(source);
+    console.log("Got rbsource = " + rbSource);
+    //const rbDest = connect(dest);
+    var spinner = new Spinner("Searching for " + packagetype);
+    spinner.setSpinnerString(17);
+    console.log("Starting spinner??");
+    spinner.start();
+    
+    rbSource.setProgress(s => spinner.setSpinnerTitle(s));
+    const results = await rbSource.search(packagetype);
+    let n = results.length;
+    for( var i in results ) {
+      let md = await rbSource.getRecordMetadata(results[i]);
+      let ds = await rbSource.listDatastreams(results[i]);
+      spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
+      if( outfile ) {
+        await fs.appendFile(outfile, util.format("oid %s\n", results[i]));
+        if( ds ) {
+          for( var j in ds ) {
+            await fs.appendFile(outfile, util.format("    datastream %s\n", ds[j]));
+          }
         }
       }
+      //let resp = await rbDest.createObject(md);
+      //console.log(resp);
+      //process.exit(-1);
     }
-    //let resp = await rbDest.createObject(md);
-    //console.log(resp);
-    //process.exit(-1);
+    spinner.stop();
+    console.log("\n");
+  } catch (e) {
+    console.log("Connection to ReDBox failed %s", e)
   }
-  spinner.stop();
-  console.log("\n");
 }
 
+
 async function info(source: string) {
+  console.log("Source");
   const rbSource = connect(source);
   const r = await rbSource.info();
   console.log(r);
@@ -96,9 +104,11 @@ parser.addArgument(
 
 var args = parser.parseArgs();
 
-if( 'type' in args ){
+if( 'type' in args && args['type'] ){
+  console.log("Type = " + args['type']);
   migrate(args['source'], args['dest'], args['type'], args['output']);
 } else {
+  console.log("Going for info");
   info(args['source']);
 }
 
