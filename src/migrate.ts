@@ -14,7 +14,8 @@ import { Spinner } from 'cli-spinner';
 function connect(server: string): Redbox1 {
   const baseURL = config.get('servers.' + server + '.url');
   const apiKey = config.get('servers.' + server + '.apiKey');
-  return new Redbox1(baseURL, apiKey);
+  const cf = config.get('servers.' + server);
+  return new Redbox1(cf);
 }
 
 

@@ -27,15 +27,13 @@ const FIXTURES = {
 
 
 function rbconnect(server: string):Redbox {
-  const baseURL = config.get('servers.' + server + '.url');
-  const apiKey = config.get('servers.' + server + '.apiKey');
-  const version = config.get('servers.' + server + '.version');
-//  if( version === 'Redbox1' ) {
-    return new Redbox1(baseURL, apiKey);
-//  } else {
-//    const brand = config.get('servers.' + server + '.brand');
-//    return new Redbox2(baseURL, brand, apiKey);
-//  }
+  const cf = config.get('servers.' + server);
+  return new Redbox1(cf);
+  // if( cf['version'] === 'Redbox1' ) {
+  //   return new Redbox1(cf);
+  // } else {
+  //   return new Redbox2(cf);
+  // }
 }
 
 

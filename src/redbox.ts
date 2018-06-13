@@ -32,14 +32,6 @@ export interface Redbox {
 }
 
 
-
-
-
-
-
-
-
-
 /* base class with the axios http methods and progress indicator */
 
 abstract class BaseRedbox {
@@ -52,9 +44,9 @@ abstract class BaseRedbox {
   /* using a custom serialiser because axios' default 
      URL-encodes the solr query string for search */
   
-  constructor(baseURL: string, apiKey: string) {
-    this.baseURL = baseURL;
-    this.apiKey = apiKey;
+  constructor(cf: Object) {
+    this.baseURL = cf['baseURL'];
+    this.apiKey = cf['apiKey'];
     this.ai = axios.create({
       baseURL: this.baseURL,
       headers: {
@@ -125,6 +117,12 @@ abstract class BaseRedbox {
 
 }
 
+
+
+
+
+
+/* Redbox v1.9 api */
 
 export class Redbox1 extends BaseRedbox implements Redbox {
   
@@ -257,8 +255,6 @@ export class Redbox1 extends BaseRedbox implements Redbox {
       return undefined;
     }
   }
-
-
   
   async readDatastream(oid: string, dsid: string): Promise<any> {
     try {
@@ -269,6 +265,136 @@ export class Redbox1 extends BaseRedbox implements Redbox {
     }
   }
 }
+
+
+
+
+/* Redbox v2.0 api */
+
+export class Redbox2 extends BaseRedbox implements Redbox {
+
+  branding: string;
+  portal: string;
+
+  constructor(cf: Object) {
+    super(cf);
+    this.branding = cf['branding'];
+    this.portal = cf['portal'];
+  }  
+
+  
+  async info(): Promise<Object> {
+    return {};
+  }
+
+  
+  async search(ptype: string, start?:number): Promise<string[]> {
+    return [];
+  }
+  
+
+  /* createRecord - add an object via the api.
+     
+     @metadata -> object containing the metadata
+     @packagetype -> has to match one of the values supported
+     by this redbox instance
+     @options -> object with the following options
+     oid -> to specify the oid
+     skipReindex -> skip the reindex process
+     
+  **/
+  
+  async createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined> {
+    let url = '/object/' + packagetype;
+    let params: Object = {};
+    let resp = await this.apipost(url, metadata, options);
+    if( resp && 'oid' in resp ) {
+      return resp['oid'];
+    } else {
+      return undefined;
+    }
+  }
+
+  /* TODO - updated record */
+
+  /* Returns the record, or undefined if it's not
+     found */
+  
+  async getRecord(oid: string): Promise<Object|undefined> {
+    try {
+      let response = await this.apiget('recordmetadata/' + oid);
+      return response;
+    } catch(e) {
+      console.log("Error " + e);
+      return undefined;
+    }
+  }
+  
+  /* The record's metadata is metadata about the record, not the
+     metadata stored in the record (that's what getRecord returns)
+     */
+  
+  async getRecordMetadata(oid: string): Promise<Object|undefined> {
+    try {
+      let response = await this.apiget('objectmetadata/' + oid);
+      return response;
+    } catch(e) {
+      console.log("Error " + e);
+      return undefined;
+    }
+  }
+  
+  
+  async updateRecordMetadata(oid: string, md: Object): Promise<Object|undefined> {
+    try {
+      let response = await this.apipost('objectmetadata/' + oid, md);
+      return response;
+    } catch(e) {
+      console.log("Error " + e);
+      return undefined;
+    }
+  }
+
+  async writeDatastream(oid: string, dsid: string, data: any): Promise<Object> {
+    try {
+      let response = await this.apipost(
+        'datastream/' + oid,
+        data,
+        { datastreamId: dsid }
+      );
+      return response;
+    } catch(e) {
+      console.log("Error " + e);
+    }
+  }
+
+
+  async listDatastreams(oid: string): Promise<Object> {
+    try {
+      let response = await this.apiget('datastream/' +oid + '/list');
+      return response;
+    } catch(e) {
+      console.log("Error " + e);
+      return undefined;
+    }
+  }
+  
+  async readDatastream(oid: string, dsid: string): Promise<any> {
+    try {
+      let response = await this.apiget('datastream/' + oid, { datastreamId: dsid });
+      return response;
+    } catch(e) {
+      console.log("Error " + e);
+    }
+  }
+}
+
+
+
+
+
+
+
 
 
 
