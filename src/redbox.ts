@@ -36,7 +36,13 @@ export interface Redbox {
 
 
 
-export class Redbox1 implements Redbox {
+
+
+
+
+/* base class with the axios http methods and progress indicator */
+
+abstract class BaseRedbox {
 
   baseURL: string;
   apiKey: string;
@@ -116,6 +122,11 @@ export class Redbox1 implements Redbox {
       return undefined;
     }
   }
+
+}
+
+
+export class Redbox1 extends BaseRedbox implements Redbox {
   
   async info(): Promise<Object> {
     try {
@@ -126,7 +137,7 @@ export class Redbox1 implements Redbox {
       return {};
     }
   }
-  
+
   /* search returns a list of all the items in the
      Redbox of the specified type */
   
@@ -257,10 +268,6 @@ export class Redbox1 implements Redbox {
       console.log("Error " + e);
     }
   }
-
-
-  
-  
 }
 
 
