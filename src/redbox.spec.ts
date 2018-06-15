@@ -17,6 +17,8 @@ const PTS = {
   'Test2_0': [ 'rdmp', 'dataRecord', 'dataPublication',  'workspace' ]
 };
 
+const DIAG = './diag';
+
 
 const FIXTURES = {
   'rdmp': {
@@ -47,12 +49,10 @@ function rbconnect(server: string):Redbox {
 
 describe('Redbox', function() {
   SERVERS.forEach(server => {
+    const rb = rbconnect(server);
     this.timeout(10000);
   
     it.skip('can fetch lists of objects from ' + server, async () => {
-      console.log("Trying to connect");
-      const rb = rbconnect(server);
-      console.log("Afterwards " + rb);
       for( var i in PTS[server] ) {
         let pt = PTS[server][i];
         console.log("Package type " + pt);
@@ -62,7 +62,6 @@ describe('Redbox', function() {
     });
     
     it.skip('can fetch a record from ' + server, async () => {
-      const rb = rbconnect(server);
       const oids = await rb.list(PTS[server][0]);
       expect(oids).to.not.be.empty;
       const oid = oids[0];
@@ -73,7 +72,6 @@ describe('Redbox', function() {
     });
     
     it('can create a record in ' + server, async () => {
-      const rb = rbconnect(server);
       const ptype = FIXTURES['rdmp'][server]['type'];
       const mdf = await fs.readFile(FIXTURES['rdmp'][server]['data']);
       const oid = await rb.createRecord(mdf, ptype);
