@@ -23,13 +23,13 @@ async function migrate(source: string, dest: string, packagetype:string, outfile
     const rbSource = connect(source);
     console.log("Got rbsource = " + rbSource);
     //const rbDest = connect(dest);
-    var spinner = new Spinner("Searching for " + packagetype);
+    var spinner = new Spinner("Listing records: " + packagetype);
     spinner.setSpinnerString(17);
     console.log("Starting spinner??");
     spinner.start();
     
     rbSource.setProgress(s => spinner.setSpinnerTitle(s));
-    const results = await rbSource.search(packagetype);
+    const results = await rbSource.list(packagetype);
     let n = results.length;
     for( var i in results ) {
       let md = await rbSource.getRecordMetadata(results[i]);

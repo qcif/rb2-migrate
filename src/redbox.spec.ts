@@ -4,22 +4,31 @@
 // Tests for Redbox API
 
 
-import { Redbox, Redbox1 } from './redbox';
+import { Redbox, Redbox1, Redbox2 } from './redbox';
 import { expect } from 'chai';
 
 const fs = require('fs-extra');
 const config = require('config');
 
-const SERVERS = [ 'Test1_9' ];
+const SERVERS = [ 'Test2_0' ];
 
 const PTS = {
   'Test1_9': [ 'dmpt', 'dataset', 'self-submission' ],
-  'Test2_0': [ 'rdmp', 'workspace', 'dataRecord', 'dataPublication' ]
+  'Test2_0': [ 'rdmp', 'dataRecord', 'dataPublication',  'workspace' ]
 };
 
 
 const FIXTURES = {
-  'dmpt': './test/rdmp.json',
+  'rdmp': {
+    'Test2_0': {
+      'type': 'rdmp',
+      'data': './test/rdmp.json'
+    },
+    'Test1_9': {
+      'type': 'dmpt',
+      'data': './test/rdmp.json'
+    },
+  },
   'image': './test/image.jpg',
 };
 
@@ -28,12 +37,11 @@ const FIXTURES = {
 
 function rbconnect(server: string):Redbox {
   const cf = config.get('servers.' + server);
-  return new Redbox1(cf);
-  // if( cf['version'] === 'Redbox1' ) {
-  //   return new Redbox1(cf);
-  // } else {
-  //   return new Redbox2(cf);
-  // }
+  if( cf['version'] === 'Redbox1' ) {
+    return new Redbox1(cf);
+  } else {
+    return new Redbox2(cf);
+  }
 }
 
 
@@ -41,18 +49,21 @@ describe('Redbox', function() {
   SERVERS.forEach(server => {
     this.timeout(10000);
   
-    it('can fetch lists of objects from ' + server, async () => {
+    it.skip('can fetch lists of objects from ' + server, async () => {
+      console.log("Trying to connect");
       const rb = rbconnect(server);
+      console.log("Afterwards " + rb);
       for( var i in PTS[server] ) {
         let pt = PTS[server][i];
-        const oids = await rb.search(pt);
+        console.log("Package type " + pt);
+        const oids = await rb.list(pt);
         expect(oids).to.not.be.empty;
       }
     });
     
-    it('can fetch a record from ' + server, async () => {
+    it.skip('can fetch a record from ' + server, async () => {
       const rb = rbconnect(server);
-      const oids = await rb.search(PTS[server][0]);
+      const oids = await rb.list(PTS[server][0]);
       expect(oids).to.not.be.empty;
       const oid = oids[0];
       const md = await rb.getRecord(oid);
@@ -63,8 +74,9 @@ describe('Redbox', function() {
     
     it('can create a record in ' + server, async () => {
       const rb = rbconnect(server);
-      const mdf = await fs.readFile(FIXTURES['dmpt']);
-      const oid = await rb.createRecord(mdf, 'dmpt');
+      const ptype = FIXTURES['rdmp'][server]['type'];
+      const mdf = await fs.readFile(FIXTURES['rdmp'][server]['data']);
+      const oid = await rb.createRecord(mdf, ptype);
       expect(oid).to.not.be.null;
       const md2 = await rb.getRecord(oid);
       expect(md2).to.not.be.null;

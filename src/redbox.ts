@@ -24,7 +24,7 @@ export interface Redbox {
   setProgress(pf: (message: string) => void): void;
 
   info(): Promise<Object>;
-  search(oid: string, start?:number ): Promise<string[]>;
+  list(oid: string, start?:number ): Promise<string[]>;
   createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined>;
   getRecord(oid: string): Promise<Object|undefined>;
   getRecordMetadata(oid: string): Promise<Object|undefined>;
@@ -47,6 +47,12 @@ abstract class BaseRedbox {
   constructor(cf: Object) {
     this.baseURL = cf['baseURL'];
     this.apiKey = cf['apiKey'];
+    this.progress = undefined;
+  }
+
+  /* this is separate so Redbox2 can hack baseURL */
+  
+  initApiClient() {
     this.ai = axios.create({
       baseURL: this.baseURL,
       headers: {
@@ -57,11 +63,10 @@ abstract class BaseRedbox {
 	return qs.stringify(params, { encode: false });
       }
     });
-    this.progress = undefined;
   }
   
   // set a progress hook which will get called with messages
-  // by "long" operations like search - this is used for the
+  // by "long" operations like list - this is used for the
   // cli-spinner in migrate.ts
   
   setProgress(pf: (message: string) => void): void {
@@ -84,6 +89,8 @@ abstract class BaseRedbox {
       if( params ) {
 	config["params"] = params;
       }
+      console.log("apiget: " + url);
+      console.log("config: " + JSON.stringify(config));
       let response = await this.ai.get(url, config);
       if( response.status === 200 ) {
 	return response.data;
@@ -105,8 +112,11 @@ abstract class BaseRedbox {
       if( params ) {
 	config["params"] = params;
       }
+      console.log("About to post to " + url);
       let response = await this.ai.post(url, payload, config);
-      if( response.status === 200 ) {
+      console.log("Post response status: " + response.status);
+      if( response.status >= 200 && response.status < 300 ) {
+        console.log("Post data: " + JSON.stringify(response.data));
 	return response.data;
       }
     } catch ( e ) {
@@ -125,6 +135,11 @@ abstract class BaseRedbox {
 /* Redbox v1.9 api */
 
 export class Redbox1 extends BaseRedbox implements Redbox {
+
+  constructor(cf: Object) {
+    super(cf)
+    this.initApiClient();
+  }
   
   async info(): Promise<Object> {
     try {
@@ -136,16 +151,15 @@ export class Redbox1 extends BaseRedbox implements Redbox {
     }
   }
 
-  /* search returns a list of all the items in the
+  /* returns a list of all the items in the
      Redbox of the specified type */
   
-  async search(ptype: string, start?:number): Promise<string[]> {
+  async list(ptype: string, start?:number): Promise<string[]> {
     let q = 'packageType:' + ptype;
-    
+    console.log("About to list - rb1");    
     if( start === undefined ) {
       start = 0;
     }
-    
     try {
       if( this.progress ) {
 	this.progress(util.format("Searching for %s: %d", ptype, start));
@@ -158,7 +172,7 @@ export class Redbox1 extends BaseRedbox implements Redbox {
       let ndocs = docs.length
       let list = docs.map(d => d.id);
       if( start + ndocs < numFound ) {
-	let rest = await this.search(ptype, start + ndocs);
+	let rest = await this.list(ptype, start + ndocs);
 	return list.concat(rest);
       } else {
 	return list;
@@ -276,11 +290,15 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   branding: string;
   portal: string;
 
+  // Note: not using http://host/branding/portal/api as the base URL because
+  // the endpoint I'm using to search is not on the api
+
   constructor(cf: Object) {
     super(cf);
     this.branding = cf['branding'];
     this.portal = cf['portal'];
-    this.baseURL += '/' + this.branding + '/' + this.portal + '/api';
+    this.baseURL += '/' + this.branding + '/' + this.portal;
+    this.initApiClient();
   }  
 
   
@@ -289,10 +307,38 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   }
 
   
-  async search(ptype: string, start?:number): Promise<string[]> {
-    return [];
+  async list(ptype: string, start?:number): Promise<string[]> {
+    console.log("About to list");
+    if( start === undefined ) {
+      start = 0;
+    }
+
+    const pagen = 10;
+    
+    try {
+      if( this.progress ) {
+	this.progress(util.format("Searching for %s: %d", ptype, start));
+      }
+      let params = { recordType: ptype, start: start, rows: String(pagen) };
+      console.log("About to apiget " + JSON.stringify(params));
+      let resp = await this.apiget('listRecords', params);
+      let response = resp["response"];
+      let numFound = response["numFound"];
+      let docs = response["items"];
+      let ndocs = docs.length
+      let list = docs.map(d => d.id);
+      if( start + ndocs < numFound ) {
+	let rest = await this.list(ptype, start + ndocs);
+	return list.concat(rest);
+      } else {
+	return list;
+      }
+    } catch(e) {
+      console.log("Error " + e);
+      return [];
+    }
   }
-  
+
 
   /* createRecord - add an object via the api.
      
@@ -306,7 +352,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   **/
   
   async createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined> {
-    let url = '/records/metadata/' + packagetype;
+    let url = 'api/records/metadata/' + packagetype;
     let params: Object = {};
     let resp = await this.apipost(url, metadata, options);
     if( resp && 'oid' in resp ) {
@@ -323,7 +369,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   
   async getRecord(oid: string): Promise<Object|undefined> {
     try {
-      let response = await this.apiget('/records/metadata/' + oid);
+      let response = await this.apiget('api/records/metadata/' + oid);
       return response;
     } catch(e) {
       console.log("Error " + e);
@@ -337,7 +383,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   
   async getRecordMetadata(oid: string): Promise<Object|undefined> {
     try {
-      let response = await this.apiget('objectmetadata/' + oid);
+      let response = await this.apiget('api/objectmetadata/' + oid);
       return response;
     } catch(e) {
       console.log("Error " + e);
