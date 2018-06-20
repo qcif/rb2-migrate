@@ -3,11 +3,13 @@
 //
 
 import axios from 'axios';
-import { Redbox, Redbox1 } from './redbox';
+import { Redbox, Redbox1, Redbox2 } from './redbox';
+import { crosswalk } from './crosswalk';
 import { ArgumentParser } from 'argparse';
 const fs = require('fs-extra');
 const config = require('config');
 const util = require('util');
+const path = require('path');
 import { Spinner } from 'cli-spinner';
 
 
@@ -17,7 +19,7 @@ function connect(server: string): Redbox1 {
 }
 
 
-async function migrate(source: string, dest: string, packagetype:string, outfile?:string): Promise<void> {
+async function migrate(source: string, dest: string, packagetype:string, outdir?:string): Promise<void> {
   try {
     console.log("About to connect");
     const rbSource = connect(source);
@@ -35,17 +37,22 @@ async function migrate(source: string, dest: string, packagetype:string, outfile
       let md = await rbSource.getRecordMetadata(results[i]);
       let ds = await rbSource.listDatastreams(results[i]);
       spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
-      if( outfile ) {
-        await fs.appendFile(outfile, util.format("oid %s\n", results[i]));
+      if( outdir ) {
+        const log = path.join(outdir, "files.log");
+        await fs.appendFile(log, util.format("oid %s\n", results[i]));
         if( ds ) {
           for( var j in ds ) {
-            await fs.appendFile(outfile, util.format("    datastream %s\n", ds[j]));
+            await fs.appendFile(log, util.format("    datastream %s\n", ds[j]));
           }
         }
       }
-      //let resp = await rbDest.createObject(md);
-      //console.log(resp);
-      //process.exit(-1);
+      const md2 = crosswalk(md, config[packagetype]['crosswalk']);
+      if( outdir ) {
+        await fs.writeJson(md2, path.join(outdir, results[i] + ".json"));
+        //let resp = await rbDest.createObject(md);
+        //console.log(resp);
+        //process.exit(-1);
+      }
     }
     spinner.stop();
     console.log("\n");
@@ -93,9 +100,9 @@ parser.addArgument(
 );
 
 parser.addArgument(
-  [ '-o', '--output' ],
+  [ '-o', '--outdir' ],
   {
-    help: "filename for dumping out a list of migrated records",
+    help: "directory for dumping diagnostics",
     defaultValue: null
   }
 );
@@ -106,7 +113,7 @@ var args = parser.parseArgs();
 
 if( 'type' in args && args['type'] ){
   console.log("Type = " + args['type']);
-  migrate(args['source'], args['dest'], args['type'], args['output']);
+  migrate(args['source'], args['dest'], args['type'], args['outdir']);
 } else {
   console.log("Going for info");
   info(args['source']);

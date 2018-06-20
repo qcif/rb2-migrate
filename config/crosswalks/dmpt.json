@@ -1,0 +1,96 @@
+{
+  "dc:title": "title",
+  "dc:description": "description",
+  "finalKeywords": "_",
+  "dc:relation.bibo:Website": "_",
+  "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
+  "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",
+  "foaf:fundedBy.foaf:Agent": {
+    "name": "_",
+    "type": "repeatable",
+    "fields": {
+      "dc:identifier": "dc_identifier",
+      "skos:prefLabel": "dc_title"
+    }
+  },
+  "foaf:fundedBy.vivo:Grant": {
+    "name": "_",
+    "type": "repeatable",
+    "fields": {
+      "warning": "mint_lookup",
+      "dc:identifier:" "dc_identifier",
+      "skos.prefLabel": "dc_title",
+      "redbox.grantNumber": "grant_number"
+    }
+  },
+  "dc:subject.anzsrc:toa": {
+    "name": "_",
+    "fields": {
+      "skos:prefLabel": "FIXME",
+      "rdf:resource": "rdf:resource"
+    }
+  },
+  "dc:subject.anzsrc:for": {
+    "name": "_",
+    "type": "repeatable",
+    "fields": {
+      "skos:prefLabel": "FIXME",
+      "rdf:resource": "rdf:resource"
+    }
+  },
+  "dc:subject.anzsrc:seo": {
+    "name": "_",
+    "type": "repeatable",
+    "fields": {
+      "skos:prefLabel": "FIXME",
+      "rdf:resource": "rdf:resource"
+    }
+  },
+  "locrel:rth.foaf:Person": {
+    "name": "contributor_ci",
+    "fields": {
+      "dc:identifier": "dc_identifier",
+      "foaf:title": "dc_title",
+      "foaf:email": "email",
+      "foaf:givenName": "givenname",
+      "foaf:familyName": "familyname"
+    }
+  },
+  "locrel:prc.foaf:Person": {
+    "name": "contributor_data_manager",
+    "fields": {
+      "dc:identifier": "dc_identifier",
+      "foaf:title": "dc_title",
+      "foaf:email": "email",
+      "foaf:givenName": "givenname",
+      "foaf:familyName": "familyname"
+    }
+  },
+  "locrel:clb.foaf:Person": {
+    "name": "contributors",
+    "type": "repeatable",
+    "fields": {
+      "dc:identifier": "dc_identifier",
+      "foaf:title": "dc_title",
+      "foaf:email": "email",
+      "foaf:givenName": "givenname",
+      "foaf:familyName": "familyname"
+    }
+  },
+  "swrc:supervisor.foaf:Person": {
+    "name": "contributor_supervisor",
+    "fields": {
+      "dc:identifier": "dc_identifier",
+      "foaf:title": "dc_title",
+      "foaf:email": "email",
+      "foaf:givenName": "givenname",
+      "foaf:familyName": "familyname"
+    }
+  },
+  "vivo:Dataset.redbox:DataCollectionMethodology": "_",
+  "vivo:Dataset.dc.format": "vivo:Dataset_dc:format",
+  "vivo:Dataset.redbox:DataCollectionResources": "_",
+  "vivo:Dataset.redbox:DataAnalysisResources": "_",
+  "vivo:Dataset.redbox:MetadataStandard": "_",
+  "vivo:Dataset.redbox:DataStructureStandard": "_"
+}

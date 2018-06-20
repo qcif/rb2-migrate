@@ -16,8 +16,10 @@ const util = require('util');
 /* common interface for RB 1.x and 2.0 */
 
 export interface Redbox {
+
   baseURL: string;
   apiKey: string;
+  version: string;
 
   progress: ((message: string) => void)|undefined;
 
@@ -38,6 +40,8 @@ abstract class BaseRedbox {
 
   baseURL: string;
   apiKey: string;
+  version: string;
+  
   ai: AxiosInstance;
   progress: ((message: string) => void)|undefined;
   
@@ -138,6 +142,7 @@ export class Redbox1 extends BaseRedbox implements Redbox {
 
   constructor(cf: Object) {
     super(cf)
+    this.version = 'Redbox1';
     this.initApiClient();
   }
   
@@ -156,7 +161,6 @@ export class Redbox1 extends BaseRedbox implements Redbox {
   
   async list(ptype: string, start?:number): Promise<string[]> {
     let q = 'packageType:' + ptype;
-    console.log("About to list - rb1");    
     if( start === undefined ) {
       start = 0;
     }
@@ -295,6 +299,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
 
   constructor(cf: Object) {
     super(cf);
+    this.version = 'Redbox2';
     this.branding = cf['branding'];
     this.portal = cf['portal'];
     this.baseURL += '/' + this.branding + '/' + this.portal;
@@ -320,7 +325,6 @@ export class Redbox2 extends BaseRedbox implements Redbox {
 	this.progress(util.format("Searching for %s: %d", ptype, start));
       }
       let params = { recordType: ptype, start: start, rows: String(pagen) };
-      console.log("About to apiget " + JSON.stringify(params));
       let resp = await this.apiget('listRecords', params);
       let response = resp["response"];
       let numFound = response["numFound"];

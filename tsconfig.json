@@ -6,6 +6,7 @@
     "src/redbox.ts",
     "src/migrate.ts",
     "src/test.ts",  
-    "src/create.ts"
+    "src/create.ts",
+    "src/crosswalk.ts"
   ]
 }

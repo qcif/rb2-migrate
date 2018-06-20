@@ -6,6 +6,7 @@
 
 import { Redbox, Redbox1, Redbox2 } from './redbox';
 import { expect } from 'chai';
+const path = require('path');
 
 const fs = require('fs-extra');
 const config = require('config');
@@ -24,11 +25,13 @@ const FIXTURES = {
   'rdmp': {
     'Test2_0': {
       'type': 'rdmp',
-      'data': './test/rdmp.json'
+      'data': './test/rdmp.json',
+      'diag': './test/diag/Test2_0'
     },
     'Test1_9': {
       'type': 'dmpt',
-      'data': './test/rdmp.json'
+      'data': './test/rdmp.json',
+      'diag': './test/diag/Test1_9'
     },
   },
   'image': './test/image.jpg',
@@ -51,6 +54,7 @@ describe('Redbox', function() {
   SERVERS.forEach(server => {
     const rb = rbconnect(server);
     this.timeout(10000);
+    
   
     it.skip('can fetch lists of objects from ' + server, async () => {
       for( var i in PTS[server] ) {
@@ -73,12 +77,16 @@ describe('Redbox', function() {
     
     it('can create a record in ' + server, async () => {
       const ptype = FIXTURES['rdmp'][server]['type'];
-      const mdf = await fs.readFile(FIXTURES['rdmp'][server]['data']);
-      const oid = await rb.createRecord(mdf, ptype);
+      const mdj = await fs.readFile(FIXTURES['rdmp'][server]['data']);
+      const oid = await rb.createRecord(mdj, ptype);
       expect(oid).to.not.be.null;
-      const md2 = await rb.getRecord(oid);
+      var md2 = await rb.getRecord(oid);
       expect(md2).to.not.be.null;
-      const md1 = JSON.parse(mdf);
+
+      const mdf2 = path.join(FIXTURES['rdmp'][server]['diag'], oid + '.out.json');
+      await fs.writeJson(mdf2, md2);
+      console.log("Wrote retrieved JSON to " + mdf2); 
+      const md1 = JSON.parse(mdj);
       expect(md2).to.deep.equal(md1);
     });
     
