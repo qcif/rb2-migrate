@@ -46,6 +46,8 @@
       "rdf:resource": "rdf:resource"
     }
   },
+
+  
   "locrel:rth.foaf:Person": {
     "name": "contributor_ci",
     "fields": {
@@ -87,10 +89,106 @@
       "foaf:familyName": "familyname"
     }
   },
+
+  
   "vivo:Dataset.redbox:DataCollectionMethodology": "_",
   "vivo:Dataset.dc.format": "vivo:Dataset_dc:format",
   "vivo:Dataset.redbox:DataCollectionResources": "_",
   "vivo:Dataset.redbox:DataAnalysisResources": "_",
   "vivo:Dataset.redbox:MetadataStandard": "_",
-  "vivo:Dataset.redbox:DataStructureStandard": "_"
+  "vivo:Dataset.redbox:DataStructureStandard": "_",
+
+
+  "vivo:Dataset.dc:extent": {
+    "name": "_",
+    "type": "valuemap",
+    "map" : {
+      "": "less-than-100GB",
+      "": "100GB-to-2TB",
+      "": "more-than-2TB"
+    }
+  },
+  "vivo:Dataset.dc:location.rdf:PlainLiteral": {
+    "name": "_",
+    "type": "valuemap",
+    "map": {
+      "": "personal-equipment",
+      "": "eresearch-platforms",
+      "": "eresearch-store",
+      "": "share-drive",
+      "": "survey-platform",
+      "": "collab-space",
+      "": "other"
+    },
+    "vivo:Dataset.dc:source.dc:location.skos:note": "_",
+
+
+    "redbox:retentionPeriod.dc:date": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "": "1year",
+        "": "5years",
+        "": "7years",
+        "": "15years",
+        "": "20years",
+        "": "permanent"
+      }
+    },
+
+    "redbox:retentionPeriod.dc:date.skos:note": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "": "heritage",
+        "": "controversial",
+        "": "ofinterest",
+        "": "costly_impossible",
+        "": "commercial"
+      }
+    },
+
+    "dataowner_name": "dataRetention_data_owner",
+    
+    
+    "dc:rightsHolder_dc:name": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "": "myUni",
+        "": "myUnjount",
+        "": "student"
+      }
+    },
+    
+    "dc:rightsHolder.dc:description": "_",
+    "redbox:ContractualObligations": "_",
+    "dc:coverage.dc:identifier": "_",
+    "dc:accessRights": {
+      "name": "_",
+      "type": "valuemap",
+      "map" : {
+        "": "manager",
+        "": "open",
+        "": "none"
+      }
+    },
+    
+    
+    "agls:policy.dc:identifier": "_",
+    "agls:policy.skos:note": "_",
+    "agls:protectiveMarking.dc:type": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "": "commercial",
+        "": "cultural",
+        "": "security",
+        "": "nonPublic"
+      }
+    },
+    
+    "agls:protectiveMarking.skos:note": "_",
+  }
+   
 }
