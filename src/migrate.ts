@@ -14,17 +14,6 @@ const winston = require('winston');
 import { Spinner } from 'cli-spinner';
 
 
-function connect(server: string): Redbox {
-  if( server ) {
-    const cf = config.get('servers.' + server);
-    if( cf['version'] === 'Redbox1' ) {
-      return new Redbox1(cf);
-    } else {
-      return new Redbox2(cf);
-    }
-  }
-}
-
 function getlogger() {
   const logcfs = config.get('logs');
   return winston.createLogger({
@@ -39,25 +28,67 @@ function getlogger() {
     })
   });
 }
-  
+
+
+function connect(server: string): Redbox {
+  if( server ) {
+    const cf = config.get('servers.' + server);
+    if( cf['version'] === 'Redbox1' ) {
+      return new Redbox1(cf);
+    } else {
+      return new Redbox2(cf);
+    }
+  }
+}
+
+
+async function loadcrosswalk(packagetype: string): Promise<Object|undefined> {
+  const cwf = path.join(config.get("crosswalks"), packagetype + '.json');
+  try {
+    console.log(log);
+    log.info("Loading crosswalk " + cwf);
+    const cw = await fs.readJson(cwf);
+    return cw
+  } catch(e) {
+    log.error("Error loading crosswalk " + cwf + ": " + e);
+    return null;
+  }
+}
+
+
+
+
 async function migrate(options: Object): Promise<void> {
   const source = options['source'];
   const dest = options['dest'];
   const packagetype = options['type'];
   const outdir = options['outdir'];
-  const log = getlogger();
+
+  const cw = await loadcrosswalk(packagetype);
+  if( ! cw ) {
+    return;
+  }
+
+  var rbSource, rbDest;
+  
   try {
-    log.info("Loading crosswalk");
-    const cwf = path.join(config.get("crosswalks"), packagetype + '.json');
-    const cw = fs.readJson(cwf);
-    log.debug("About to connect");
-    const rbSource = connect(source);
-    log.debug("Got rbsource = " + rbSource);
-    const rbDest = connect(dest);
+    rbSource = connect(source);
+  } catch(e) {
+    log.error("Error connecting to source rb " + source + ": " + e);
+    return;
+  }
+
+  try {
+    rbDest = connect(dest);
+  } catch(e) {
+    log.error("Error connecting to dest rb " + dest + ": " + e);
+    return;
+  }
+
+  try {
     var spinner = new Spinner("Listing records: " + packagetype);
     spinner.setSpinnerString(17);
     spinner.start();
-    
     rbSource.setProgress(s => spinner.setSpinnerTitle(s));
     const results = await rbSource.list(packagetype);
     let n = results.length;
@@ -65,6 +96,7 @@ async function migrate(options: Object): Promise<void> {
       let md = await rbSource.getRecordMetadata(results[i]);
       // let ds = await rbSource.listDatastreams(results[i]);
       // spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
+      spinner.setSpinnerTitle(util.format("Crosswalking %d", i));  
       const md2 = crosswalk(log, cw, md);
       if( outdir ) {
         await fs.writeJson(md2, path.join(outdir, results[i] + ".json"));
@@ -73,13 +105,13 @@ async function migrate(options: Object): Promise<void> {
         // add record;
       }
     }
+    spinner.setSpinnerTitle("Done.");
     spinner.stop();
     console.log("\n");
   } catch (e) {
-    console.log("Connection to ReDBox failed: %s", e)
+    log.error("Migration error:" + e);
   }
 }
-
 
 async function info(source: string) {
   console.log("Source");
@@ -88,6 +120,8 @@ async function info(source: string) {
   console.log(r);
 }
 
+const log = getlogger();
+    
 var parser = new ArgumentParser({
   version: '0.0.1',
   addHelp: true,
@@ -132,7 +166,7 @@ parser.addArgument(
 
 var args = parser.parseArgs();
 
-if( 'type' in args && args['type'] ){
+if( 'type' in args && args['type'] ){  
   migrate(args);
 } else {
   info(args['source']);
