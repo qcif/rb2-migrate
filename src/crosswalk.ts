@@ -60,16 +60,40 @@ function unflatten(original: Object) {
   }
   return unflat;
 }
-      
-export function crosswalk(original: Object, config: Object):Object {
-  var dest = {};
-  const unflattened = unflatten(original);
 
-  for( const field in unflattened ) {
-    if( field in config ) {
-      dest[config[field]] = unflattened[field]; 
+function trfield(cf: string, old: string): string {
+  if( cf === "_" ) {
+    return old.replace('.', '_');
+  } else {
+    return cf;
+  }
+}
+      
+export function crosswalk(log: any, cwspec: Object, original: Object):Object {
+  var dest = {};
+  var src = unflatten(original);
+  var oid = original['oid'];
+
+  for( const srcfield in cwspec ) {
+    if( srcfield in src ) {
+      if( typeof(cwspec[srcfield]) === 'string' ) {
+        var destfield = trfield(cwspec[srcfield], srcfield); 
+        dest[destfield] = src[srcfield];
+        if( ! dest[destfield] ) {
+          log.verbose(`${oid}/${srcfield} empty`);
+        }
+        delete src[srcfield];
+      } else {
+        const spec = cwspec[srcfield];
+        var destfield = trfield(spec["name"], srcfield);
+        if( spec["type"] === "valuemap" ) {
+          dest[destfield] = valuemap(log, spec, oid, srcfield, src[srcfield]);
+        } else {
+          dest[destfield] = src[srcfield];
+        }
+      }
     } else {
-      dest[field] = unflattened[field];
+      log.info(`${oid}/${srcfield} field not found`);
     }
   }
 
@@ -77,11 +101,18 @@ export function crosswalk(original: Object, config: Object):Object {
 }
 
 
-async function main(filename: string): Promise<void> {
-  const raw = await fs.readJson(filename);
-  const cooked = crosswalk(raw, CROSSWALK);
-  console.log(cooked);
+function valuemap(log: any, spec: Object, oid:string, srcfield: string, srcval: string): string {
+  if( "map" in spec ) {
+    if( srcval in spec["map"] ) {
+      return spec["map"][srcval];
+    } else {
+      log.error(`${oid}/${srcfield} no map for value ${srcval}`);
+    }
+  } else {
+    log.error(`No 'map' config in valuemap field ${srcfield}`);
+  }
+  return "";
 }
+  
 
-
-main('test/rdmp.json');
+  

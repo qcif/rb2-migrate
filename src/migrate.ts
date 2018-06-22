@@ -10,24 +10,52 @@ const fs = require('fs-extra');
 const config = require('config');
 const util = require('util');
 const path = require('path');
+const winston = require('winston');
 import { Spinner } from 'cli-spinner';
 
 
-function connect(server: string): Redbox1 {
-  const cf = config.get('servers.' + server);
-  return new Redbox1(cf);
+function connect(server: string): Redbox {
+  if( server ) {
+    const cf = config.get('servers.' + server);
+    if( cf['version'] === 'Redbox1' ) {
+      return new Redbox1(cf);
+    } else {
+      return new Redbox2(cf);
+    }
+  }
 }
 
-
-async function migrate(source: string, dest: string, packagetype:string, outdir?:string): Promise<void> {
+function getlogger() {
+  const logcfs = config.get('logs');
+  return winston.createLogger({
+    level: 'info',
+    format: winston.format.simple(),
+    transports: logcfs.map((cf) => {
+      if( 'filename' in cf ) {
+        return new winston.transports.File(cf);
+      } else {
+        return new winston.transports.Console();
+      }
+    })
+  });
+}
+  
+async function migrate(options: Object): Promise<void> {
+  const source = options['source'];
+  const dest = options['dest'];
+  const packagetype = options['type'];
+  const outdir = options['outdir'];
+  const log = getlogger();
   try {
-    console.log("About to connect");
+    log.info("Loading crosswalk");
+    const cwf = path.join(config.get("crosswalks"), packagetype + '.json');
+    const cw = fs.readJson(cwf);
+    log.debug("About to connect");
     const rbSource = connect(source);
-    console.log("Got rbsource = " + rbSource);
-    //const rbDest = connect(dest);
+    log.debug("Got rbsource = " + rbSource);
+    const rbDest = connect(dest);
     var spinner = new Spinner("Listing records: " + packagetype);
     spinner.setSpinnerString(17);
-    console.log("Starting spinner??");
     spinner.start();
     
     rbSource.setProgress(s => spinner.setSpinnerTitle(s));
@@ -35,29 +63,20 @@ async function migrate(source: string, dest: string, packagetype:string, outdir?
     let n = results.length;
     for( var i in results ) {
       let md = await rbSource.getRecordMetadata(results[i]);
-      let ds = await rbSource.listDatastreams(results[i]);
-      spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
-      if( outdir ) {
-        const log = path.join(outdir, "files.log");
-        await fs.appendFile(log, util.format("oid %s\n", results[i]));
-        if( ds ) {
-          for( var j in ds ) {
-            await fs.appendFile(log, util.format("    datastream %s\n", ds[j]));
-          }
-        }
-      }
-      const md2 = crosswalk(md, config[packagetype]['crosswalk']);
+      // let ds = await rbSource.listDatastreams(results[i]);
+      // spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
+      const md2 = crosswalk(log, cw, md);
       if( outdir ) {
         await fs.writeJson(md2, path.join(outdir, results[i] + ".json"));
-        //let resp = await rbDest.createObject(md);
-        //console.log(resp);
-        //process.exit(-1);
+      }
+      if( rbDest ) {
+        // add record;
       }
     }
     spinner.stop();
     console.log("\n");
   } catch (e) {
-    console.log("Connection to ReDBox failed %s", e)
+    console.log("Connection to ReDBox failed: %s", e)
   }
 }
 
@@ -75,34 +94,36 @@ var parser = new ArgumentParser({
   description: "ReDBox 1.x -> 2.0 migration script"
 });
 
+
 parser.addArgument(
   [ '-t', '--type'],
   {
-    help: "package type: omit for list of types",
-    defaultValue: ""
+    help: "Record type to migrate. Leave out for a list of types.",
+    defaultValue: null
   }
 );
 
 parser.addArgument(
   [ '-s', '--source'],
   {
-    help: "source - must match a server in config",
-    defaultValue: "Source"
+    help: "ReDBox server to migrate records from.",
+    defaultValue: "Test1_9"
   }
 );
 
 parser.addArgument(
   [ '-d', '--dest' ],
   {
-    help: "destination - must match a server in config",
-    defaultValue: "Dest"
+    help: "ReDBox server to migrate records to. Leave out to run in test mode.",
+    defaultValue: null
   }
 );
+
 
 parser.addArgument(
   [ '-o', '--outdir' ],
   {
-    help: "directory for dumping diagnostics",
+    help: "Write diagnostics and logs to this directory.",
     defaultValue: null
   }
 );
@@ -112,10 +133,8 @@ parser.addArgument(
 var args = parser.parseArgs();
 
 if( 'type' in args && args['type'] ){
-  console.log("Type = " + args['type']);
-  migrate(args['source'], args['dest'], args['type'], args['outdir']);
+  migrate(args);
 } else {
-  console.log("Going for info");
   info(args['source']);
 }
 

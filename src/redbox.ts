@@ -93,8 +93,6 @@ abstract class BaseRedbox {
       if( params ) {
 	config["params"] = params;
       }
-      console.log("apiget: " + url);
-      console.log("config: " + JSON.stringify(config));
       let response = await this.ai.get(url, config);
       if( response.status === 200 ) {
 	return response.data;
@@ -116,11 +114,8 @@ abstract class BaseRedbox {
       if( params ) {
 	config["params"] = params;
       }
-      console.log("About to post to " + url);
       let response = await this.ai.post(url, payload, config);
-      console.log("Post response status: " + response.status);
       if( response.status >= 200 && response.status < 300 ) {
-        console.log("Post data: " + JSON.stringify(response.data));
 	return response.data;
       }
     } catch ( e ) {

@@ -7,6 +7,7 @@
     "src/migrate.ts",
     "src/test.ts",  
     "src/create.ts",
-    "src/crosswalk.ts"
+    "src/crosswalk.ts",
+    "src/testlogs.ts"
   ]
 }
