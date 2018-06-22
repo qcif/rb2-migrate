@@ -15,11 +15,43 @@
 
 const fs = require('fs-extra');
 
+class TaggedLogger {
 
-const CROSSWALK = {
-  "dc:title": "title",
-  "dc:description": "description"
+  log: any;
+  tag: string;
+
+  constructor(log: any, tag: string) {
+    this.log = log;
+    this.tag = tag;
+  }
+
+  error(msg: string): void {
+    this.log.error(this.tag + ' ' + msg);
+  }
+
+  warn(msg: string): void {
+    this.log.warn(this.tag + ' ' + msg);
+  }
+
+  info(msg: string): void {
+    this.log.info(this.tag + ' ' + msg);
+  }
+
+  verbose(msg: string): void {
+    this.log.verbose(this.tag + ' ' + msg);
+  }
+
+  debug(msg: string): void {
+    this.log.debug(this.tag + ' ' + msg);
+  }
+
+  silly(msg: string): void {
+    this.log.silly(this.tag + ' ' + msg);
+  }
 }
+  
+
+
 
 
 function unflatten(original: Object) {
@@ -69,47 +101,61 @@ function trfield(cf: string, old: string): string {
   }
 }
       
-export function crosswalk(log: any, cwspec: Object, original: Object):Object {
+export function crosswalk(log: any, cwjson: Object, original: Object):Object {
   var dest = {};
   var src = unflatten(original);
-  var oid = original['oid'];
+  const idfield = cwjson['idfield'];
+  const oid = original[idfield];
+
+  const cwspec = cwjson['crosswalk'];
 
   for( const srcfield in cwspec ) {
+    const tlog = new TaggedLogger(log, `[${oid}/${srcfield}]`);
     if( srcfield in src ) {
+      tlog.verbose("found in src");
       if( typeof(cwspec[srcfield]) === 'string' ) {
         var destfield = trfield(cwspec[srcfield], srcfield); 
         dest[destfield] = src[srcfield];
+        tlog.verbose("simple " + destfield + " set to " + JSON.stringify(src[srcfield]));
         if( ! dest[destfield] ) {
-          log.verbose(`${oid}/${srcfield} empty`);
+          tlog.verbose("empty field");
         }
         delete src[srcfield];
       } else {
         const spec = cwspec[srcfield];
         var destfield = trfield(spec["name"], srcfield);
         if( spec["type"] === "valuemap" ) {
-          dest[destfield] = valuemap(log, spec, oid, srcfield, src[srcfield]);
+          dest[destfield] = valuemap(tlog, spec, srcfield, src[srcfield]);
         } else {
           dest[destfield] = src[srcfield];
         }
+        tlog.verbose("compound " + destfield + " set to " + JSON.stringify(dest[destfield]));
+        delete src[srcfield];
       }
     } else {
-      log.info(`${oid}/${srcfield} field not found`);
+      tlog.info("missing field");
     }
+  }
+
+  for( const srcfield in src ) {
+    const tlog = new TaggedLogger(log, `[${oid}/${srcfield}]`);
+    tlog.info("uncrosswalked field");
   }
 
   return dest;
 }
 
 
-function valuemap(log: any, spec: Object, oid:string, srcfield: string, srcval: string): string {
+function valuemap(tlog: any, spec: Object, srcfield: string, srcval: string): string {
   if( "map" in spec ) {
     if( srcval in spec["map"] ) {
+      tlog.verbose("mapped " + srcval + " to " + spec["map"][srcval]);
       return spec["map"][srcval];
     } else {
-      log.error(`${oid}/${srcfield} no map for value ${srcval}`);
+      tlog.error(`no mapping for value "${srcval}"`);
     }
   } else {
-    log.error(`No 'map' config in valuemap field ${srcfield}`);
+    tlog.error(`No 'map' config in valuemap field`);
   }
   return "";
 }

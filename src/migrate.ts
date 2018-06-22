@@ -17,7 +17,7 @@ import { Spinner } from 'cli-spinner';
 function getlogger() {
   const logcfs = config.get('logs');
   return winston.createLogger({
-    level: 'info',
+    level: 'error',
     format: winston.format.simple(),
     transports: logcfs.map((cf) => {
       if( 'filename' in cf ) {
@@ -92,13 +92,20 @@ async function migrate(options: Object): Promise<void> {
     const results = await rbSource.list(packagetype);
     let n = results.length;
     for( var i in results ) {
-      let md = await rbSource.getRecordMetadata(results[i]);
+      let md = await rbSource.getRecord(results[i]);
       // let ds = await rbSource.listDatastreams(results[i]);
       // spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
-      spinner.setSpinnerTitle(util.format("Crosswalking %d", i));  
+      spinner.setSpinnerTitle(util.format("Crosswalking %d", i));
       const md2 = crosswalk(log, cw, md);
       if( outdir ) {
-        await fs.writeJson(md2, path.join(outdir, results[i] + ".json"));
+        await fs.writeJson(
+          path.join(outdir, util.format("old_%d.json", i)),
+          md
+        );
+        await fs.writeJson(
+          path.join(outdir, util.format("new_%d.json", i)),
+          md2
+        );
       }
       if( rbDest ) {
         // add record;
