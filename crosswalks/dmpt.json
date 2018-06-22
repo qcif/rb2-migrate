@@ -18,7 +18,7 @@
     "type": "repeatable",
     "fields": {
       "warning": "mint_lookup",
-      "dc:identifier:" "dc_identifier",
+      "dc:identifier": "dc_identifier",
       "skos.prefLabel": "dc_title",
       "redbox.grantNumber": "grant_number"
     }
@@ -119,76 +119,75 @@
       "": "survey-platform",
       "": "collab-space",
       "": "other"
-    },
-    "vivo:Dataset.dc:source.dc:location.skos:note": "_",
+    }
+  },
+  "vivo:Dataset.dc:source.dc:location.skos:note": "_",
 
 
-    "redbox:retentionPeriod.dc:date": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "": "1year",
-        "": "5years",
-        "": "7years",
-        "": "15years",
-        "": "20years",
-        "": "permanent"
-      }
-    },
-
-    "redbox:retentionPeriod.dc:date.skos:note": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "": "heritage",
-        "": "controversial",
-        "": "ofinterest",
-        "": "costly_impossible",
-        "": "commercial"
-      }
-    },
-
-    "dataowner_name": "dataRetention_data_owner",
-    
-    
-    "dc:rightsHolder_dc:name": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "": "myUni",
-        "": "myUnjount",
-        "": "student"
-      }
-    },
-    
-    "dc:rightsHolder.dc:description": "_",
-    "redbox:ContractualObligations": "_",
-    "dc:coverage.dc:identifier": "_",
-    "dc:accessRights": {
-      "name": "_",
-      "type": "valuemap",
-      "map" : {
-        "": "manager",
-        "": "open",
-        "": "none"
-      }
-    },
-    
-    
-    "agls:policy.dc:identifier": "_",
-    "agls:policy.skos:note": "_",
-    "agls:protectiveMarking.dc:type": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "": "commercial",
-        "": "cultural",
-        "": "security",
-        "": "nonPublic"
-      }
-    },
-    
-    "agls:protectiveMarking.skos:note": "_",
-  }
-   
+  "redbox:retentionPeriod.dc:date": {
+    "name": "_",
+    "type": "valuemap",
+    "map": {
+      "": "1year",
+      "": "5years",
+      "": "7years",
+      "": "15years",
+      "": "20years",
+      "": "permanent"
+    }
+  },
+  
+  "redbox:retentionPeriod.dc:date.skos:note": {
+    "name": "_",
+    "type": "valuemap",
+    "map": {
+      "": "heritage",
+      "": "controversial",
+      "": "ofinterest",
+      "": "costly_impossible",
+      "": "commercial"
+    }
+  },
+  
+  "dataowner_name": "dataRetention_data_owner",
+  
+  
+  "dc:rightsHolder_dc:name": {
+    "name": "_",
+    "type": "valuemap",
+    "map": {
+      "": "myUni",
+      "": "myUnjount",
+      "": "student"
+    }
+  },
+  
+  "dc:rightsHolder.dc:description": "_",
+  "redbox:ContractualObligations": "_",
+  "dc:coverage.dc:identifier": "_",
+  "dc:accessRights": {
+    "name": "_",
+    "type": "valuemap",
+    "map" : {
+      "": "manager",
+      "": "open",
+      "": "none"
+    }
+  },
+  
+  
+  "agls:policy.dc:identifier": "_",
+  "agls:policy.skos:note": "_",
+  "agls:protectiveMarking.dc:type": {
+    "name": "_",
+    "type": "valuemap",
+    "map": {
+      "": "commercial",
+      "": "cultural",
+      "": "security",
+      "": "nonPublic"
+    }
+  },
+  
+  "agls:protectiveMarking.skos:note": "_"
 }

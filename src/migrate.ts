@@ -45,7 +45,6 @@ function connect(server: string): Redbox {
 async function loadcrosswalk(packagetype: string): Promise<Object|undefined> {
   const cwf = path.join(config.get("crosswalks"), packagetype + '.json');
   try {
-    console.log(log);
     log.info("Loading crosswalk " + cwf);
     const cw = await fs.readJson(cwf);
     return cw
