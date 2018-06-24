@@ -11,7 +11,7 @@ const config = require('config');
 const util = require('util');
 const path = require('path');
 const winston = require('winston');
-const csvdata = require('csvdata');
+const stringify = require('csv-stringify/lib/sync');
 import { Spinner } from 'cli-spinner';
 
 
@@ -41,6 +41,9 @@ function connect(server: string): Redbox {
     }
   }
 }
+
+
+
 
 
 async function loadcrosswalk(packagetype: string): Promise<Object|undefined> {
@@ -119,17 +122,25 @@ async function migrate(options: Object): Promise<void> {
     spinner.setSpinnerTitle("Done.");
     spinner.stop();
     console.log("\n");
-    await write_errata(outdir, errata);
+    await writeerrata(outdir, errata);
   } catch (e) {
     log.error("Migration error:" + e);
   }
   
 }
 
-async function write_errata(outdir: string, errata: Object): Promise<void> {
-  const csv = path.join(outdir, "errata.csv");
-  await csvdata.write(csv, errata);
+// async function writeerrata(outdir: string, errata: Object): Promise<void> {
+//   const csv = path.join(outdir, "errata.csv");
+//   await csvdata.write(csv, errata);
+// }
+
+
+async function writeerrata(outdir: string, errata: Object):Promise<void> {
+  const csvfn = path.join(outdir, "errata.csv");
+  const csvstr = stringify(errata);
+  await fs.outputFile(csvfn, csvstr);
 }
+
 
 async function info(source: string) {
   console.log("Source");
