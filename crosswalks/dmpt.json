@@ -127,9 +127,10 @@
       "name": "_",
       "type": "valuemap",
       "map" : {
-        "": "less-than-100GB",
-        "": "100GB-to-2TB",
-        "": "more-than-2TB"
+        "Less than 10 GB": "less-than-100GB",
+        "10GB-20GB": "less-than-100GB",
+        "20GB ‚Äì 100GB": "less-than-100GB",
+        "100GB+": "100GB-to-2TB"
       }
     },
     "vivo:Dataset.dc:location.rdf:PlainLiteral": {
