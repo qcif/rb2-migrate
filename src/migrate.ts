@@ -95,11 +95,10 @@ async function migrate(options: Object): Promise<void> {
     rbSource.setProgress(s => spinner.setSpinnerTitle(s));
     const results = await rbSource.list(packagetype);
     let n = results.length;
-    var errata = [];
+    var errata = [ [ 'oid', 'field', 'status', 'value' ] ];
     for( var i in results ) {
       let md = await rbSource.getRecord(results[i]);
       // let ds = await rbSource.listDatastreams(results[i]);
-      // spinner.setSpinnerTitle(util.format("Migrating %d/%d %s", i, n, packagetype));
       spinner.setSpinnerTitle(util.format("Crosswalking %d", i));
       
       const md2 = crosswalk(cw, md, ( oid, field, msg, value ) => {
@@ -128,11 +127,6 @@ async function migrate(options: Object): Promise<void> {
   }
   
 }
-
-// async function writeerrata(outdir: string, errata: Object): Promise<void> {
-//   const csv = path.join(outdir, "errata.csv");
-//   await csvdata.write(csv, errata);
-// }
 
 
 async function writeerrata(outdir: string, errata: Object):Promise<void> {

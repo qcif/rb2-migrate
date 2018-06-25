@@ -2,6 +2,26 @@
   "idfield": "oid",
   "source": "dmpt",
   "dest": "rdmp",
+  "required": [
+    "title",
+    "description",
+    "dc:identifier",
+    "contributor_ci",
+    "contributor_data_manager",
+    "vivo:Dataset_redbox:DataCollectionMethodology",
+    "vivo:Dataset_dc_format",
+    "vivo:Dataset_dc:extent",
+    "vivo:Dataset_dc:location_rdf:PlainLiteral",
+    "vivo:Dataset_dc:source_dc:location_rdf:PlainLiteral",
+    "redbox:retentionPeriod_dc:date",
+    "dc:rightsHolder_dc:name",
+    "dc:accessRights"
+  ],
+  "ignore": [
+    "action",
+    "oid",
+    "objMeta"
+  ],
   "crosswalk": {
     "dc:title": "title",
     "dc:description": "description",

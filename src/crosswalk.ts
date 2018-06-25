@@ -57,10 +57,14 @@ function unflatten(original: Object) {
 }
 
 function trfield(cf: string, old: string): string {
-  if( cf === "_" ) {
+  var f = cf;
+  if( typeof(cf) !== "string" ) {
+    f = cf['name'];
+  }
+  if( f === "_" ) {
     return old.replace('.', '_');
   } else {
-    return cf;
+    return f;
   }
 }
       
@@ -69,21 +73,25 @@ export function crosswalk(cwjson: Object, original: Object, errata: (oid: string
   var src = unflatten(original);
   const idfield = cwjson['idfield'];
   const oid = original[idfield];
-
+  const reqd = cwjson['required'];
   const cwspec = cwjson['crosswalk'];
+  const ignore = cwjson['ignore'];
 
   for( const srcfield in cwspec ) {
+    var destfield = trfield(cwspec[srcfield], srcfield); 
     if( srcfield in src ) {
       if( typeof(cwspec[srcfield]) === 'string' ) {
-        var destfield = trfield(cwspec[srcfield], srcfield); 
         dest[destfield] = src[srcfield];
         if( ! dest[destfield] ) {
-          errata(oid, srcfield, "empty", null);
+          if( reqd.includes(destfield) ) {
+            errata(oid, srcfield, "required", null);
+          } else {
+            errata(oid, srcfield, "blank", null);
+          }
         }
         delete src[srcfield];
       } else {
         const spec = cwspec[srcfield];
-        var destfield = trfield(spec["name"], srcfield);
         if( spec["type"] === "valuemap" ) {
           dest[destfield] = valuemap(spec, srcfield, src[srcfield]);
           if( !dest[destfield] ) {
@@ -95,12 +103,19 @@ export function crosswalk(cwjson: Object, original: Object, errata: (oid: string
         delete src[srcfield];
       }
     } else {
-      errata(oid, srcfield, "missing", null);
+      if( reqd.includes(destfield) ) {
+        errata(oid, srcfield, "required", null);
+      } else {
+        errata(oid, srcfield, "missing", null);
+      }
     }
   }
-
   for( const srcfield in src ) {
-    errata(oid, srcfield, "unmatched", src[srcfield]);
+    if( !ignore.includes(srcfield) ) {
+      errata(oid, srcfield, "unmatched", src[srcfield]);
+    } else {
+      errata(oid, srcfield, "ignored", src[srcfield]);
+    }
   }
 
   return dest;
