@@ -131,20 +131,21 @@
         "Less than 100GB": "less-than-100GB",
         "20GB – 100GB": "less-than-100GB",
         "10GB-20GB": "less-than-100GB",
-        "100GB+": "100GB-to-2TB"
+        "100GB+": "100GB-to-2TB",
+        "": "less-than-100GB"
       }
     },
     "vivo:Dataset.dc:location.rdf:PlainLiteral": {
       "name": "_",
       "type": "valuemap",
       "map": {
-        "": "personal-equipment",
+        "Personal equipment": "personal-equipment",
         "": "eresearch-platforms",
-        "": "eresearch-store",
-        "": "share-drive",
+        "eResearch storage platforms": "eresearch-store",
+        "Shared university network drive": "share-drive",
         "": "survey-platform",
-        "": "collab-space",
-        "": "other"
+        "University provided collaboration space": "collab-space",
+        "Other": "other"
       }
     },
     "vivo:Dataset.dc:source.dc:location.skos:note": "_",
@@ -204,17 +205,7 @@
     
     "agls:policy.dc:identifier": "_",
     "agls:policy.skos:note": "_",
-    "agls:protectiveMarking.dc:type": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "": "commercial",
-        "": "cultural",
-        "": "security",
-        "": "nonPublic"
-      }
-    },
-    
+    "agls:protectiveMarking.dc:type": "_",    
     "agls:protectiveMarking.skos:note": "_"
   }
 }

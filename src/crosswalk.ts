@@ -18,7 +18,7 @@ const fs = require('fs-extra');
 
 
 function unflatten(original: Object) {
-  const multifield = /^(.*?)\.(\d+)\.$/;
+  const multifield = /^(.*?)\.(\d+)\.?$/;
   const multirecord = /^(.*?)\.(\d+)\.(.+)$/;
   var unflat = {};
   for( const field in original ) {
@@ -68,7 +68,7 @@ function trfield(cf: string, old: string): string {
   }
 }
       
-export function crosswalk(cwjson: Object, original: Object, errata: (oid: string, field: string, msg: string, value: any) => void):Object {
+export function crosswalk(cwjson: Object, original: Object, errata: (oid: string, field: string, msg: string, value: any) => void):Object[] {
   var dest = {};
   var src = unflatten(original);
   const idfield = cwjson['idfield'];
@@ -118,7 +118,7 @@ export function crosswalk(cwjson: Object, original: Object, errata: (oid: string
     }
   }
 
-  return dest;
+  return [ src, dest ];
 }
 
 

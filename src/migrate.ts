@@ -100,17 +100,21 @@ async function migrate(options: Object): Promise<void> {
       let md = await rbSource.getRecord(results[i]);
       // let ds = await rbSource.listDatastreams(results[i]);
       spinner.setSpinnerTitle(util.format("Crosswalking %d", i));
-      
-      const md2 = crosswalk(cw, md, ( oid, field, msg, value ) => {
+      const oid = md[cw['idfield']];
+      const [ mdu, md2 ] = crosswalk(cw, md, ( oid, field, msg, value ) => {
         errata.push([oid, field, msg, value]);
       });
       if( outdir ) {
         await fs.writeJson(
-          path.join(outdir, util.format("old_%d.json", i)),
+          path.join(outdir, util.format("%s_orig.json", oid)),
           md, { spaces: 4 }
         );
         await fs.writeJson(
-          path.join(outdir, util.format("new_%d.json", i)),
+          path.join(outdir, util.format("%s_unflat.json", oid)),
+          mdu, { spaces: 4 }
+        );
+        await fs.writeJson(
+          path.join(outdir, util.format("%s_new.json", oid)),
           md2, { spaces: 4 }
         );
       }
