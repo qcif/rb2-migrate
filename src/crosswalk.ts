@@ -15,7 +15,7 @@
 
 const fs = require('fs-extra');
 
-
+type LogCallback = (oid: string, field: string, msg: string, value: any) => void; 
 
 function unflatten(original: Object) {
   const multifield = /^(.*?)\.(\d+)\.?$/;
@@ -68,7 +68,7 @@ function trfield(cf: string, old: string): string {
   }
 }
       
-export function crosswalk(cwjson: Object, original: Object, errata: (oid: string, field: string, msg: string, value: any) => void):Object[] {
+export function crosswalk(cwjson: Object, original: Object, logger: LogCallback):Object[] {
   var dest = {};
   var src = unflatten(original);
   const idfield = cwjson['idfield'];
@@ -83,43 +83,40 @@ export function crosswalk(cwjson: Object, original: Object, errata: (oid: string
       if( typeof(cwspec[srcfield]) === 'string' ) {
         dest[destfield] = src[srcfield];
         if( dest[destfield] ) {
-          errata(oid, srcfield, "copied", dest[destfield]);
+          logger(oid, srcfield, "copied", dest[destfield]);
         } else {
           if( reqd.includes(destfield) ) {
-            errata(oid, srcfield, "required", null);
+            logger(oid, srcfield, "required", null);
           } else {
-            errata(oid, srcfield, "blank", null);
+            logger(oid, srcfield, "blank", null);
           }
         }
         delete src[srcfield];
       } else {
         const spec = cwspec[srcfield];
         if( spec["type"] === "valuemap" ) {
-          dest[destfield] = valuemap(spec, srcfield, src[srcfield]);
-          if( dest[destfield] ) {
-            errata(oid, srcfield, "mapped", dest[destfield]);
-          } else {
-            errata(oid, srcfield, "unmapped", src[srcfield]);
-          }
-        } else {
-          errata(oid, srcfield, "copied", JSON.stringify(dest[destfield]));
-          dest[destfield] = src[srcfield];
+          dest[destfield] = valuemap(spec, srcfield, src[srcfield], oid, logger);
+          delete src[srcfield];
+        } else if( spec["type"] === "record" ) {
+          dest[destfield] = record(spec, srcfield, src, oid, logger);
+          delete src[srcfield];
+       } else {
+          logger(oid, srcfield, "unrecognised type", spec["type"]);
         }
-        delete src[srcfield];
       }
     } else {
       if( reqd.includes(destfield) ) {
-        errata(oid, srcfield, "required", null);
+        logger(oid, srcfield, "required", null);
       } else {
-        errata(oid, srcfield, "missing", null);
+        logger(oid, srcfield, "missing", null);
       }
     }
   }
   for( const srcfield in src ) {
     if( !ignore.includes(srcfield) ) {
-      errata(oid, srcfield, "unmatched", src[srcfield]);
+      logger(oid, srcfield, "unmatched", src[srcfield]);
     } else {
-      errata(oid, srcfield, "ignored", src[srcfield]);
+      logger(oid, srcfield, "ignored", src[srcfield]);
     }
   }
 
@@ -127,14 +124,37 @@ export function crosswalk(cwjson: Object, original: Object, errata: (oid: string
 }
 
 
-function valuemap(spec: Object, srcfield: string, srcval: string): string {
+function valuemap(spec: Object, srcfield: string, srcval: string, oid: string, logger: LogCallback): string {
   if( "map" in spec ) {
     if( srcval in spec["map"] ) {
+      logger(oid, srcfield, "mapped", spec["map"][srcval]);
       return spec["map"][srcval];
-    } 
+    } else {
+      logger(oid, srcfield, "unmapped", srcval);
+      return "";
+    }
   }
+  logger(oid, srcfield, "no map!", srcval);
   return "";
 }
-  
 
+
+// todo: repeatable records
+
+function record(spec: Object, srcfield: string, src: Object, oid:string, logger: LogCallback): Object {
+  if( "fields" in spec ) {
+    var dest = {};
+    logger(oid, srcfield, "record", "");
+    for( var subf in spec["fields"] ) {
+      const srcf = srcfield + '.' + subf;
+      if( srcf in src ) {
+        dest[spec["fields"][subf]] = src[srcf];
+        logger(oid, subf, "subfield", src[srcf]);
+      } else {
+        logger(oid, subf, "subfield not found", srcf);
+      }
+    }
+    return dest;
+  } 
+}
   

@@ -29,17 +29,20 @@
     "dc:relation.bibo:Website": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",
+
     "foaf:fundedBy.foaf:Agent": {
       "name": "_",
-      "type": "repeatable",
-      "fields": {
+      "type": "record",
+      "repeatable": 1,
+     "fields": {
         "dc:identifier": "dc_identifier",
         "skos:prefLabel": "dc_title"
       }
     },
     "foaf:fundedBy.vivo:Grant": {
       "name": "_",
-      "type": "repeatable",
+      "type": "record",
+      "repeatable": 1,
       "fields": {
         "warning": "mint_lookup",
         "dc:identifier": "dc_identifier",
@@ -49,6 +52,7 @@
     },
     "dc:subject.anzsrc:toa": {
       "name": "_",
+      "type": "record",
       "fields": {
         "skos:prefLabel": "FIXME",
         "rdf:resource": "rdf:resource"
@@ -56,7 +60,8 @@
     },
     "dc:subject.anzsrc:for": {
       "name": "_",
-      "type": "repeatable",
+      "type": "record",
+      "repeatable": 1,
       "fields": {
         "skos:prefLabel": "FIXME",
         "rdf:resource": "rdf:resource"
@@ -64,7 +69,8 @@
     },
     "dc:subject.anzsrc:seo": {
       "name": "_",
-      "type": "repeatable",
+      "type": "record",
+      "repeatable": 1,
       "fields": {
         "skos:prefLabel": "FIXME",
         "rdf:resource": "rdf:resource"
@@ -74,6 +80,7 @@
     
     "locrel:rth.foaf:Person": {
       "name": "contributor_ci",
+      "type": "record",
       "fields": {
         "dc:identifier": "dc_identifier",
         "foaf:title": "dc_title",
@@ -84,6 +91,7 @@
     },
     "locrel:prc.foaf:Person": {
       "name": "contributor_data_manager",
+      "type": "record",
       "fields": {
         "dc:identifier": "dc_identifier",
         "foaf:title": "dc_title",
@@ -94,7 +102,8 @@
     },
     "locrel:clb.foaf:Person": {
       "name": "contributors",
-      "type": "repeatable",
+      "type": "record",
+      "repeatable": 1,
       "fields": {
         "dc:identifier": "dc_identifier",
         "foaf:title": "dc_title",
