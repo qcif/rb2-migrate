@@ -154,7 +154,7 @@
     "vivo:Dataset.dc:location.skos:note": "_",
 
     
-    "vivo:Dataset.dc.source.dc:location.rdf:PlainLiteral": {
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": {
       "name": "_",
       "type": "valuemap",
       "map": {
