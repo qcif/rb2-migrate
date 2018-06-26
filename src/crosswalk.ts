@@ -82,7 +82,9 @@ export function crosswalk(cwjson: Object, original: Object, errata: (oid: string
     if( srcfield in src ) {
       if( typeof(cwspec[srcfield]) === 'string' ) {
         dest[destfield] = src[srcfield];
-        if( ! dest[destfield] ) {
+        if( dest[destfield] ) {
+          errata(oid, srcfield, "copied", dest[destfield]);
+        } else {
           if( reqd.includes(destfield) ) {
             errata(oid, srcfield, "required", null);
           } else {
@@ -94,10 +96,13 @@ export function crosswalk(cwjson: Object, original: Object, errata: (oid: string
         const spec = cwspec[srcfield];
         if( spec["type"] === "valuemap" ) {
           dest[destfield] = valuemap(spec, srcfield, src[srcfield]);
-          if( !dest[destfield] ) {
+          if( dest[destfield] ) {
+            errata(oid, srcfield, "mapped", dest[destfield]);
+          } else {
             errata(oid, srcfield, "unmapped", src[srcfield]);
           }
         } else {
+          errata(oid, srcfield, "copied", JSON.stringify(dest[destfield]));
           dest[destfield] = src[srcfield];
         }
         delete src[srcfield];

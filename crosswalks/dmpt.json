@@ -135,19 +135,42 @@
         "": "less-than-100GB"
       }
     },
+
     "vivo:Dataset.dc:location.rdf:PlainLiteral": {
       "name": "_",
       "type": "valuemap",
       "map": {
-        "Personal equipment": "personal-equipment",
+        "personal-equipment": "personal-equipment",
         "": "eresearch-platforms",
+        "eresearch-store": "eresearch-store",
+        "share-drive": "share-drive",
+        "survey-platform": "survey-platform",
+        "collab-space": "collab-space",
+        "other": "other"
+      }
+    },
+
+    
+    "vivo:Dataset.dc:location.skos:note": "_",
+
+    
+    "vivo:Dataset.dc.source.dc:location.rdf:PlainLiteral": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "Personal equipment": "personal-equipment",
+        "Personal equipment (e.g. external drive, own laptop, etc)": "personal-equipment",
+        "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
         "eResearch storage platforms": "eresearch-store",
         "Shared university network drive": "share-drive",
-        "": "survey-platform",
+        "survey-platform": "survey-platform",
         "University provided collaboration space": "collab-space",
         "Other": "other"
       }
     },
+
+
+    
     "vivo:Dataset.dc:source.dc:location.skos:note": "_",
 
 
@@ -155,12 +178,10 @@
       "name": "_",
       "type": "valuemap",
       "map": {
-        "": "1year",
-        "": "5years",
-        "": "7years",
-        "": "15years",
-        "": "20years",
-        "": "permanent"
+        "12months": "1year",
+        "5years": "5years",
+        "15years": "15years",
+        "permanent": "permanent"
       }
     },
     
@@ -168,11 +189,11 @@
       "name": "_",
       "type": "valuemap",
       "map": {
-        "": "heritage",
-        "": "controversial",
-        "": "ofinterest",
-        "": "costly_impossible",
-        "": "commercial"
+        "heritage": "heritage",
+        "controversial": "controversial",
+        "ofinterest": "ofinterest",
+        "costly_impossible": "costly_impossible",
+        "commercial": "commercial"
       }
     },
     
