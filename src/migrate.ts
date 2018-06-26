@@ -101,7 +101,7 @@ async function migrate(options: Object): Promise<void> {
       // let ds = await rbSource.listDatastreams(results[i]);
       spinner.setSpinnerTitle(util.format("Crosswalking %d", i));
       const oid = md[cw['idfield']];
-      const [ mdu, md2 ] = crosswalk(cw, md, ( oid, field, msg, value ) => {
+      const [ mdu, md2 ] = crosswalk(cw, md, ( field, msg, value ) => {
         errata.push([oid, field, msg, value]);
       });
       if( outdir ) {

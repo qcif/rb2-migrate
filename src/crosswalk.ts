@@ -15,9 +15,9 @@
 
 const fs = require('fs-extra');
 
-type LogCallback = (oid: string, field: string, msg: string, value: any) => void; 
+type LogCallback = (field: string, msg: string, value: any) => void; 
 
-function unflatten(original: Object) {
+function unflatten(original: Object, logger: LogCallback) {
   const multifield = /^(.*?)\.(\d+)\.?$/;
   const multirecord = /^(.*?)\.(\d+)\.(.+)$/;
   var unflat = {};
@@ -27,7 +27,7 @@ function unflatten(original: Object) {
       const [ d, f, j ] = m1;
       const i = parseInt(j) - 1;
       if( f in unflat && i in unflat[f] ) {
-        console.log("error: multiple fields: " + d);
+        logger(field, "unflat: duplicate", d);
       }
       if( !(f in unflat) ) {
         unflat[f] = [];
@@ -39,7 +39,7 @@ function unflatten(original: Object) {
         const [ d, f, j, s ] = m2;
         const i = parseInt(j) - 1;
         if( f in unflat && i in unflat[f] && s in unflat[f][i] ) {
-          console.log("error: multiple fields: " + d);
+          logger(field, "unflat: duplicate record", d);
         }
         if( !(f in unflat) ) {
           unflat[f] = [];
@@ -70,9 +70,11 @@ function trfield(cf: string, old: string): string {
       
 export function crosswalk(cwjson: Object, original: Object, logger: LogCallback):Object[] {
   var dest = {};
-  var src = unflatten(original);
   const idfield = cwjson['idfield'];
   const oid = original[idfield];
+
+  var src = unflatten(original, logger);
+
   const reqd = cwjson['required'];
   const cwspec = cwjson['crosswalk'];
   const ignore = cwjson['ignore'];
@@ -83,40 +85,40 @@ export function crosswalk(cwjson: Object, original: Object, logger: LogCallback)
       if( typeof(cwspec[srcfield]) === 'string' ) {
         dest[destfield] = src[srcfield];
         if( dest[destfield] ) {
-          logger(oid, srcfield, "copied", dest[destfield]);
+          logger(srcfield, "copied", dest[destfield]);
         } else {
           if( reqd.includes(destfield) ) {
-            logger(oid, srcfield, "required", null);
+            logger(srcfield, "required", null);
           } else {
-            logger(oid, srcfield, "blank", null);
+            logger(srcfield, "blank", null);
           }
         }
         delete src[srcfield];
       } else {
         const spec = cwspec[srcfield];
         if( spec["type"] === "valuemap" ) {
-          dest[destfield] = valuemap(spec, srcfield, src[srcfield], oid, logger);
+          dest[destfield] = valuemap(spec, srcfield, src[srcfield], logger);
           delete src[srcfield];
         } else if( spec["type"] === "record" ) {
-          dest[destfield] = record(spec, srcfield, src, oid, logger);
+          dest[destfield] = record(spec, srcfield, src, logger);
           delete src[srcfield];
        } else {
-          logger(oid, srcfield, "unrecognised type", spec["type"]);
+          logger(srcfield, "unrecognised type", spec["type"]);
         }
       }
     } else {
       if( reqd.includes(destfield) ) {
-        logger(oid, srcfield, "required", null);
+        logger(srcfield, "required", null);
       } else {
-        logger(oid, srcfield, "missing", null);
+        logger(srcfield, "missing", null);
       }
     }
   }
   for( const srcfield in src ) {
     if( !ignore.includes(srcfield) ) {
-      logger(oid, srcfield, "unmatched", src[srcfield]);
+      logger(srcfield, "unmatched", src[srcfield]);
     } else {
-      logger(oid, srcfield, "ignored", src[srcfield]);
+      logger(srcfield, "ignored", src[srcfield]);
     }
   }
 
@@ -124,34 +126,34 @@ export function crosswalk(cwjson: Object, original: Object, logger: LogCallback)
 }
 
 
-function valuemap(spec: Object, srcfield: string, srcval: string, oid: string, logger: LogCallback): string {
+function valuemap(spec: Object, srcfield: string, srcval: string, logger: LogCallback): string {
   if( "map" in spec ) {
     if( srcval in spec["map"] ) {
-      logger(oid, srcfield, "mapped", spec["map"][srcval]);
+      logger(srcfield, "mapped", spec["map"][srcval]);
       return spec["map"][srcval];
     } else {
-      logger(oid, srcfield, "unmapped", srcval);
+      logger(srcfield, "unmapped", srcval);
       return "";
     }
   }
-  logger(oid, srcfield, "no map!", srcval);
+  logger(srcfield, "no map!", srcval);
   return "";
 }
 
 
 // todo: repeatable records
 
-function record(spec: Object, srcfield: string, src: Object, oid:string, logger: LogCallback): Object {
+function record(spec: Object, srcfield: string, src: Object, logger: LogCallback): Object {
   if( "fields" in spec ) {
     var dest = {};
-    logger(oid, srcfield, "record", "");
+    logger(srcfield, "record", "");
     for( var subf in spec["fields"] ) {
       const srcf = srcfield + '.' + subf;
       if( srcf in src ) {
         dest[spec["fields"][subf]] = src[srcf];
-        logger(oid, subf, "subfield", src[srcf]);
+        logger(subf, "subfield", src[srcf]);
       } else {
-        logger(oid, subf, "subfield not found", srcf);
+        logger(subf, "subfield not found", srcf);
       }
     }
     return dest;
