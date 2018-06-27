@@ -34,7 +34,7 @@
       "name": "_",
       "type": "record",
       "repeatable": 1,
-     "fields": {
+      "fields": {
         "dc:identifier": "dc_identifier",
         "skos:prefLabel": "dc_title"
       }

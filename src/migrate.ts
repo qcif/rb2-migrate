@@ -95,14 +95,14 @@ async function migrate(options: Object): Promise<void> {
     rbSource.setProgress(s => spinner.setSpinnerTitle(s));
     const results = await rbSource.list(packagetype);
     let n = results.length;
-    var errata = [ [ 'oid', 'field', 'status', 'value' ] ];
+    var errata = [ [ 'oid', 'stage', 'field', 'status', 'value' ] ];
     for( var i in results ) {
       let md = await rbSource.getRecord(results[i]);
       // let ds = await rbSource.listDatastreams(results[i]);
       spinner.setSpinnerTitle(util.format("Crosswalking %d", i));
       const oid = md[cw['idfield']];
-      const [ mdu, md2 ] = crosswalk(cw, md, ( field, msg, value ) => {
-        errata.push([oid, field, msg, value]);
+      const [ mdu, md2 ] = crosswalk(cw, md, ( stage, field, msg, value ) => {
+        errata.push([oid, stage, field, msg, value]);
       });
       if( outdir ) {
         await fs.writeJson(
