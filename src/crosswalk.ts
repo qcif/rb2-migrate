@@ -15,7 +15,7 @@
 
 const fs = require('fs-extra');
 
-type LogCallback = (stage: string, field: string, msg: string, value: any) => void; 
+type LogCallback = (stage: string, field: string, nfield: string, msg: string, value: any) => void; 
 
 
 export function crosswalk(cwjson: Object, original: Object, logger: LogCallback):Object[] {
@@ -35,41 +35,42 @@ export function crosswalk(cwjson: Object, original: Object, logger: LogCallback)
       if( typeof(cwspec[srcfield]) === 'string' ) {
         dest[destfield] = src[srcfield];
         if( dest[destfield] ) {
-          logger('crosswalk', srcfield, "copied", dest[destfield]);
+          logger('crosswalk', srcfield, destfield, "copied", dest[destfield]);
         } else {
           if( reqd.includes(destfield) ) {
-            logger('crosswalk', srcfield, "required", null);
+            logger('crosswalk', srcfield, destfield, "required", null);
           } else {
-            logger('crosswalk', srcfield, "blank", null);
+            logger('crosswalk', srcfield, destfield, "blank", null);
           }
         }
         delete src[srcfield];
       } else {
         const spec = cwspec[srcfield];
         if( spec["type"] === "valuemap" ) {
-          dest[destfield] = valuemap(spec, srcfield, src[srcfield], logger);
+          dest[destfield] = valuemap(spec, srcfield, destfield, src[srcfield], logger);
           delete src[srcfield];
         } else if( spec["type"] === "record" ) {
-          logger('crosswalk', srcfield, "assuming processed", JSON.stringify(src[srcfield]));
+          // FIXME
+          logger('crosswalk', srcfield, destfield, "assuming processed", JSON.stringify(src[srcfield]));
           dest[destfield] = src[srcfield]
           delete src[srcfield];
         } else {
-          logger('crosswalk', srcfield, "unrecognised type", spec["type"]);
+          logger('crosswalk', srcfield, destfield, "error: type", spec["type"]);
         }
       }
     } else {
       if( reqd.includes(destfield) ) {
-        logger("crosswalk", srcfield, "required", null);
+        logger("crosswalk", srcfield, destfield, "required", null);
       } else {
-        logger("crosswalk", srcfield, "missing", null);
+        logger("crosswalk", srcfield, destfield, "missing", null);
       }
     }
   }
   for( const srcfield in src ) {
     if( !ignore.includes(srcfield) ) {
-      logger("postwalk", srcfield, "unmatched", src[srcfield]);
+      logger("postwalk", srcfield, "", "unmatched", src[srcfield]);
     } else {
-      logger("postwalk", srcfield, "ignored", src[srcfield]);
+      logger("postwalk", srcfield, "", "ignored", src[srcfield]);
     }
   }
 
@@ -95,12 +96,12 @@ function unflatten(cwjson: Object, original: Object, logger: LogCallback): Objec
       const f = m[1];
       const i = parseInt(m[2]) - 1;
       if( f in unflat && i in unflat[f] ) {
-        logger("unflatten", field, "unflat: duplicate", f);
+        logger("unflatten", field, "", "unflat: duplicate", f);
       }
       if( !(f in unflat) ) {
         unflat[f] = [];
       }
-      logger("unflatten", field, "unflatten", f + " " + String());
+      logger("unflatten", field, "", "unflatten", f + " " + String());
       unflat[f][i] = pass1[field];
     } else {
       unflat[field] = pass1[field];
@@ -162,12 +163,12 @@ function records(cwjson: Object, original: Object, logger: LogCallback): Object 
         const m2 = sfield.match(repeatrecord);
         if( m2 ) {
           if( ! spec['repeatable'] ) {
-            logger("records", field, "not repeatable", sfield);
+            logger("records", field, "", "not repeatable", sfield);
           } else {
             const i = parseInt(m2[1]) - 1;
             sfield = m2[2];
             if( !(sfield in spec['fields']) ) {
-              logger("records", field, "unknown subfield", sfield);
+              logger("records", field, "", "unknown subfield", sfield);
             } else {
               if( !(rfield in output) ) {
                 output[rfield] = [];
@@ -175,7 +176,7 @@ function records(cwjson: Object, original: Object, logger: LogCallback): Object 
               if( !(i in output[rfield]) ) {
                 output[rfield][i] = {};
               }
-              logger("records", field, "copied", original[field])
+              logger("records", field, sfield, "copied", original[field])
               output[rfield][i][sfield] = original[field];
               delete output[field];
             }
@@ -183,15 +184,15 @@ function records(cwjson: Object, original: Object, logger: LogCallback): Object 
         } else {
           // It doesn't look repeatable
           if( spec['repeatable'] ) {
-            logger("records", field, "should be repeatable", sfield);
+            logger("records", field, "", "should be repeatable", sfield);
           } else {
             if( !(sfield in spec['fields']) ) {
-              logger("records", field, "unknown subfield", sfield);
+              logger("records", field, "", "unknown subfield", sfield);
             } else {
               if( !(rfield in output) ) {
                 output[rfield] = {};
               }
-              logger("records", field, "copied", original[field])
+              logger("records", field, sfield, "copied", original[field])
               output[rfield][sfield] = original[field];
               delete output[field];
             }
@@ -231,17 +232,17 @@ function trfield(cf: string, old: string): string {
 }
       
 
-function valuemap(spec: Object, srcfield: string, srcval: string, logger: LogCallback): string {
+function valuemap(spec: Object, srcfield: string, destfield: string, srcval: string, logger: LogCallback): string {
   if( "map" in spec ) {
     if( srcval in spec["map"] ) {
-      logger("crosswalk", srcfield, "mapped", spec["map"][srcval]);
+      logger("crosswalk", srcfield, destfield, "mapped", spec["map"][srcval]);
       return spec["map"][srcval];
     } else {
-      logger("crosswalk", srcfield, "unmapped", srcval);
+      logger("crosswalk", srcfield, destfield, "unmapped", srcval);
       return "";
     }
   }
-  logger("crosswalk", srcfield, "no map!", srcval);
+  logger("crosswalk", srcfield, destfield, "no map!", srcval);
   return "";
 }
 
