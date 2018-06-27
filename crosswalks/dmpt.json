@@ -221,9 +221,9 @@
       "name": "_",
       "type": "valuemap",
       "map" : {
-        "": "manager",
-        "": "open",
-        "": "none"
+        "permission from the data manager": "manager",
+        "open, free access under license": "open",
+        "no access due to sensitivities": "none"
       }
     },
     
