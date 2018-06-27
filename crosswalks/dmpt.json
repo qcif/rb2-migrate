@@ -50,14 +50,9 @@
         "redbox.grantNumber": "grant_number"
       }
     },
-    "dc:subject.anzsrc:toa": {
-      "name": "_",
-      "type": "record",
-      "fields": {
-        "skos:prefLabel": "FIXME",
-        "rdf:resource": "rdf:resource"
-      }
-    },
+    
+    "dc:subject.anzsrc:toa.rdf:resource": "_",
+    
     "dc:subject.anzsrc:for": {
       "name": "_",
       "type": "record",
@@ -105,11 +100,11 @@
       "type": "record",
       "repeatable": 1,
       "fields": {
-        "dc:identifier": "dc_identifier",
-        "foaf:title": "dc_title",
-        "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
+        "person.dc:identifier": "dc_identifier",
+        "person.foaf:title": "dc_title",
+        "person.foaf:email": "email",
+        "person.foaf:givenName": "givenname",
+        "person.foaf:familyName": "familyname"
       }
     },
     "swrc:supervisor.foaf:Person": {

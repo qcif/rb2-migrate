@@ -175,6 +175,7 @@ function records(cwjson: Object, original: Object, logger: LogCallback): Object 
               if( !(i in output[rfield]) ) {
                 output[rfield][i] = {};
               }
+              logger("records", field, "copied", original[field])
               output[rfield][i][sfield] = original[field];
               delete output[field];
             }
@@ -190,6 +191,7 @@ function records(cwjson: Object, original: Object, logger: LogCallback): Object 
               if( !(rfield in output) ) {
                 output[rfield] = {};
               }
+              logger("records", field, "copied", original[field])
               output[rfield][sfield] = original[field];
               delete output[field];
             }
