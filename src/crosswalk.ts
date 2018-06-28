@@ -18,6 +18,16 @@ const fs = require('fs-extra');
 type LogCallback = (stage: string, field: string, nfield: string, msg: string, value: any) => void; 
 
 
+function notempty(x) {
+  if( !x || x === "null" ) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
+
 export function crosswalk(cwjson: Object, original: Object, logger: LogCallback):Object[] {
   var dest = {};
   const idfield = cwjson['idfield'];
@@ -80,40 +90,8 @@ export function crosswalk(cwjson: Object, original: Object, logger: LogCallback)
 
 /* unflatten - preprocessing pass which collects multiple records in the
    rb1.x "field.n." and "field.subfield" formats into proper JSON.
-   Has been split out into simplemultiples() and records()
-
-*/
-
-function unflatten(cwjson: Object, original: Object, logger: LogCallback): Object {
-  /* First, process multi-field records - this removes the original
-     fields for those */
-  const pass1 = records(cwjson, original, logger);
-  const multifield = /^(.*?)\.(\d+)\.?$/;
-  var unflat = {};
-  for( const field in pass1 ) {
-    const m = field.match(multifield);
-    if( m ) {
-      const f = m[1];
-      const i = parseInt(m[2]) - 1;
-      if( f in unflat && i in unflat[f] ) {
-        logger("unflatten", field, "", "unflat: duplicate", f);
-      }
-      if( !(f in unflat) ) {
-        unflat[f] = [];
-      }
-      logger("unflatten", field, "", "unflatten", f + " " + String());
-      unflat[f][i] = pass1[field];
-    } else {
-      unflat[field] = pass1[field];
-    }
-  }
-  return unflat;
-}
-
-
-
-
-/* gathers all of the crosswalk fields with type = "record" like so
+   
+   gathers all of the crosswalk fields with type = "record" like so
 
    "outer:field.subfield:one": "value1",
    "outer:field.subfield:two": "value2", [..]
@@ -142,13 +120,26 @@ function unflatten(cwjson: Object, original: Object, logger: LogCallback): Objec
        } 
     ]
 
+   and now (for repeatable fields without subfields)
+
+   "repeating:singleton.1.throw:this.away": "value1",
+   "repeating:singleton.2.throw:this.away": "value2",
+
+   "repeating:singleton": {
+       "subfield:one": "value1",
+       "subfield:two": "value2", 
+       [..]
+   }
+
+
    Returns an object with just the new record fields
 
 
 */ 
 
-function records(cwjson: Object, original: Object, logger: LogCallback): Object {  
-  const repeatrecord = /^(\d+)\.(.*)$/;
+function unflatten(cwjson: Object, original: Object, logger: LogCallback): Object {
+  const repeatrecord = /^(\d+)\.?(.*)$/;
+
   var output = {... original};
   var rspecs = getrecordspecs(cwjson);
   for( const rfield in rspecs ) {
@@ -167,18 +158,28 @@ function records(cwjson: Object, original: Object, logger: LogCallback): Object 
           } else {
             const i = parseInt(m2[1]) - 1;
             sfield = m2[2];
-            if( !(sfield in spec['fields']) ) {
-              logger("records", field, "", "unknown subfield", sfield);
-            } else {
+            if( !('fields' in spec) ) {
+              // no subfields
               if( !(rfield in output) ) {
                 output[rfield] = [];
               }
-              if( !(i in output[rfield]) ) {
-                output[rfield][i] = {};
-              }
-              logger("records", field, sfield, "copied", original[field])
-              output[rfield][i][sfield] = original[field];
+              logger("records", field, 'single', "copied", original[field]);
+              output[rfield][i] = original[field];
               delete output[field];
+            } else {
+              if( !(sfield in spec['fields']) ) {
+                logger("records", field, "", "unknown subfield", sfield);
+              } else {
+                if( !(rfield in output) ) {
+                  output[rfield] = [];
+                }
+                if( !(i in output[rfield]) ) {
+                  output[rfield][i] = {};
+                }
+                logger("records", field, sfield, "copied", original[field])
+                output[rfield][i][sfield] = original[field];
+                delete output[field];
+              }
             }
           }
         } else {
@@ -199,6 +200,12 @@ function records(cwjson: Object, original: Object, logger: LogCallback): Object 
           }
         }
       }
+    }
+  }
+  for( const rfield in output ) {
+    if( Array.isArray(output[rfield]) ) {
+      // remove empty or blank list items
+      output[rfield] = output[rfield].filter((x) => notempty(x));
     }
   }
   return output;

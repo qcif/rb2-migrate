@@ -25,7 +25,12 @@
   "crosswalk": {
     "dc:title": "title",
     "dc:description": "description",
-    "finalKeywords": "_",
+    "dc:identifier": "dc:identifier",
+    "finalKeywords": {
+      "name": "_",
+      "type": "record",
+      "repeatable": 1
+    },
     "dc:relation.bibo:Website": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",
@@ -109,6 +114,7 @@
     },
     "swrc:supervisor.foaf:Person": {
       "name": "contributor_supervisor",
+      "type": "record",
       "fields": {
         "dc:identifier": "dc_identifier",
         "foaf:title": "dc_title",
@@ -144,13 +150,14 @@
       "name": "_",
       "type": "valuemap",
       "map": {
-        "personal-equipment": "personal-equipment",
-        "": "eresearch-platforms",
-        "eresearch-store": "eresearch-store",
-        "share-drive": "share-drive",
+        "Personal equipment": "personal-equipment",
+        "Personal equipment (e.g. external drive, own laptop, etc)": "personal-equipment",
+        "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
+        "eResearch storage platforms": "eresearch-platforms",
+        "Shared university network drive": "share-drive",
         "survey-platform": "survey-platform",
-        "collab-space": "collab-space",
-        "other": "other"
+        "University provided collaboration space": "collab-space",
+        "Other": "other"
       }
     },
 
@@ -165,7 +172,7 @@
         "Personal equipment": "personal-equipment",
         "Personal equipment (e.g. external drive, own laptop, etc)": "personal-equipment",
         "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
-        "eResearch storage platforms": "eresearch-store",
+        "eResearch storage platforms": "eresearch-platforms",
         "Shared university network drive": "share-drive",
         "survey-platform": "survey-platform",
         "University provided collaboration space": "collab-space",
@@ -204,19 +211,23 @@
     "dataowner_name": "dataRetention_data_owner",
     
     
-    "dc:rightsHolder_dc:name": {
+    "dc:rightsHolder.dc:name": {
       "name": "_",
       "type": "valuemap",
       "map": {
-        "": "myUni",
-        "": "myUnjount",
-        "": "student"
+        "myUni": "myUni",
+        "myUnjount": "myUnjount",
+        "student": "student"
       }
     },
     
     "dc:rightsHolder.dc:description": "_",
     "redbox:ContractualObligations": "_",
-    "dc:coverage.dc:identifier": "_",
+    "dc:coverage.dc:identifier": {
+      "type": "record",
+      "name": "_",
+      "repeatable": 1
+    },
     "dc:accessRights": {
       "name": "_",
       "type": "valuemap",
@@ -230,7 +241,11 @@
     
     "agls:policy.dc:identifier": "_",
     "agls:policy.skos:note": "_",
-    "agls:protectiveMarking.dc:type": "_",    
+    "agls:protectiveMarking.dc:type": {
+      "type": "record",
+      "repeatable": 1,
+      "name": "_"
+    },
     "agls:protectiveMarking.skos:note": "_"
   }
 }
