@@ -14,6 +14,7 @@
 
 
 const fs = require('fs-extra');
+const util = require('util');
 
 type LogCallback = (stage: string, field: string, nfield: string, msg: string, value: any) => void; 
 
@@ -23,7 +24,92 @@ function notempty(x) {
     return false;
   } else {
     return true;
+ }
+}
+
+const FOR_SEO_RE = /http:\/\/purl.org\/asc\/1297.0\/2008\/(seo|for)\/(\d+)$/;
+const FOR_SEO_DELIM = ' - ';
+
+// note that there's one handle_person function which gets called from four
+// different items in the handlers dict so that they can handle repeatable
+// people and inject their role
+
+const handlers = {
+  'for_seo': function(logger: LogCallback, originals: Object[]): Object[] {
+    return originals.map((f) => handle_for_seo(logger, f));
+  },
+  'fnci': function(logger: LogCallback, original: Object): Object {
+    return handle_person(logger, "Chief Investigator", original)
+  },
+  'data_manager': function(logger: LogCallback, original: Object): Object {
+    return handle_person(logger, "Data Manager", original)
+  },
+  'contributors': function(logger: LogCallback, original: Object[]): Object[] {
+    return original.map((p) => handle_person(logger, "Contributor", p))
+  },
+  'supervisor': function(logger: LogCallback, original: Object): Object {
+    return handle_person(logger, "Supervisor", original)
+  },
+};
+
+
+function handle_person(logger: LogCallback, role:string, o: Object): Object {
+  const fullname = util.format("%s %s", o["foaf:givenName"], o["foaf:familyName"]);
+  const honorific = o["foaf:title"];
+  const output = {
+    "dc:identifier": o["dc:identifier"],
+    text_full_name: fullname,
+    full_name_honorific: honorific + ' ' + fullname,
+    email: o["foaf:email"],
+    username: "",
+    role: role
+  };
+  logger('handler', "person", role, "succeeded", JSON.stringify(output));
+  return output;
+}
+
+
+function handle_for_seo(logger: LogCallback, o:Object): Object {
+  const url = o['rdf:resource']; 
+  const name = o['skos:prefLabel'];
+  if( !url ) {
+    logger("handler", "for_seo", "", "Empty rdf:resource", "");
+    return {};
   }
+  if( !name ) {
+    logger("handler", "for_seo", "", "Empty skos:prefLabel", "");
+    return {};
+  }
+  const m = url.match(FOR_SEO_RE);
+  if( m ) {
+    const [ c1, l1 ] = name.split(FOR_SEO_DELIM);
+    const output = {
+      'rdf:resource': url,
+      'type': m[1],
+      'name': name,
+      'label': l1,
+      'notation': m[2],
+      'genealogy': genealogy(m[2])
+    };
+    logger("handler", "for_seo", "", "succeeded", JSON.stringify(output));
+    return output;
+  } else {
+    return { 'label': 'crossswalk error' };
+  }
+}
+
+
+// FOR or SEO code genealogy:
+// '112233' -> [ '11', '1122' ] etc
+
+function genealogy(code:string):string[] {
+  var c = '';
+  var g = [];
+  for( var i = 0; i < code.length - 2; i += 2 ) {
+    c += code.slice(i, i + 2);
+    g.push(c);
+  }
+  return g;
 }
 
 
@@ -34,6 +120,7 @@ export function crosswalk(cwjson: Object, original: Object, logger: LogCallback)
   const oid = original[idfield];
 
   var src = unflatten(cwjson, original, logger);
+  const unflat = {... src};
 
   const reqd = cwjson['required'];
   const cwspec = cwjson['crosswalk'];
@@ -60,9 +147,17 @@ export function crosswalk(cwjson: Object, original: Object, logger: LogCallback)
           dest[destfield] = valuemap(spec, srcfield, destfield, src[srcfield], logger);
           delete src[srcfield];
         } else if( spec["type"] === "record" ) {
-          // FIXME
-          logger('crosswalk', srcfield, destfield, "assuming processed", JSON.stringify(src[srcfield]));
-          dest[destfield] = src[srcfield]
+          if( "handler" in spec ) {
+            if( !(spec["handler"] in handlers) ) {
+              logger('crosswalk', srcfield, destfield, "unknown handler", spec["handler"]);
+            } else {
+              dest[destfield] = handlers[spec["handler"]](logger, src[srcfield]);
+              logger('crosswalk', srcfield, destfield, "handler", JSON.stringify(dest[destfield]));              
+            }
+          } else {
+            logger('crosswalk', srcfield, destfield, "assuming processed", JSON.stringify(src[srcfield]));
+            dest[destfield] = src[srcfield];
+          }
           delete src[srcfield];
         } else {
           logger('crosswalk', srcfield, destfield, "error: type", spec["type"]);
@@ -84,7 +179,7 @@ export function crosswalk(cwjson: Object, original: Object, logger: LogCallback)
     }
   }
 
-  return [ src, dest ];
+  return [ unflat, dest ];
 }
 
 
@@ -253,23 +348,3 @@ function valuemap(spec: Object, srcfield: string, destfield: string, srcval: str
   return "";
 }
 
-
-// todo: repeatable records
-
-// function record(spec: Object, srcfield: string, src: Object, logger: LogCallback): Object {
-//   if( "fields" in spec ) {
-//     var dest = {};
-//     logger("crosswalk", srcfield, "record", "");
-//     for( var subf in spec["fields"] ) {
-//       const srcf = srcfield + '.' + subf;
-//       if( srcf in src ) {
-//         dest[spec["fields"][subf]] = src[srcf];
-//         logger(subf, "subfield", src[srcf]);
-//       } else {
-//         logger(subf, "subfield not found", srcf);
-//       }
-//     }
-//     return dest;
-//   } 
-// }
-  

@@ -64,13 +64,20 @@ async function loadcrosswalk(packagetype: string): Promise<Object|undefined> {
 async function migrate(options: Object): Promise<void> {
   const source = options['source'];
   const dest = options['dest'];
-  const packagetype = options['type'];
+  const source_type = options['type'];
   const outdir = options['outdir'];
 
-  const cw = await loadcrosswalk(packagetype);
+  const cw = await loadcrosswalk(source_type);
   if( ! cw ) {
     return;
   }
+
+  if( source_type !== cw['source_type'] ) {
+    log.error("Source type mismatch: " + source_type + '/' + cw['source_type']);
+    return;
+  }
+
+  const dest_type = cw['dest_type'];
 
   var rbSource, rbDest;
   
@@ -89,20 +96,20 @@ async function migrate(options: Object): Promise<void> {
   }
 
   try {
-    var spinner = new Spinner("Listing records: " + packagetype);
+    var spinner = new Spinner("Listing records: " + source_type);
     spinner.setSpinnerString(17);
     spinner.start();
     rbSource.setProgress(s => spinner.setSpinnerTitle(s));
-    const results = await rbSource.list(packagetype);
+    var results = await rbSource.list(source_type);
+    results = results.splice(0, 1);
     let n = results.length;
-    var errata = [ [ 'oid', 'stage', 'ofield', 'nfield', 'status', 'value' ] ];
+    var report = [ [ 'oid', 'stage', 'ofield', 'nfield', 'status', 'value' ] ];
     for( var i in results ) {
       let md = await rbSource.getRecord(results[i]);
-      // let ds = await rbSource.listDatastreams(results[i]);
-      spinner.setSpinnerTitle(util.format("Crosswalking %d", i));
+      spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
       const oid = md[cw['idfield']];
       const [ mdu, md2 ] = crosswalk(cw, md, ( stage, ofield, nfield, msg, value ) => {
-        errata.push([oid, stage, ofield, nfield, msg, value]);
+        report.push([oid, stage, ofield, nfield, msg, value]);
       });
       if( outdir ) {
         await fs.writeJson(
@@ -119,23 +126,31 @@ async function migrate(options: Object): Promise<void> {
         );
       }
       if( rbDest ) {
-        // add record;
+        try {
+          const noid = await rbDest.createRecord(md2, dest_type);
+          report.push([oid, "create", "", "", "", noid]);
+        } catch(e) {
+          report.push([oid, "create", "", "", "create failed", e]);
+        }
       }
     }
+
     spinner.setSpinnerTitle("Done.");
     spinner.stop();
     console.log("\n");
-    await writeerrata(outdir, errata);
+    await writereport(outdir, report);
   } catch (e) {
     log.error("Migration error:" + e);
+    var stack = e.stack;
+    log.error(stack);
   }
   
 }
 
 
-async function writeerrata(outdir: string, errata: Object):Promise<void> {
-  const csvfn = path.join(outdir, "errata.csv");
-  const csvstr = stringify(errata);
+async function writereport(outdir: string, report: Object):Promise<void> {
+  const csvfn = path.join(outdir, "report.csv");
+  const csvstr = stringify(report);
   await fs.outputFile(csvfn, csvstr);
 }
 

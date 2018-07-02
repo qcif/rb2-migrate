@@ -1,7 +1,7 @@
 {
   "idfield": "oid",
-  "source": "dmpt",
-  "dest": "rdmp",
+  "source_type": "dmpt",
+  "dest_type": "rdmp",
   "required": [
     "title",
     "description",
@@ -61,18 +61,21 @@
     "dc:subject.anzsrc:for": {
       "name": "_",
       "type": "record",
+      "handler": "for_seo",
       "repeatable": 1,
       "fields": {
-        "skos:prefLabel": "FIXME",
+        "skos:prefLabel": "skos:prefLabel",
         "rdf:resource": "rdf:resource"
       }
     },
+
     "dc:subject.anzsrc:seo": {
       "name": "_",
       "type": "record",
+      "handler": "for_seo",
       "repeatable": 1,
       "fields": {
-        "skos:prefLabel": "FIXME",
+        "skos:prefLabel": "skos:prefLabel",
         "rdf:resource": "rdf:resource"
       }
     },
@@ -81,6 +84,7 @@
     "locrel:rth.foaf:Person": {
       "name": "contributor_ci",
       "type": "record",
+      "handler": "fnci",
       "fields": {
         "dc:identifier": "dc_identifier",
         "foaf:title": "dc_title",
@@ -92,6 +96,7 @@
     "locrel:prc.foaf:Person": {
       "name": "contributor_data_manager",
       "type": "record",
+      "handler": "data_manager",
       "fields": {
         "dc:identifier": "dc_identifier",
         "foaf:title": "dc_title",
@@ -103,6 +108,7 @@
     "locrel:clb.foaf:Person": {
       "name": "contributors",
       "type": "record",
+      "handler": "contributor",
       "repeatable": 1,
       "fields": {
         "person.dc:identifier": "dc_identifier",
@@ -113,8 +119,9 @@
       }
     },
     "swrc:supervisor.foaf:Person": {
-      "name": "contributor_supervisor",
+      "name": "supervisor",
       "type": "record",
+      "handler": "supervisor",
       "fields": {
         "dc:identifier": "dc_identifier",
         "foaf:title": "dc_title",

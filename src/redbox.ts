@@ -106,20 +106,23 @@ abstract class BaseRedbox {
   
   async apipost(path: string, payload: Object, params?: Object): Promise<Object|undefined> {
     let url = path;
+    let config = {};
     if( url[0] !== '/' ) {
       url = '/' + url;
     }
     try {
-      let config = {};
       if( params ) {
-	config["params"] = params;
+        config["params"] = params;
       }
       let response = await this.ai.post(url, payload, config);
       if( response.status >= 200 && response.status < 300 ) {
-	return response.data;
+        return response.data;
       }
     } catch ( e ) {
       console.log("Post error " + String(e));
+      console.log("URL: " + url);
+      console.log("payload: " + JSON.stringify(payload));
+      console.log("config:" + JSON.stringify(config));
       return undefined;
     }
   }

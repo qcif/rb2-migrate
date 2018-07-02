@@ -8,6 +8,7 @@
     "src/test.ts",  
     "src/create.ts",
     "src/crosswalk.ts",
-    "src/testlogs.ts"
+    "src/testlogs.ts",
+    "src/genealogy.ts"
   ]
 }
