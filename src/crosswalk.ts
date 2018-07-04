@@ -327,11 +327,23 @@ function trfield(cf: string, old: string): string {
     f = cf['name'];
   }
   if( f === "_" ) {
-    return old.replace('.', '_');
+    f = old.replace(/\./g, '_');
+    return f;
   } else {
     return f;
   }
 }
+
+export function checkdots(js: Object): boolean {
+  for( var key in js ) {
+    if( key.match(/\./) ) {
+      console.log("Bad key: " + key);
+      return false;
+    }
+  }
+  return true;
+}
+
       
 
 function valuemap(spec: Object, srcfield: string, destfield: string, srcval: string, logger: LogCallback): string {

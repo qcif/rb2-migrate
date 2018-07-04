@@ -28,6 +28,7 @@ export interface Redbox {
   info(): Promise<Object>;
   list(oid: string, start?:number ): Promise<string[]>;
   createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined>;
+  // deleteRecord(oid: string): Promise<bool>;
   getRecord(oid: string): Promise<Object|undefined>;
   getRecordMetadata(oid: string): Promise<Object|undefined>;
   updateRecordMetadata(oid: string, metadata: Object): Promise<Object|undefined>;
@@ -121,11 +122,29 @@ abstract class BaseRedbox {
     } catch ( e ) {
       console.log("Post error " + String(e));
       console.log("URL: " + url);
-      console.log("payload: " + JSON.stringify(payload));
+      console.log("payload: " + JSON.stringify(payload).slice(0, 40));
       console.log("config:" + JSON.stringify(config));
       return undefined;
     }
   }
+
+  // async apidelete(path: string): Promise<Object> {
+  //   let url = path;
+  //   if( url[0] !== '/' ) {
+  //     url = '/' + url;
+  //   }
+  //   try {
+  //     let response = await this.ai.delete(url);
+  //     if( response.status >= 200 && response.status < 300 ) {
+  //       return response.data;
+  //     }
+  //   } catch ( e ) {
+  //     console.log("Delete error " + String(e));
+  //     console.log("URL: " + url);
+  //     return undefined;
+  //   }
+
+  // }
 
 }
 
@@ -207,6 +226,17 @@ export class Redbox1 extends BaseRedbox implements Redbox {
       return undefined;
     }
   }
+
+  // async deleteRecord(oid: string): Promise<bool> {
+  //   let url = '/object/' + oid + '/delete';
+  //   let resp = await this.apidelete(url);
+  //   if( resp ) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
 
   /* TODO - updated record */
 
@@ -363,6 +393,18 @@ export class Redbox2 extends BaseRedbox implements Redbox {
       return undefined;
     }
   }
+
+
+  // async deleteRecord(oid: string): Promise<bool> {
+  //   let url = '/object/' + oid + '/delete';
+  //   let resp = await this.apidelete(url);
+  //   if( resp ) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
 
   /* TODO - updated record */
 

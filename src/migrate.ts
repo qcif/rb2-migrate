@@ -4,7 +4,7 @@
 
 import axios from 'axios';
 import { Redbox, Redbox1, Redbox2 } from './redbox';
-import { crosswalk } from './crosswalk';
+import { crosswalk, checkdots } from './crosswalk';
 import { ArgumentParser } from 'argparse';
 const fs = require('fs-extra');
 const config = require('config');
@@ -66,6 +66,7 @@ async function migrate(options: Object): Promise<void> {
   const dest = options['dest'];
   const source_type = options['type'];
   const outdir = options['outdir'];
+  const limit = options['number'];
 
   const cw = await loadcrosswalk(source_type);
   if( ! cw ) {
@@ -101,7 +102,9 @@ async function migrate(options: Object): Promise<void> {
     spinner.start();
     rbSource.setProgress(s => spinner.setSpinnerTitle(s));
     var results = await rbSource.list(source_type);
-    results = results.splice(0, 1);
+    if( limit && parseInt(limit) > 0 ) {
+      results = results.splice(0, limit);
+    }
     let n = results.length;
     var report = [ [ 'oid', 'stage', 'ofield', 'nfield', 'status', 'value' ] ];
     for( var i in results ) {
@@ -126,11 +129,15 @@ async function migrate(options: Object): Promise<void> {
         );
       }
       if( rbDest ) {
-        try {
-          const noid = await rbDest.createRecord(md2, dest_type);
-          report.push([oid, "create", "", "", "", noid]);
-        } catch(e) {
-          report.push([oid, "create", "", "", "create failed", e]);
+        if( checkdots(md2) ) {
+          try { 
+            const noid = await rbDest.createRecord(md2, dest_type);
+            report.push([oid, "create", "", "", "", noid]);
+          } catch(e) {
+            report.push([oid, "create", "", "", "create failed", e]);
+          }
+        } else {
+          report.push([oid, "failed", "", "", "bad json", ""]);
         }
       }
     }
@@ -200,6 +207,14 @@ parser.addArgument(
   [ '-o', '--outdir' ],
   {
     help: "Write diagnostics and logs to this directory.",
+    defaultValue: null
+  }
+);
+
+parser.addArgument(
+  [ '-n', '--number'],
+  {
+    help: "Limit migration to first n records",
     defaultValue: null
   }
 );
