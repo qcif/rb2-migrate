@@ -8,20 +8,28 @@ export type LogCallback = (stage: string, field: string, nfield: string, msg: st
 
 export interface Handler {
 
-	logger LogCallback;
-	id: string;
-	crosswalk(orig: Object):Object; 
+	logger: LogCallback;
+	params: Object; 
 
+	crosswalk(orig: Object): Object; 
 
 }
 
-export class HandlerBase {
+export abstract class HandlerBase {
 
-	constructor(l: LogCallback, id: string) {
+	logger: LogCallback;
+	params: Object; 
+
+	constructor(l: LogCallback, p?: Object) {
 		this.logger = l;
-		this.id = id;
+		if( p ) {
+			this.params = p;
+		} else {
+			this.params = {};
+		}
 	}
 
+	abstract crosswalk(orig: object): Object;
 
 }
 
@@ -29,12 +37,13 @@ export class HandlerBase {
 const hreg: { [ id: string ]: string } = {};
 
 
-export function register_handler(id: string, classname: string) {
-	hreg{id} = classname;
-}
+// export function register_handler(id: string, classname: string) {
+// 	hreg{id} = classname;
+// }
 
-export function make_handler(id: string, l: LogCallback): Handler {
-	if( id in hreg ) {
-		return new 
-	}
-}
+// export function make_handler(id: string, l: LogCallback): Handler {
+// 	if( id in hreg ) {
+// 		const classname = hreg[id];
+		
+// 	}
+// }

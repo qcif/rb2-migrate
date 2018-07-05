@@ -46,8 +46,6 @@ abstract class BaseRedbox {
   ai: AxiosInstance;
   progress: ((message: string) => void)|undefined;
   
-  /* using a custom serialiser because axios' default 
-     URL-encodes the solr query string for search */
   
   constructor(cf: Object) {
     this.baseURL = cf['baseURL'];
@@ -56,6 +54,9 @@ abstract class BaseRedbox {
   }
 
   /* this is separate so Redbox2 can hack baseURL */
+
+  /* using a custom serialiser because axios' default 
+     URL-encodes the solr query string for search */
   
   initApiClient() {
     this.ai = axios.create({

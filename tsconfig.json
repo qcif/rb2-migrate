@@ -2,13 +2,7 @@
   "compilerOptions": {
     "lib": [ "ES2015" ]
   },
-  "files": [
-    "src/redbox.ts",
-    "src/migrate.ts",
-    "src/test.ts",  
-    "src/create.ts",
-    "src/crosswalk.ts",
-    "src/testlogs.ts",
-    "src/genealogy.ts"
+  "include": [
+    "src/**/*" 
   ]
 }
