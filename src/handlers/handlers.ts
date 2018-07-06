@@ -1,5 +1,6 @@
 
-// Pluggable field handlers
+// Pluggable field handlers (see ./index.ts in this directory for
+// more info)
 
 import { LogCallback } from '../types';
 
@@ -8,7 +9,10 @@ export interface Handler {
 	logger: LogCallback;
 	params: Object; 
 
-	crosswalk(orig: Object): Object; 
+	// note: might need crosswalk to be async if it needs to do a lookup
+	// somewhere
+
+	crosswalk(orig: Object): Object|undefined; 
 
 }
 
@@ -29,18 +33,3 @@ export abstract class HandlerBase {
 	abstract crosswalk(orig: object): Object;
 
 }
-
-
-const hreg: { [ id: string ]: string } = {};
-
-
-// export function register_handler(id: string, classname: string) {
-// 	hreg{id} = classname;
-// }
-
-// export function make_handler(id: string, l: LogCallback): Handler {
-// 	if( id in hreg ) {
-// 		const classname = hreg[id];
-		
-// 	}
-// }

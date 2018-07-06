@@ -6,16 +6,16 @@ const FOR_SEO_DELIM = ' - ';
 
 export class ForSeo extends HandlerBase implements Handler {
 
-  crosswalk(o:Object): Object {
+  crosswalk(o:Object): Object|undefined {
     const url = o['rdf:resource']; 
     const name = o['skos:prefLabel'];
     if( !url ) {
-      this.logger("handler", "for_seo", "", "Empty rdf:resource", "");
-      return {};
+      this.logger("handler", "ForSeo", "", "Empty rdf:resource", "");
+      return undefined;
     } 
     if( !name ) {
-      this.logger("handler", "for_seo", "", "Empty skos:prefLabel", "");
-      return {};
+      this.logger("handler", "ForSeo", "", "Empty skos:prefLabel", "");
+      return undefined;
     }
     const m = url.match(FOR_SEO_RE);
     if( m ) {

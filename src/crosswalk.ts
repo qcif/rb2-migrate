@@ -22,47 +22,20 @@ import * as Handlers from './handlers/';
 
 
 
-function make_handler(logger:LogCallback, spec:Object): Handlers.Handler|undefined {
+function get_handler(logger:LogCallback, spec:Object): Handlers.Handler|undefined {
   const className = spec['handler'];
   if( className in Handlers ) {
     const cl = Handlers[className];
     var instance = new cl(logger, spec['handler_params']);
     return instance;
   } else {
-    console.log("class not found " + className);
     return undefined;
   }
 }
 
 
 
-export function run_handler(logger: LogCallback, spec: Object, original: any): any {
-  const h = make_handler(logger, spec);
-  if( h ) {
-    if( spec['repeatable'] ) {
-      return original.map((o) => h.crosswalk(o));
-    } else {
-      return h.crosswalk(original);
-    }
-  } else {
-    return undefined;
-  }
-}
-
-
-
-function notempty(x) {
-  if( !x || x === "null" ) {
-    return false;
-  } else {
-    return true;
- }
-}
-
-
-
-
-export function crosswalk(cwjson: Object, original: Object, logger: LogCallback):Object[] {
+export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Object[] {
   var dest = {};
   const idfield = cwjson['idfield'];
   const oid = original[idfield];
@@ -96,11 +69,19 @@ export function crosswalk(cwjson: Object, original: Object, logger: LogCallback)
           delete src[srcfield];
         } else if( spec["type"] === "record" ) {
           if( "handler" in spec ) {
-            dest[destfield] = run_handler(logger, spec, src[srcfield]);
-            if( dest[destfield] ) {
-              logger('crosswalk', srcfield, destfield, "handler", JSON.stringify(dest[destfield]));
+            const h = get_handler(logger, spec);
+            if( h ) {
+              if( spec['repeatable'] ) {
+                if( Array.isArray(src[srcfield]) ) {
+                  dest[destfield] = src[srcfield].map((o) => h.crosswalk(o));
+                } else {
+                  logger('crosswalk', srcfield, destfield, "error: non-repeatable", JSON.stringify(src[srcfield]));
+                }
+              } else { 
+                dest[destfield] = h.crosswalk(src[srcfield]);
+              }
             } else {
-              logger('crosswalk', srcfield, destfield, "error: unknown handler", spec["handler"]);
+              logger('crosswalk', srcfield, destfield, "error: handler", spec["handler"])
             }
           } else {
             logger('crosswalk', srcfield, destfield, "assuming processed", JSON.stringify(src[srcfield]));
@@ -175,7 +156,9 @@ export function crosswalk(cwjson: Object, original: Object, logger: LogCallback)
    }
 
 
-   Returns an object with just the new record fields
+   Returns an object with the old record fields deleted and the new record
+   fields added. Fields which aren't record fields are passed through to the
+   output unchanged.
 
 
 */ 
@@ -253,6 +236,19 @@ function unflatten(cwjson: Object, original: Object, logger: LogCallback): Objec
   }
   return output;
 }
+
+
+function notempty(x) {
+  if( !x || x === "null" ) {
+    return false;
+  } else {
+    return true;
+ }
+}
+
+
+
+
 
 /* pulls all of the specifications for record fields from the
    crosswalk spec */

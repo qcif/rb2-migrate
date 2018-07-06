@@ -4,7 +4,7 @@ const util = require('util');
 
 export class Person extends HandlerBase implements Handler {
 
-  crosswalk(o: Object): Object {
+  crosswalk(o: Object): Object|undefined {
     const fullname = util.format("%s %s", o["foaf:givenName"], o["foaf:familyName"]);
     const honorific = o["foaf:title"];
     const output = {
@@ -15,8 +15,16 @@ export class Person extends HandlerBase implements Handler {
       username: "",
       role: this.params["role"]
     };
-    this.logger('handler', "person", this.params["role"], "succeeded", JSON.stringify(output));
-    return output;
+    if( o["foaf:familyName"] ) {
+      this.logger('handler', "Person", this.params["role"], "succeeded", JSON.stringify(output));
+      if( !o["dc:identifier"] ) {
+        this.logger('handler', "Person", this.params["role"], "warning", "No dc:identifier");
+      }
+      return output;
+    } else {
+      this.logger('handler', "Person", this.params["role"], "missing", "No foaf:familyName")
+    }
+    return undefined;
   }
 }
 
