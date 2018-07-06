@@ -1,8 +1,8 @@
-import { Handler, HandlerBase, LogCallback } from './handlers';
+import { Handler, HandlerBase } from './handlers';
+
 const util = require('util');
 
-
-export class PeopleHandler extends HandlerBase implements Handler {
+export class Person extends HandlerBase implements Handler {
 
   crosswalk(o: Object): Object {
     const fullname = util.format("%s %s", o["foaf:givenName"], o["foaf:familyName"]);

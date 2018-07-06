@@ -61,7 +61,7 @@
     "dc:subject.anzsrc:for": {
       "name": "_",
       "type": "record",
-      "handler": "for_seo",
+      "handler": "ForSeo",
       "repeatable": 1,
       "fields": {
         "skos:prefLabel": "skos:prefLabel",
@@ -72,7 +72,7 @@
     "dc:subject.anzsrc:seo": {
       "name": "_",
       "type": "record",
-      "handler": "for_seo",
+      "handler": "ForSeo",
       "repeatable": 1,
       "fields": {
         "skos:prefLabel": "skos:prefLabel",
@@ -84,7 +84,7 @@
     "locrel:rth.foaf:Person": {
       "name": "contributor_ci",
       "type": "record",
-      "handler": "person",
+      "handler": "Person",
       "handler_params": {
         "role": "Chief Investigator"
       },
@@ -99,7 +99,7 @@
     "locrel:prc.foaf:Person": {
       "name": "contributor_data_manager",
       "type": "record",
-      "handler": "person",
+      "handler": "Person",
       "handler_params": {
         "role": "Data Manager"
       },
@@ -114,7 +114,7 @@
     "locrel:clb.foaf:Person": {
       "name": "contributors",
       "type": "record",
-      "handler": "person",
+      "handler": "Person",
       "handler_params": {
         "role": "Contributor"
       },
@@ -130,7 +130,7 @@
     "swrc:supervisor.foaf:Person": {
       "name": "supervisor",
       "type": "record",
-      "handler": "person",
+      "handler": "Person",
       "handler_params": {
         "role": "Supervisor"
       },

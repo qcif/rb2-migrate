@@ -1,11 +1,10 @@
 
-import { Handler, HandlerBase, LogCallback } from './handlers';
-
+import { Handler, HandlerBase } from './handlers';
 
 const FOR_SEO_RE = /http:\/\/purl.org\/asc\/1297.0\/2008\/(seo|for)\/(\d+)$/;
 const FOR_SEO_DELIM = ' - ';
 
-export class ForHandler extends HandlerBase implements Handler {
+export class ForSeo extends HandlerBase implements Handler {
 
   crosswalk(o:Object): Object {
     const url = o['rdf:resource']; 
@@ -48,8 +47,9 @@ export class ForHandler extends HandlerBase implements Handler {
     }
     return g;
   }
-
 }
+
+
 
 
 

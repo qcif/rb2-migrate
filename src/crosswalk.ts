@@ -16,59 +16,27 @@
 const fs = require('fs-extra');
 const util = require('util');
 
-import { LogCallback, Handler } from './handlers/handlers';
-import { ForHandler } from './handlers/for_seo_codes';
-import { PeopleHandler } from './handlers/people';
+import { LogCallback } from './types';
 
-function notempty(x) {
-  if( !x || x === "null" ) {
-    return false;
+import * as Handlers from './handlers/';
+
+
+
+function make_handler(logger:LogCallback, spec:Object): Handlers.Handler|undefined {
+  const className = spec['handler'];
+  if( className in Handlers ) {
+    const cl = Handlers[className];
+    var instance = new cl(logger, spec['handler_params']);
+    return instance;
   } else {
-    return true;
- }
-}
-
-
-// note that there's one handle_person function which gets called from four
-// different items in the handlers dict so that they can handle repeatable
-// people and inject their role
-
-// const handlers = {
-//   'for_seo': function(logger: LogCallback, originals: Object[]): Object[] {
-//     return originals.map((f) => handle_for_seo(logger, f));
-//   },
-//   'fnci': function(logger: LogCallback, original: Object): Object {
-//     return handle_person(logger, "Chief Investigator", original)
-//   },
-//   'data_manager': function(logger: LogCallback, original: Object): Object {
-//     return handle_person(logger, "Data Manager", original)
-//   },
-//   'contributors': function(logger: LogCallback, original: Object[]): Object[] {
-//     return original.map((p) => handle_person(logger, "Contributor", p))
-//   },
-//   'supervisor': function(logger: LogCallback, original: Object): Object {
-//     return handle_person(logger, "Supervisor", original)
-//   },
-// };
-
-
-
-// this needs to look up handler classes in a registry and create the
-// right ones
-
-function make_handler(logger:LogCallback, spec:Object): Handler|undefined {
-  if( spec['handler'] == 'for_seo' ) {
-    return new ForHandler(logger, spec['handler_params']);
+    console.log("class not found " + className);
+    return undefined;
   }
-  if( spec['handler'] == 'person' ) {
-    return new PeopleHandler(logger, spec['handler_params']);
-  }
-  return undefined;
 }
 
 
 
-function run_handler(logger: LogCallback, spec: Object, original: any): any {
+export function run_handler(logger: LogCallback, spec: Object, original: any): any {
   const h = make_handler(logger, spec);
   if( h ) {
     if( spec['repeatable'] ) {
@@ -80,6 +48,17 @@ function run_handler(logger: LogCallback, spec: Object, original: any): any {
     return undefined;
   }
 }
+
+
+
+function notempty(x) {
+  if( !x || x === "null" ) {
+    return false;
+  } else {
+    return true;
+ }
+}
+
 
 
 
