@@ -1,0 +1,29 @@
+{
+  "servers": {
+    "Test1_9": {
+      "version": "Redbox1",
+      "baseURL": "https://redbox.organisation.org/redbox/api/v1",
+      "apiKey": "#############",
+      "packageTypes": [ "dmpt", "dataset", "self-submission" ]
+    },
+    "Test2_0": {
+      "version": "Redbox2",
+      "baseURL": "http://redbox2.orginisation.org/",
+      "apiKey": "#############",
+      "packageTypes": [ "rdmp", "dataRecord", "workspace" ],
+      "branding": "default",
+      "portal": "rdmp"
+    }
+  },
+  "crosswalks": "./crosswalks/",
+  "logs": [
+    {
+      "level": "error"
+    },
+    {
+      "filename": "./logs/debug.log",
+      "level": "error"
+    }
+  ]
+}
+                                                                      
