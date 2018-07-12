@@ -168,9 +168,37 @@ your own.
 
 ## Handlers
 
+A Handler is a TypeScript class which implements the Handler interface
+defined in src/handlers/handlers.ts.  Copying the examples provided is
+probable the best way to write one.
+
+Handler source files should be added to the src/handlers directory, and 
+also need to be exported from that directory's index.ts file, like so:
+
+    export { ForSeo } from './ForSeo';
+    export { Person } from './Person';
+    export { FundingBody } from './FundingBody';
+    export { MyHandler } from './MyHandler';
+
+The class name of the handler has to match the value of the "handler"
+field in the crosswalk configuration.
+
+Handlers are called on record values *after* any mapping of fields 
+using the "field" object has been applied.  For an example of how this
+works, compare the four fields which use the Person handler to
+crosswalk FNCIs, data managers, collaborators and supervisors from 
+ReDBOx 1.9. The subfields for these records aren't the same in RB1.9,
+so the default crosswalk maps them onto a standard record structure
+before they are processed by the Person handler.
 
 ### ForSeo
 
+A handler to map FOR and SEO codes from ReDBox 1.9 to ReDBox 2.0.
+
 ### Person
 
+A handler to map Person values from RB1.9 to RB2.0
+
 ### FundingBody
+
+A handler to map funding bodies from RB1.9 to RB2.0.
