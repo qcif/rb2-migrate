@@ -7,7 +7,7 @@ import { LogCallback } from '../types';
 export interface Handler {
 
 	logger: LogCallback;
-	params: Object; 
+	config: Object; 
 
 	// note: might need crosswalk to be async if it needs to do a lookup
 	// somewhere
@@ -16,18 +16,17 @@ export interface Handler {
 
 }
 
+// 'config' is the clause invoking this handler in the crosswalk/recordType.json
+// file, so that handlers can have parameters. For an example, see Person.ts
+
 export abstract class HandlerBase {
 
 	logger: LogCallback;
-	params: Object; 
+	config: Object; 
 
-	constructor(l: LogCallback, p?: Object) {
+	constructor(l: LogCallback, c: Object) {
 		this.logger = l;
-		if( p ) {
-			this.params = p;
-		} else {
-			this.params = {};
-		}
+		this.config = c;
 	}
 
 	abstract crosswalk(orig: object): Object;

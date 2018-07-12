@@ -39,6 +39,7 @@
       "name": "_",
       "type": "record",
       "repeatable": 1,
+      "handler": "FundingBody",
       "fields": {
         "dc:identifier": "dc_identifier",
         "skos:prefLabel": "dc_title"
@@ -50,8 +51,8 @@
       "repeatable": 1,
       "fields": {
         "warning": "mint_lookup",
-        "dc:identifier": "dc_identifier",
-        "skos.prefLabel": "dc_title",
+        "dc:identifier": "dc:identifier",
+        "skos.prefLabel": "dc:title",
         "redbox.grantNumber": "grant_number"
       }
     },
@@ -85,12 +86,10 @@
       "name": "contributor_ci",
       "type": "record",
       "handler": "Person",
-      "handler_params": {
-        "role": "Chief Investigator"
-      },
+      "role": "Chief Investigator",
       "fields": {
-        "dc:identifier": "dc_identifier",
-        "foaf:title": "dc_title",
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
         "foaf:email": "email",
         "foaf:givenName": "givenname",
         "foaf:familyName": "familyname"
@@ -100,12 +99,10 @@
       "name": "contributor_data_manager",
       "type": "record",
       "handler": "Person",
-      "handler_params": {
-        "role": "Data Manager"
-      },
+      "role": "Data Manager",
       "fields": {
-        "dc:identifier": "dc_identifier",
-        "foaf:title": "dc_title",
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
         "foaf:email": "email",
         "foaf:givenName": "givenname",
         "foaf:familyName": "familyname"
@@ -115,28 +112,24 @@
       "name": "contributors",
       "type": "record",
       "handler": "Person",
-      "handler_params": {
-        "role": "Contributor"
-      },
+      "role": "Contributor",
       "repeatable": 1,
       "fields": {
-        "person.dc:identifier": "dc_identifier",
-        "person.foaf:title": "dc_title",
+        "person.dc:identifier": "dc:identifier",
+        "person.foaf:title": "honorific",
         "person.foaf:email": "email",
         "person.foaf:givenName": "givenname",
         "person.foaf:familyName": "familyname"
       }
     },
     "swrc:supervisor.foaf:Person": {
-      "name": "supervisor",
+      "name": "contributor_supervisor",
       "type": "record",
       "handler": "Person",
-      "handler_params": {
-        "role": "Supervisor"
-      },
+      "role": "Supervisor",
       "fields": {
-        "dc:identifier": "dc_identifier",
-        "foaf:title": "dc_title",
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
         "foaf:email": "email",
         "foaf:givenName": "givenname",
         "foaf:familyName": "familyname"

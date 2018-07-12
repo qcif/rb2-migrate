@@ -15,6 +15,7 @@
 
 const fs = require('fs-extra');
 const util = require('util');
+const _ = require('lodash');
 
 import { LogCallback } from './types';
 
@@ -26,11 +27,30 @@ function get_handler(logger:LogCallback, spec:Object): Handlers.Handler|undefine
   const className = spec['handler'];
   if( className in Handlers ) {
     const cl = Handlers[className];
-    var instance = new cl(logger, spec['handler_params']);
+    var instance = new cl(logger, spec);
     return instance;
   } else {
     return undefined;
   }
+}
+
+// apply_handler - run a handler and if the result is undefined, replace it with
+// {}
+
+function apply_handler(h: Handlers.Handler, original:Object): Object {
+  const out = h.crosswalk(original);
+  if( _.isUndefined(out) ) {
+    return {};
+  } else {
+    return out;
+  }
+}
+
+// repeat_handler - map a handler over multiple inputs and collapse any undefined
+// results
+
+function repeat_handler(h: Handlers.Handler, originals: Object[]):Object[] {
+  return originals.map((o) => h.crosswalk(o)).filter((o) => o)
 }
 
 
@@ -73,12 +93,13 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
             if( h ) {
               if( spec['repeatable'] ) {
                 if( Array.isArray(src[srcfield]) ) {
-                  dest[destfield] = src[srcfield].map((o) => h.crosswalk(o));
+                  dest[destfield] = repeat_handler(h, src[srcfield]);
                 } else {
-                  logger('crosswalk', srcfield, destfield, "error: non-repeatable", JSON.stringify(src[srcfield]));
+                  logger('crosswalk', srcfield, destfield, "error: repeatable handler with non-array input", JSON.stringify(src[srcfield]));
+                  dest[destfield] = [];
                 }
               } else { 
-                dest[destfield] = h.crosswalk(src[srcfield]);
+                dest[destfield] = apply_handler(h, src[srcfield]);
               }
             } else {
               logger('crosswalk', srcfield, destfield, "error: handler", spec["handler"])
@@ -155,6 +176,8 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
        [..]
    }
 
+  keys are remapped based on the fields{} dict in the crosswalk file
+
 
    Returns an object with the old record fields deleted and the new record
    fields added. Fields which aren't record fields are passed through to the
@@ -196,14 +219,15 @@ function unflatten(cwjson: Object, original: Object, logger: LogCallback): Objec
               if( !(sfield in spec['fields']) ) {
                 logger("records", field, "", "unknown subfield", sfield);
               } else {
+                const mfield = spec['fields'][sfield];
                 if( !(rfield in output) ) {
                   output[rfield] = [];
                 }
                 if( !(i in output[rfield]) ) {
                   output[rfield][i] = {};
                 }
-                logger("records", field, sfield, "copied", original[field])
-                output[rfield][i][sfield] = original[field];
+                logger("records", field, mfield, "copied", original[field])
+                output[rfield][i][mfield] = original[field];
                 delete output[field];
               }
             }
@@ -216,11 +240,12 @@ function unflatten(cwjson: Object, original: Object, logger: LogCallback): Objec
             if( !(sfield in spec['fields']) ) {
               logger("records", field, "", "unknown subfield", sfield);
             } else {
+              const mfield = spec['fields'][sfield];
               if( !(rfield in output) ) {
                 output[rfield] = {};
               }
-              logger("records", field, sfield, "copied", original[field])
-              output[rfield][sfield] = original[field];
+              logger("records", field, mfield, "copied", original[field])
+              output[rfield][mfield] = original[field];
               delete output[field];
             }
           }

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Redbox, Redbox1, Redbox2 } from './redbox';
 import { crosswalk, checkdots } from './crosswalk';
 import { ArgumentParser } from 'argparse';
+
 const fs = require('fs-extra');
 const config = require('config');
 const util = require('util');
@@ -96,6 +97,11 @@ async function migrate(options: Object): Promise<void> {
     return;
   }
 
+  if( outdir ) {
+    await(fs.ensureDir(path.join(outdir, 'originals')));
+    await(fs.ensureDir(path.join(outdir, 'new')));
+  }
+
   try {
     var spinner = new Spinner("Listing records: " + source_type);
     spinner.setSpinnerString(17);
@@ -114,31 +120,39 @@ async function migrate(options: Object): Promise<void> {
       const [ mdu, md2 ] = crosswalk(cw, md, ( stage, ofield, nfield, msg, value ) => {
         report.push([oid, stage, ofield, nfield, msg, value]);
       });
-      if( outdir ) {
-        await fs.writeJson(
-          path.join(outdir, util.format("%s_orig.json", oid)),
-          md, { spaces: 4 }
-        );
-        await fs.writeJson(
-          path.join(outdir, util.format("%s_unflat.json", oid)),
-          mdu, { spaces: 4 }
-        );
-        await fs.writeJson(
-          path.join(outdir, util.format("%s_new.json", oid)),
-          md2, { spaces: 4 }
-        );
-      }
+      var noid = 'new_' + oid;
       if( rbDest ) {
         if( checkdots(md2) ) {
           try { 
-            const noid = await rbDest.createRecord(md2, dest_type);
-            report.push([oid, "create", "", "", "", noid]);
+            noid = await rbDest.createRecord(md2, dest_type);
+            if( noid ) {
+              report.push([oid, "create", "", "", "", noid]);
+            } else {
+              report.push([oid, "create", "", "", "null noid", ""]);
+            }
           } catch(e) {
             report.push([oid, "create", "", "", "create failed", e]);
           }
         } else {
           report.push([oid, "failed", "", "", "bad json", ""]);
         }
+      }
+      if( outdir ) {
+        await fs.writeJson(
+          path.join(outdir, 'originals', util.format("%s.json", oid)),
+          md, { spaces: 4 }
+        );
+        await fs.writeJson(
+          path.join(outdir, 'originals', util.format("%s_unflat.json", oid)),
+          mdu, { spaces: 4 }
+        );
+        if( !noid ) {
+          noid = '_' + oid;
+        }
+        await fs.writeJson(
+          path.join(outdir, 'new', util.format("%s.json", noid)),
+          md2, { spaces: 4 }
+        );
       }
     }
 
