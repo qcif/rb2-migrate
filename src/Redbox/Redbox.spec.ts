@@ -3,8 +3,12 @@
 //
 // Tests for Redbox API
 
+import { Redbox } from './Redbox';
+import { Redbox1 } from './Redbox1';
+import { Redbox2 } from './Redbox2';
 
-import { Redbox, Redbox1, Redbox2 } from './redbox';
+
+
 import { expect } from 'chai';
 const path = require('path');
 
@@ -26,12 +30,14 @@ const FIXTURES = {
     'Test2_0': {
       'type': 'rdmp',
       'data': './test/rdmp.json',
-      'diag': './test/diag/Test2_0'
+      'diag': './test/diag/Test2_0',
+      'user': 'user1'
     },
     'Test1_9': {
       'type': 'dmpt',
       'data': './test/rdmp.json',
-      'diag': './test/diag/Test1_9'
+      'diag': './test/diag/Test1_9',
+      'user': 'user1'
     },
   },
   'image': './test/image.jpg',
@@ -89,6 +95,22 @@ describe('Redbox', function() {
       const md1 = JSON.parse(mdj);
       expect(md2).to.deep.equal(md1);
     });
+
+    it('can set view permissions in ' + server, async () => {
+      const ptype = FIXTURES['rdmp'][server]['type'];
+      const mdj = await fs.readFile(FIXTURES['rdmp'][server]['data']);
+      const oid = await rb.createRecord(mdj, ptype);
+
+      const resp = await rb.grantPermission(oid, FIXTURES['rdmp'][server]['user']);
+
+      console.log("grantPermission respose " + JSON.stringify(resp));
+
+      const perms = await rb.getPermissions(oid);
+
+      console.log("getPermissions respose " + JSON.stringify(perms));
+
+
+    })
     
     // Note: rb.writeObjectDatastream needs to set the
     // content-type header to match the payload, I think.
