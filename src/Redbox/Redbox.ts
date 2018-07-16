@@ -98,6 +98,7 @@ export abstract class BaseRedbox {
       if( params ) {
 	config["params"] = params;
       }
+      console.log("apiget " + url);
       let response = await this.ai.get(url, config);
       if( response.status === 200 ) {
 	return response.data;

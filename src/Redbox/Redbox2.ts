@@ -142,7 +142,8 @@ export class Redbox2 extends BaseRedbox implements Redbox {
 
   async getPermissions(oid): Promise<Object|undefined> {
     try {
-      let response = await this.apiget('api/records/permissions' + oid);
+      let response = await this.apiget('api/records/permissions/' + oid);
+      console.log("getPermissions = " + JSON.stringify(response));
       return response;
     } catch(e) {
       console.log("Errror " + e);

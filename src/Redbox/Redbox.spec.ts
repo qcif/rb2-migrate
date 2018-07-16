@@ -14,6 +14,7 @@ const path = require('path');
 
 const fs = require('fs-extra');
 const config = require('config');
+const _ = require('lodash');
 
 const SERVERS = [ 'Test2_0' ];
 
@@ -31,13 +32,25 @@ const FIXTURES = {
       'type': 'rdmp',
       'data': './test/rdmp.json',
       'diag': './test/diag/Test2_0',
-      'user': 'user1'
+      'apiuser': 'admin',
+      'user': 'user1',
+      'permissions': {
+        'viewRoles' : [ 'Admin', 'Librarians' ],
+        'editRoles' : [ 'Admin', 'Librarians' ],
+        'view' : [ 'admin' ],
+        'edit' : [ 'admin' ]
+      }
     },
     'Test1_9': {
       'type': 'dmpt',
       'data': './test/rdmp.json',
       'diag': './test/diag/Test1_9',
-      'user': 'user1'
+      'apiuser': 'admin',
+      'user': 'user1',
+      'permissions': {
+        'view' : [ 'admin' ],
+        'edit' : [ 'admin' ]
+      }
     },
   },
   'image': './test/image.jpg',
@@ -53,6 +66,12 @@ function rbconnect(server: string):Redbox {
   } else {
     return new Redbox2(cf);
   }
+}
+
+async function makerecord(rb:Redbox, server: string): Promise<string> {
+  const ptype = FIXTURES['rdmp'][server]['type'];
+  const mdj = await fs.readFile(FIXTURES['rdmp'][server]['data']);
+  return await rb.createRecord(mdj, ptype);
 }
 
 
@@ -81,38 +100,65 @@ describe('Redbox', function() {
       
     });
     
-    it('can create a record in ' + server, async () => {
-      const ptype = FIXTURES['rdmp'][server]['type'];
-      const mdj = await fs.readFile(FIXTURES['rdmp'][server]['data']);
-      const oid = await rb.createRecord(mdj, ptype);
+    it.skip('can create a record in ' + server, async () => {
+      const oid = await makerecord(rb, server);
       expect(oid).to.not.be.null;
+
       var md2 = await rb.getRecord(oid);
       expect(md2).to.not.be.null;
 
       const mdf2 = path.join(FIXTURES['rdmp'][server]['diag'], oid + '.out.json');
       await fs.writeJson(mdf2, md2);
       console.log("Wrote retrieved JSON to " + mdf2); 
+      const mdj = await fs.readFile(FIXTURES['rdmp'][server]['data']);
       const md1 = JSON.parse(mdj);
       expect(md2).to.deep.equal(md1);
     });
 
+    it('can read permissions from ' + server, async () => {
+      const oid = await makerecord(rb, server);
+
+      const perms = await rb.getPermissions(oid);
+      expect(perms).to.not.be.undefined;
+
+      expect(perms).to.deep.equal(FIXTURES['rdmp'][server]['permissions']);
+    })
+
     it('can set view permissions in ' + server, async () => {
-      const ptype = FIXTURES['rdmp'][server]['type'];
-      const mdj = await fs.readFile(FIXTURES['rdmp'][server]['data']);
-      const oid = await rb.createRecord(mdj, ptype);
+      const oid = await makerecord(rb, server);
+
+      const perms1 = await rb.getPermissions(oid);
+      expect(perms1).to.not.be.undefined;
 
       const resp = await rb.grantPermission(oid, 'view', {
         'users': [ FIXTURES['rdmp'][server]['user'] ]
       });
 
-      console.log("grantPermission response " + JSON.stringify(resp));
+      var nperms = _.cloneDeep(FIXTURES['rdmp'][server]['permissions']);
+      console.log(" nperms = " + JSON.stringify(nperms));
+      nperms['view'].push(FIXTURES['rdmp'][server]['user']);
 
-      const perms = await rb.getPermissions(oid);
-
-      console.log("getPermissions response " + JSON.stringify(perms));
-
-
+      expect(resp).to.deep.equal(nperms);
     })
+
+    it('can set edit permissions in ' + server, async () => {
+      const oid = await makerecord(rb, server);
+
+      const perms1 = await rb.getPermissions(oid);
+      expect(perms1).to.not.be.undefined;
+
+      const resp = await rb.grantPermission(oid, 'edit', {
+        'users': [ FIXTURES['rdmp'][server]['user'] ]
+      });
+
+      var nperms = _.cloneDeep(FIXTURES['rdmp'][server]['permissions']);
+      nperms['edit'].push(FIXTURES['rdmp'][server]['user']);
+      console.log(" actual = " + JSON.stringify(resp));
+      console.log(" expect = " + JSON.stringify(nperms));
+
+      expect(resp).to.deep.equal(nperms);
+    })
+
     
     // Note: rb.writeObjectDatastream needs to set the
     // content-type header to match the payload, I think.
