@@ -2,6 +2,9 @@
 import { BaseRedbox, Redbox } from "./Redbox";
 
 
+const util = require('util');
+
+
 /* Redbox v2.0 api */
 
 /* https://redbox-mint.github.io/redbox-portal/additional-documentation/rest-api.html */
@@ -166,10 +169,10 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   */
 
 
-  async grantPermission(oid: string, users: Object, permission: string): Promise<Object|undefined> {
+  async grantPermission(oid: string, permission: string, users: Object): Promise<Object|undefined> {
     try {
       let response = await this.apipost(
-        'api/records/permissions/' + p + '/' + oid,
+        'api/records/permissions/' + permission + '/' + oid,
         users
         );
       return response;
@@ -184,10 +187,10 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   */
 
 
-  async removePermission(oid: string, users: Object, permission: string): Promise<Object|undefined> {
+  async removePermission(oid: string, permission: string, users: Object): Promise<Object|undefined> {
     try {
       let response = await this.apidelete(
-        'api/records/permissions/' + p + '/' + oid,
+        'api/records/permissions/' + permission + '/' + oid,
         users
         );
       return response;

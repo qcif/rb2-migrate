@@ -33,14 +33,14 @@ export interface Redbox {
   getRecordMetadata(oid: string): Promise<Object|undefined>;
   updateRecordMetadata(oid: string, metadata: Object): Promise<Object|undefined>;
   getPermissions(oid: string): Promise<Object|undefined>;
-  grantPermission(oid: string, users:Object, permission: string): Promise<Object|undefined>;
-  removePermission(oid: string, users:Object, permission: string): Promise<Object|undefined>;
+  grantPermission(oid: string, permission: string, users:Object): Promise<Object|undefined>;
+  removePermission(oid: string, permission: string, users:Object): Promise<Object|undefined>;
 }
 
 
 /* base class with the axios http methods and progress indicator */
 
-abstract class BaseRedbox {
+export abstract class BaseRedbox {
 
   baseURL: string;
   apiKey: string;
@@ -132,15 +132,27 @@ abstract class BaseRedbox {
     }
   }
 
-  async apidelete(path: string): Promise<Object> {
+
+// see https://github.com/axios/axios/issues/897#issuecomment-343715381
+// on axios' support for adding a body to a delete request, which
+// it does a bit differently than with a post
+
+  async apidelete(path: string, payload?: Object): Promise<Object> {
     let url = path;
     if( url[0] !== '/' ) {
       url = '/' + url;
     }
     try {
-      let response = await this.ai.delete(url);
-      if( response.status >= 200 && response.status < 300 ) {
-        return response.data;
+      if( payload ) {
+        let response = await this.ai.delete(url, { data: payload });
+        if( response.status >= 200 && response.status < 300 ) {
+          return response.data;
+        }
+      } else {
+        let response = await this.ai.delete(url);
+        if( response.status >= 200 && response.status < 300 ) {
+          return response.data;
+        }
       }
     } catch ( e ) {
       console.log("Delete error " + String(e));

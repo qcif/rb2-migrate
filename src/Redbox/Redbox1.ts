@@ -1,6 +1,7 @@
 
 import { BaseRedbox, Redbox } from "./Redbox";
 
+const util = require('util');
 
 
 /* Redbox v1.9 api */
@@ -154,11 +155,11 @@ export class Redbox1 extends BaseRedbox implements Redbox {
 
   /* the next two are stubs to satisfy the interface */
 
-  async grantPermission(oid: string, users:Object, permission: string): Promise<Object|undefined> {
+  async grantPermission(oid: string, permission: string, users:Object): Promise<Object|undefined> {
     return undefined;
   }
 
-  async removePermission(oid: string, users:Object, permission: string): Promise<Object|undefined> {
+  async removePermission(oid: string, permission: string, users:Object): Promise<Object|undefined> {
     return undefined;
   }
 

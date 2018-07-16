@@ -101,13 +101,15 @@ describe('Redbox', function() {
       const mdj = await fs.readFile(FIXTURES['rdmp'][server]['data']);
       const oid = await rb.createRecord(mdj, ptype);
 
-      const resp = await rb.grantPermission(oid, FIXTURES['rdmp'][server]['user']);
+      const resp = await rb.grantPermission(oid, 'view', {
+        'users': [ FIXTURES['rdmp'][server]['user'] ]
+      });
 
-      console.log("grantPermission respose " + JSON.stringify(resp));
+      console.log("grantPermission response " + JSON.stringify(resp));
 
       const perms = await rb.getPermissions(oid);
 
-      console.log("getPermissions respose " + JSON.stringify(perms));
+      console.log("getPermissions response " + JSON.stringify(perms));
 
 
     })
