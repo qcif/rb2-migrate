@@ -82,6 +82,42 @@ The package type to be fetched from the source server.
 
 The package type to be written to the destination server.
 
+### workflow
+
+A map between workflow stages in the source server and the destination
+server.
+
+### permissions
+
+(Note: the way permissions work is specific to migrating a 1.9 to a 2.0
+server, and even more specifically about migrating UTS's 1.9 to 2.0.  A
+more mature migration script will need to handle 2.x -> 2.y migrations.)
+
+Because of changes to the permissions system from 1.9 to 2.0, and
+because the 1.9 API doesn't expose all of its view permissions, they
+aren't crosswalked directly. Instead, the idea is to give a crosswalked
+record the same permissions it would have had, if it had been created 
+in 2.0.
+
+The permissions config maps contributer fields in the destination record
+to an array of permissions - ie 
+
+    "contributor_ci": [ "view", "edit" ]
+
+means that the FNCI will be granted view and edit permissions on the
+record.
+
+"\_owner\_" is a special key value which picks up the owner of a record
+in 1.9 and gives that user the specified permissions.
+
+If the owner is different from contributor_ci or contributor_data_manager,
+this will be highlighted in the output reports.
+
+### permissions_id
+
+Specifies which field from a Person record should be used as the id
+for setting permissions
+
 ### required
 
 A list of fields in the destination JSON which are mandatory. The script

@@ -131,7 +131,19 @@ export class Redbox1 extends BaseRedbox implements Redbox {
     }
   }
 
-  /* just getting the owner from the TF-OBJ-META for now */
+  /* ReDBox 1.9 permissions work as follows:
+     the owner (in the recordmetadata/TF_OBJ_META) has view and edit
+     a list of extra users may have been granted view
+
+     Getting the extra users is not straightforward, because they're
+     in the Derby database, not storage.
+
+     For now, getPermissions here just looks up the owner and 
+     returns their permissions.
+
+     It also ignores role permissions for now (they should all be
+     the same for objects at the same workflow stage)
+   */
 
   async getPermissions(oid: string): Promise<Object|undefined> {
     try {

@@ -136,23 +136,18 @@ async function migrate(options: Object): Promise<void> {
         } else {
           report.push([oid, "failed", "", "", "bad json", ""]);
         }
-      }
-      if( outdir ) {
-        await fs.writeJson(
-          path.join(outdir, 'originals', util.format("%s.json", oid)),
-          md, { spaces: 4 }
-        );
-        await fs.writeJson(
-          path.join(outdir, 'originals', util.format("%s_unflat.json", oid)),
-          mdu, { spaces: 4 }
-        );
-        if( !noid ) {
-          noid = '_' + oid;
+        if( noid && noid !== 'new_' + oid ) {
+          const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
+          if( 'error' in perms ) {
+            report.push([oid, "permissions", "", "", "permissions failed", perms['error'] ]);
+          } else {
+            report.push([oid, "permissions", "", "", "set", perms]);
+          }
         }
-        await fs.writeJson(
-          path.join(outdir, 'new', util.format("%s.json", noid)),
-          md2, { spaces: 4 }
-        );
+      }
+
+      if( outdir ) {
+        dumpjson(outdir, oid, noid, md, mdu, md2);
       }
     }
 
@@ -167,6 +162,79 @@ async function migrate(options: Object): Promise<void> {
   }
   
 }
+
+
+// set the permissions on a newly created record based on the crosswalk config
+// and the new user lists.
+
+async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oid: string, md2: Object, pcw: Object): Promise<Object> {
+  const users = await usermap(rbSource, oid, md2, pcw);
+  var perms = { 'edit': [], 'view':[] };
+  for ( const cat in users ) {
+    for( const user in users[cat] ) {
+      for( const p in pcw[cat] ) {
+        if( !( user in perms[p]) ) {
+          perms[p].push(user);
+        }
+      }  
+    }
+  }
+  try {
+    await rbDest.grantPermission(noid, 'view', perms['view']);
+    return await rbDest.grantPermission(noid, 'edit', perms['edit']);
+  } catch (e) {
+    return { 'error': e };
+  }
+}
+
+
+// build a dict of user categories (ie contributor_ci) to lists of user IDs
+
+async function usermap(rbSource: Redbox, oid: string, md2: Object, pcw: Object): Promise<{ [ cat: string ]: [ string ]}> {
+  var users = {};
+  
+  const id_field = pcw['user_id'];
+
+  for( var c in pcw['permissions'] ) {
+    if( c === '_owner' ) {
+      const oldperms = await rbSource.getPermissions(oid);
+      users[c] = [ oldperms['edit'][0] ];
+    } else if( c in md2 ) {
+      if( Array.isArray(md2[c]) ) {
+        users[c] = md2[c].map((u) => u[id_field])
+      } else {
+        users[c] = [ md2[c][id_field] ];
+      }
+    }
+  }
+  return users;
+}
+
+ 
+
+
+
+async function dumpjson(outdir: string, oid: string, noid: string, md: Object, mdu: Object, md2: Object): Promise<void> {
+  await fs.writeJson(
+    path.join(outdir, 'originals', util.format("%s.json", oid)),
+    md,
+    { spaces: 4 }
+    );
+  await fs.writeJson(
+    path.join(outdir, 'originals', util.format("%s_unflat.json", oid)),
+    mdu,
+    { spaces: 4 }
+    );
+  if( !noid ) {
+    noid = '_' + oid;
+  }
+  await fs.writeJson(
+    path.join(outdir, 'new', util.format("%s.json", noid)),
+    md2,
+    { spaces: 4 }
+  );
+}
+
 
 
 async function writereport(outdir: string, report: Object):Promise<void> {
