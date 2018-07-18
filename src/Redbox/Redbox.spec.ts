@@ -16,7 +16,7 @@ const fs = require('fs-extra');
 const config = require('config');
 const _ = require('lodash');
 
-const SERVERS = [ 'Test2_0' ];
+const SERVERS = [ 'Test1_9', 'Test2_0' ];
 
 const PTS = {
   'Test1_9': [ 'dmpt', 'dataset', 'self-submission' ],
@@ -117,6 +117,7 @@ describe('Redbox', function() {
 
     it('can read permissions from ' + server, async () => {
       const oid = await makerecord(rb, server);
+      console.log(Object.getPrototypeOf(rb));
 
       const perms = await rb.getPermissions(oid);
       expect(perms).to.not.be.undefined;
@@ -135,7 +136,6 @@ describe('Redbox', function() {
       });
 
       var nperms = _.cloneDeep(FIXTURES['rdmp'][server]['permissions']);
-      console.log(" nperms = " + JSON.stringify(nperms));
       nperms['view'].push(FIXTURES['rdmp'][server]['user']);
 
       expect(resp).to.deep.equal(nperms);
@@ -153,8 +153,6 @@ describe('Redbox', function() {
 
       var nperms = _.cloneDeep(FIXTURES['rdmp'][server]['permissions']);
       nperms['edit'].push(FIXTURES['rdmp'][server]['user']);
-      console.log(" actual = " + JSON.stringify(resp));
-      console.log(" expect = " + JSON.stringify(nperms));
 
       expect(resp).to.deep.equal(nperms);
     })

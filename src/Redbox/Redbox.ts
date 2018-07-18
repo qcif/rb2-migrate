@@ -65,11 +65,11 @@ export abstract class BaseRedbox {
     this.ai = axios.create({
       baseURL: this.baseURL,
       headers: {
-	"Authorization": "Bearer " + this.apiKey,
-	"Content-Type": "application/json"
+        "Authorization": "Bearer " + this.apiKey,
+	      "Content-Type": "application/json"
       },
       paramsSerializer: function(params) {
-	return qs.stringify(params, { encode: false });
+	      return qs.stringify(params, { encode: false });
       }
     });
   }
@@ -96,12 +96,11 @@ export abstract class BaseRedbox {
     try {
       let config = {};
       if( params ) {
-	config["params"] = params;
+        config["params"] = params;
       }
-      console.log("apiget " + url);
       let response = await this.ai.get(url, config);
       if( response.status === 200 ) {
-	return response.data;
+        return response.data;
       }
     } catch ( e ) {
       return undefined;

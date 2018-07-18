@@ -2,8 +2,7 @@
 // Typescript version of Stash 2 -> 3 migration code
 //
 
-import axios from 'axios';
-import { Redbox, Redbox1, Redbox2 } from './redbox';
+import { Redbox, Redbox1, Redbox2 } from './Redbox';
 import { crosswalk, checkdots } from './crosswalk';
 import { ArgumentParser } from 'argparse';
 
