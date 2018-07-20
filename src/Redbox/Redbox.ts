@@ -124,7 +124,7 @@ export abstract class BaseRedbox {
         return response.data;
       }
     } catch ( e ) {
-      console.log("Post error " + String(e));
+      console.trace("\n\nPost error " + String(e));
       console.log("URL: " + url);
       console.log("payload: " + JSON.stringify(payload).slice(0, 40));
       console.log("config:" + JSON.stringify(config));

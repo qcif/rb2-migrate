@@ -8,7 +8,7 @@ require('axios-debug')(axios);
 import { AxiosInstance } from 'axios';
 const qs = require('qs');
 const util = require('util');
-
+const _ = require('lodash');
 
 /* Redbox v1.9 api */
 
@@ -155,7 +155,39 @@ export class Redbox1 extends BaseRedbox implements Redbox {
     }
   }
 
-  // security_exception
+
+  /* ReDBox 1.9 permissions work as follows:
+     the owner (in the recordmetadata/TF_OBJ_META) has view and edit
+     a list of extra users may have been granted view
+
+   */
+
+  async getPermissions(oid: string): Promise<Object|undefined> {
+    try {
+      let perms = { view: [], edit: [] };
+      let response = await this.getRecordMetadata(oid);
+      if( response ) {
+        const owner = response['owner'];
+        if( owner ) {
+          perms['view'].push(owner);
+          perms['edit'].push(owner);
+        }
+
+        const viewers = await this.getSecurityExceptions(oid);
+        perms['view'] = _.union(perms['view'], viewers);
+        return perms;
+      } else {
+        return undefined;
+      }
+    } catch(e) {
+      console.log("Error " + e);
+    }
+  }
+
+
+
+  // looks up the oid's security_exception in the Solr index, which gives
+  // a list of other users who have been granted view access
 
   async getSecurityExceptions(oid: string): Promise<string[]> {
     const url = 'select';
@@ -174,41 +206,6 @@ export class Redbox1 extends BaseRedbox implements Redbox {
       } else {
         return [];
       }
-    }
-  }
-
-  /* ReDBox 1.9 permissions work as follows:
-     the owner (in the recordmetadata/TF_OBJ_META) has view and edit
-     a list of extra users may have been granted view
-
-     Getting the extra users is not straightforward, because they're
-     in the Derby database, not storage.
-
-     For now, getPermissions here just looks up the owner and 
-     returns their permissions.
-
-     It also ignores role permissions for now (they should all be
-     the same for objects at the same workflow stage)
-   */
-
-  async getPermissions(oid: string): Promise<Object|undefined> {
-    try {
-      const views = await this.getSecurityExceptions(oid);
-      console.log("views: " + JSON.stringify(views));
-      let response = await this.getRecordMetadata(oid);
-      if( response ) {
-        const owner = response['owner'];
-        if( owner ) {
-          return {
-              view: [ owner ],
-              edit: [ owner ]
-          };
-        }
-      } else {
-        return undefined;
-      }
-    } catch(e) {
-      console.log("Error " + e);
     }
   }
 

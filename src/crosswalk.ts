@@ -303,14 +303,21 @@ function trfield(cf: string, old: string): string {
   }
 }
 
-export function checkdots(js: Object): boolean {
+export function validate(required: string[], js: Object, logger:LogCallback): boolean {
+  var r = required;
+  var ok = true;
   for( var key in js ) {
     if( key.match(/\./) ) {
-      console.log("Bad key: " + key);
-      return false;
+      ok = false;
+      logger("validate", "", key, "invalid character", ".");
     }
+    _.pull(r, key);
   }
-  return true;
+  if( r ) {
+    r.map(rf => logger("validate", "", rf, "missing", ""));
+    ok = false;
+  } 
+  return ok;
 }
 
       

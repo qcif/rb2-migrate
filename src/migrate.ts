@@ -3,7 +3,7 @@
 //
 
 import { Redbox, Redbox1, Redbox2 } from './Redbox';
-import { crosswalk, checkdots } from './crosswalk';
+import { crosswalk, validate } from './crosswalk';
 import { ArgumentParser } from 'argparse';
 
 const fs = require('fs-extra');
@@ -12,6 +12,7 @@ const util = require('util');
 const path = require('path');
 const winston = require('winston');
 const stringify = require('csv-stringify/lib/sync');
+const _ = require('lodash');
 import { Spinner } from 'cli-spinner';
 
 
@@ -116,31 +117,37 @@ async function migrate(options: Object): Promise<void> {
       let md = await rbSource.getRecord(results[i]);
       spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
       const oid = md[cw['idfield']];
-      const [ mdu, md2 ] = crosswalk(cw, md, ( stage, ofield, nfield, msg, value ) => {
+      const logger = ( stage, ofield, nfield, msg, value ) => {
         report.push([oid, stage, ofield, nfield, msg, value]);
-      });
+      };
+      const [ mdu, md2 ] = crosswalk(cw, md, logger);
       var noid = 'new_' + oid;
       if( rbDest ) {
-        if( checkdots(md2) ) {
-          try { 
+        if( validate(cw['required'], md2, logger) ) {
+          try {
+            console.log(md2);
             noid = await rbDest.createRecord(md2, dest_type);
             if( noid ) {
-              report.push([oid, "create", "", "", "", noid]);
+              logger("create", "", "", "", noid);
             } else {
-              report.push([oid, "create", "", "", "null noid", ""]);
+              logger("create", "", "", "null noid", "");
             }
           } catch(e) {
-            report.push([oid, "create", "", "", "create failed", e]);
+            logger("create", "", "", "create failed", e);
           }
         } else {
-          report.push([oid, "failed", "", "", "bad json", ""]);
+          console.log("\nInvalid or incomplete JSON for " + oid +", not migrating");
         }
         if( noid && noid !== 'new_' + oid ) {
           const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
-          if( 'error' in perms ) {
-            report.push([oid, "permissions", "", "", "permissions failed", perms['error'] ]);
+          if( perms ) {
+            if( 'error' in perms ) {
+              logger("permissions", "", "", "permissions failed", perms['error']);
+            } else {
+              logger("permissions", "", "", "set", perms);
+            }
           } else {
-            report.push([oid, "permissions", "", "", "set", perms]);
+            logger("permissions", "", "", "permissions failed", "unknown error");
           }
         }
       }
@@ -163,20 +170,30 @@ async function migrate(options: Object): Promise<void> {
 }
 
 
-// set the permissions on a newly created record based on the crosswalk config
-// and the new user lists.
+// Set the permissions on a newly created record. Works like this:
+//
+// - read the permissions from the old record
+// - add edit, view for the FNCI and Data Manager of the new record
+// - add view for all of the contributors of the new record
+//
+// This preserves any extra people granted view access in RB 1.9
 
 async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oid: string, md2: Object, pcw: Object): Promise<Object> {
+  var perms = await rbSource.getPermissions(oid);
+  var nperms = { view: [], edit: [] };
+  if( !perms ) {
+    perms = { view: [], edit: [] };
+  } 
   const users = await usermap(rbSource, oid, md2, pcw);
-  var perms = { 'edit': [], 'view':[] };
   for ( const cat in users ) {
     for( const user in users[cat] ) {
       for( const p in pcw[cat] ) {
         if( !( user in perms[p]) ) {
           perms[p].push(user);
-        }
-      }  
-    }
+      }
+    }  
+  }
+  [ 'view, edit '].map((p) => perms[p] = _.union(perms[p], nperms[p]));
   }
   try {
     await rbDest.grantPermission(noid, 'view', perms['view']);
