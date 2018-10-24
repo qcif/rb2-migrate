@@ -2,3 +2,5 @@
 config/default.json
 ~$*.xls*
 .idea
+node_modules
+src/**/*.js

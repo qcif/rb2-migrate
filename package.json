@@ -5,7 +5,8 @@
   "main": "src/migrate.js",
   "repository": "https://code.research.uts.edu.au/eresearch/rb2-migrate",
   "scripts": {
-    "test": "mocha -r ts-node/register src/**/*spec.ts"
+    "test": "mocha -r ts-node/register src/**/*spec.ts",
+    "compile": "node_modules/.bin/tsc --project tsconfig.json"
   },
   "keywords": [
     "redbox",
