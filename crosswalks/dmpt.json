@@ -144,7 +144,7 @@
     "swrc:supervisor.foaf:Person": {
       "name": "contributor_supervisor",
       "type": "record",
-      "handler": "Pe1rson",
+      "handler": "Person",
       "role": "Supervisor",
       "fields": {
         "dc:identifier": "dc:identifier",
