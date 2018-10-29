@@ -1,5 +1,5 @@
 {
-  "idfield": "oid",
+  "idfield": "id",
   "source_type": "dataRecord",
   "dest_type": "dataRecord",
 
@@ -21,18 +21,7 @@
 
   "required": [
     "title",
-    "description",
-    "dc:identifier",
-    "contributor_ci",
-    "contributor_data_manager",
-    "vivo:Dataset_redbox:DataCollectionMethodology",
-    "vivo:Dataset_dc_format",
-    "vivo:Dataset_dc:extent",
-    "vivo:Dataset_dc:location_rdf:PlainLiteral",
-    "vivo:Dataset_dc:source_dc:location_rdf:PlainLiteral",
-    "redbox:retentionPeriod_dc:date",
-    "dc:rightsHolder_dc:name",
-    "dc:accessRights"
+    "description"
   ],
 
   "ignore": [
@@ -41,9 +30,9 @@
     "objMeta"
   ],
 
-  "fields": {
-    "dc:title": "title",
-    "dc:description": "description",
+  "crosswalk": {
+    "title": "title",
+    "description": "description",
     "dc:identifier": "dc:identifier",
     "finalKeywords": {
       "name": "_",

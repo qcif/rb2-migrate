@@ -68,7 +68,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
   const ignore = cwjson['ignore'];
 
   for( const srcfield in cwspec ) {
-    var destfield = trfield(cwspec[srcfield], srcfield); 
+    var destfield = trfield(cwspec[srcfield], srcfield);
     if( srcfield in src ) {
       if( typeof(cwspec[srcfield]) === 'string' ) {
         dest[destfield] = src[srcfield];
@@ -98,7 +98,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
                   logger('crosswalk', srcfield, destfield, "error: repeatable handler with non-array input", JSON.stringify(src[srcfield]));
                   dest[destfield] = [];
                 }
-              } else { 
+              } else {
                 dest[destfield] = apply_handler(h, src[srcfield]);
               }
             } else {
@@ -135,7 +135,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
 
 /* unflatten - preprocessing pass which collects multiple records in the
    rb1.x "field.n." and "field.subfield" formats into proper JSON.
-   
+
    gathers all of the crosswalk fields with type = "record" like so
 
    "outer:field.subfield:one": "value1",
@@ -143,7 +143,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
 
    "outer:field": {
        "subfield:one": "value1",
-       "subfield:two": "value2", 
+       "subfield:two": "value2",
        [..]
        }
 
@@ -153,7 +153,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
    "repeating:field.1.subfield:two": "value2a",
    "repeating:field.2.subfield:one": "value1b",
    "repeating:field.2.subfield:two": "value2b",
- 
+
    "repeating:field": [
        {
            "subfield:one": "value1a",
@@ -162,7 +162,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
        {
            "subfield:one": "value1a",
            "subfield:two": "value2a"
-       } 
+       }
     ]
 
    and now (for repeatable fields without subfields)
@@ -172,7 +172,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
 
    "repeating:singleton": {
        "subfield:one": "value1",
-       "subfield:two": "value2", 
+       "subfield:two": "value2",
        [..]
    }
 
@@ -184,7 +184,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
    output unchanged.
 
 
-*/ 
+*/
 
 function unflatten(cwjson: Object, original: Object, logger: LogCallback): Object {
   const repeatrecord = /^(\d+)\.?(.*)$/;
@@ -198,7 +198,7 @@ function unflatten(cwjson: Object, original: Object, logger: LogCallback): Objec
       const m = field.match(pattern);
       if( m ) {
         // check to see if the field looks like a repeatable
-        // record by matching on a leading (\d)\. 
+        // record by matching on a leading (\d)\.
         var sfield = m[1];
         const m2 = sfield.match(repeatrecord);
         if( m2 ) {
@@ -287,8 +287,8 @@ function getrecordspecs(cwjson: Object): Object {
   }
   return rspecs;
 }
-            
-         
+
+
 
 function trfield(cf: string, old: string): string {
   var f = cf;
@@ -313,14 +313,15 @@ export function validate(required: string[], js: Object, logger:LogCallback): bo
     }
     _.pull(r, key);
   }
-  if( r ) {
+  // Modified to check if the array is empty, instead of `if (r)`, just revert if this is incorrect. - Shilo
+  if( !_.isEmpty(r) ) {
     r.map(rf => logger("validate", "", rf, "missing", ""));
     ok = false;
-  } 
+  }
   return ok;
 }
 
-      
+
 
 function valuemap(spec: Object, srcfield: string, destfield: string, srcval: string, logger: LogCallback): string {
   if( "map" in spec ) {
@@ -335,4 +336,3 @@ function valuemap(spec: Object, srcfield: string, destfield: string, srcval: str
   logger("crosswalk", srcfield, destfield, "no map!", srcval);
   return "";
 }
-

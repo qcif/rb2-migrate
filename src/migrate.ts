@@ -127,7 +127,6 @@ async function migrate(options: Object): Promise<void> {
       if( rbDest ) {
         if( validate(cw['required'], md2, logger) ) {
           try {
-            console.log(md2);
             noid = await rbDest.createRecord(md2, dest_type);
             if( noid ) {
               logger("create", "", "", "", noid);
