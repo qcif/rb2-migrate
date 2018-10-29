@@ -1,0 +1,282 @@
+{
+  "idfield": "oid",
+  "source_type": "dataRecord",
+  "dest_type": "dataRecord",
+
+  "workflow": {
+    "stageold1": "stagenew1",
+    "stageold2": "stagenew2"
+  },
+
+  "permissions": {
+    "user_id": "email",
+    "permissions": {
+      "_owner_": [ "view", "edit" ],
+      "contributor_ci": [ "view", "edit" ],
+      "contributor_data_manager": [ "view", "edit" ],
+      "contributors": [ "view" ],
+      "contributor_supervisor": [ "view" ]
+    }
+  },
+
+  "required": [
+    "title",
+    "description",
+    "dc:identifier",
+    "contributor_ci",
+    "contributor_data_manager",
+    "vivo:Dataset_redbox:DataCollectionMethodology",
+    "vivo:Dataset_dc_format",
+    "vivo:Dataset_dc:extent",
+    "vivo:Dataset_dc:location_rdf:PlainLiteral",
+    "vivo:Dataset_dc:source_dc:location_rdf:PlainLiteral",
+    "redbox:retentionPeriod_dc:date",
+    "dc:rightsHolder_dc:name",
+    "dc:accessRights"
+  ],
+
+  "ignore": [
+    "action",
+    "oid",
+    "objMeta"
+  ],
+
+  "fields": {
+    "dc:title": "title",
+    "dc:description": "description",
+    "dc:identifier": "dc:identifier",
+    "finalKeywords": {
+      "name": "_",
+      "type": "record",
+      "repeatable": 1
+    },
+    "dc:relation.bibo:Website": "_",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",
+
+    "foaf:fundedBy.foaf:Agent": {
+      "name": "_",
+      "type": "record",
+      "repeatable": 1,
+      "handler": "FundingBody",
+      "fields": {
+        "dc:identifier": "dc_identifier",
+        "skos:prefLabel": "dc_title"
+      }
+    },
+    "foaf:fundedBy.vivo:Grant": {
+      "name": "_",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "warning": "mint_lookup",
+        "dc:identifier": "dc:identifier",
+        "skos.prefLabel": "dc:title",
+        "redbox.grantNumber": "grant_number"
+      }
+    },
+
+    "dc:subject.anzsrc:toa.rdf:resource": "_",
+
+    "dc:subject.anzsrc:for": {
+      "name": "_",
+      "type": "record",
+      "handler": "ForSeo",
+      "repeatable": 1,
+      "fields": {
+        "skos:prefLabel": "skos:prefLabel",
+        "rdf:resource": "rdf:resource"
+      }
+    },
+
+    "dc:subject.anzsrc:seo": {
+      "name": "_",
+      "type": "record",
+      "handler": "ForSeo",
+      "repeatable": 1,
+      "fields": {
+        "skos:prefLabel": "skos:prefLabel",
+        "rdf:resource": "rdf:resource"
+      }
+    },
+
+
+    "locrel:rth.foaf:Person": {
+      "name": "contributor_ci",
+      "type": "record",
+      "handler": "Person",
+      "role": "Chief Investigator",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "locrel:prc.foaf:Person": {
+      "name": "contributor_data_manager",
+      "type": "record",
+      "handler": "Person",
+      "role": "Data Manager",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "locrel:clb.foaf:Person": {
+      "name": "contributors",
+      "type": "record",
+      "handler": "Person",
+      "role": "Contributor",
+      "repeatable": 1,
+      "fields": {
+        "person.dc:identifier": "dc:identifier",
+        "person.foaf:title": "honorific",
+        "person.foaf:email": "email",
+        "person.foaf:givenName": "givenname",
+        "person.foaf:familyName": "familyname"
+      }
+    },
+    "swrc:supervisor.foaf:Person": {
+      "name": "contributor_supervisor",
+      "type": "record",
+      "handler": "Pe1rson",
+      "role": "Supervisor",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+
+
+    "vivo:Dataset.redbox:DataCollectionMethodology": "_",
+    "vivo:Dataset.dc.format": "vivo:Dataset_dc:format",
+    "vivo:Dataset.redbox:DataCollectionResources": "_",
+    "vivo:Dataset.redbox:DataAnalysisResources": "_",
+    "vivo:Dataset.redbox:MetadataStandard": "_",
+    "vivo:Dataset.redbox:DataStructureStandard": "_",
+
+
+    "vivo:Dataset.dc:extent": {
+      "name": "_",
+      "type": "valuemap",
+      "map" : {
+        "Less than 10 GB": "less-than-100GB",
+        "Less than 100GB": "less-than-100GB",
+        "20GB – 100GB": "less-than-100GB",
+        "10GB-20GB": "less-than-100GB",
+        "100GB+": "100GB-to-2TB",
+        "": "less-than-100GB"
+      }
+    },
+
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "Personal equipment": "personal-equipment",
+        "Personal equipment (e.g. external drive, own laptop, etc)": "personal-equipment",
+        "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
+        "eResearch storage platforms": "eresearch-platforms",
+        "Shared university network drive": "share-drive",
+        "survey-platform": "survey-platform",
+        "University provided collaboration space": "collab-space",
+        "Other": "other"
+      }
+    },
+
+
+    "vivo:Dataset.dc:location.skos:note": "_",
+
+
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "Personal equipment": "personal-equipment",
+        "Personal equipment (e.g. external drive, own laptop, etc)": "personal-equipment",
+        "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
+        "eResearch storage platforms": "eresearch-platforms",
+        "Shared university network drive": "share-drive",
+        "survey-platform": "survey-platform",
+        "University provided collaboration space": "collab-space",
+        "Other": "other"
+      }
+    },
+
+
+
+    "vivo:Dataset.dc:source.dc:location.skos:note": "_",
+
+
+    "redbox:retentionPeriod.dc:date": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "12months": "1year",
+        "5years": "5years",
+        "15years": "15years",
+        "permanent": "permanent"
+      }
+    },
+
+    "redbox:retentionPeriod.dc:date.skos:note": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "heritage": "heritage",
+        "controversial": "controversial",
+        "ofinterest": "ofinterest",
+        "costly_impossible": "costly_impossible",
+        "commercial": "commercial"
+      }
+    },
+
+    "dataowner_name": "dataRetention_data_owner",
+
+
+    "dc:rightsHolder.dc:name": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "myUni": "myUni",
+        "myUnjount": "myUnjount",
+        "student": "student"
+      }
+    },
+
+    "dc:rightsHolder.dc:description": "_",
+    "redbox:ContractualObligations": "_",
+    "dc:coverage.dc:identifier": {
+      "type": "record",
+      "name": "_",
+      "repeatable": 1
+    },
+    "dc:accessRights": {
+      "name": "_",
+      "type": "valuemap",
+      "map" : {
+        "permission from the data manager": "manager",
+        "open, free access under license": "open",
+        "no access due to sensitivities": "none"
+      }
+    },
+
+
+    "agls:policy.dc:identifier": "_",
+    "agls:policy.skos:note": "_",
+    "agls:protectiveMarking.dc:type": {
+      "type": "record",
+      "repeatable": 1,
+      "name": "_"
+    },
+    "agls:protectiveMarking.skos:note": "_"
+  }
+}

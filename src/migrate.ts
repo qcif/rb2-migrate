@@ -2,7 +2,7 @@
 // Typescript version of Stash 2 -> 3 migration code
 //
 
-import { Redbox, Redbox1, Redbox2 } from './Redbox';
+import { Redbox, Redbox1, Redbox2, RDA } from './Redbox';
 import { crosswalk, validate } from './crosswalk';
 import { ArgumentParser } from 'argparse';
 
@@ -37,6 +37,8 @@ function connect(server: string): Redbox {
     const cf = config.get('servers.' + server);
     if( cf['version'] === 'Redbox1' ) {
       return new Redbox1(cf);
+    } else if (cf['version'] === 'RDA') {
+      return new RDA(cf);
     } else {
       return new Redbox2(cf);
     }
@@ -82,7 +84,7 @@ async function migrate(options: Object): Promise<void> {
   const dest_type = cw['dest_type'];
 
   var rbSource, rbDest;
-  
+
   try {
     rbSource = connect(source);
   } catch(e) {
@@ -166,7 +168,7 @@ async function migrate(options: Object): Promise<void> {
     var stack = e.stack;
     log.error(stack);
   }
-  
+
 }
 
 
@@ -183,7 +185,7 @@ async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oi
   var nperms = { view: [], edit: [] };
   if( !perms ) {
     perms = { view: [], edit: [] };
-  } 
+  }
   const users = await usermap(rbSource, oid, md2, pcw);
   for ( const cat in users ) {
     for( const user in users[cat] ) {
@@ -191,7 +193,7 @@ async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oi
         if( !( user in perms[p]) ) {
           perms[p].push(user);
       }
-    }  
+    }
   }
   [ 'view, edit '].map((p) => perms[p] = _.union(perms[p], nperms[p]));
   }
@@ -208,7 +210,7 @@ async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oi
 
 async function usermap(rbSource: Redbox, oid: string, md2: Object, pcw: Object): Promise<{ [ cat: string ]: [ string ]}> {
   var users = {};
-  
+
   const id_field = pcw['user_id'];
 
   for( var c in pcw['permissions'] ) {
@@ -226,7 +228,7 @@ async function usermap(rbSource: Redbox, oid: string, md2: Object, pcw: Object):
   return users;
 }
 
- 
+
 
 
 
@@ -268,7 +270,7 @@ async function info(source: string) {
 }
 
 const log = getlogger();
-    
+
 var parser = new ArgumentParser({
   version: '0.0.1',
   addHelp: true,
@@ -321,9 +323,8 @@ parser.addArgument(
 
 var args = parser.parseArgs();
 
-if( 'type' in args && args['type'] ){  
+if( 'type' in args && args['type'] ){
   migrate(args);
 } else {
   info(args['source']);
 }
-
