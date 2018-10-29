@@ -6,7 +6,7 @@
   "repository": "https://code.research.uts.edu.au/eresearch/rb2-migrate",
   "scripts": {
     "test": "mocha -r ts-node/register src/**/*spec.ts",
-    "compile": "fsys --task=remove --fileFolder=dist; tsc; fsys --task=copy --filesFolders=config --destination=dist --clobber=true --preserveTimestamps=false"
+    "compile": "fsys --task=remove --fileFolder=dist; tsc; fsys --task=copy --filesFolders=config,crosswalks --destination=dist --clobber=true --preserveTimestamps=false"
   },
   "keywords": [
     "redbox",
@@ -41,8 +41,10 @@
     "qs": "^6.5.2",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
-    "ts-node": "^6.0.3",
     "typescript": "^2.8.3",
     "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "ts-node": "^6.2.0"
   }
 }

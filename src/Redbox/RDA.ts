@@ -27,8 +27,9 @@ export class RDA extends BaseRedbox implements Redbox {
   }
 
   initApiClient() {
+    let apiUrl = `${this.baseURL}${this.apiKey}/`
     this.ai = axios.create({
-      baseURL: this.baseURL,
+      baseURL: apiUrl,
       headers: {
 	      "Content-Type": "application/json"
       },
@@ -70,16 +71,18 @@ export class RDA extends BaseRedbox implements Redbox {
       start = 0;
     }
     try {
-      if (this.progress) {
-	       this.progress(util.format("Searching for %s: %d", ptype, start));
-      }
+      
       let params = { q: q, start: start, fl: '*' };
       let resp = await this.apiget('getMetadata.json', params);
       let response = resp["message"];
-      let numFound = response["numFound"];
+      // let numFound = response["numFound"];
+      let numFound = 1000;
       let docs = response["docs"];
       let ndocs = docs.length
       let list = docs.map(d => d.id);
+      if (this.progress) {
+        this.progress(util.format("Searching for %s: %d of %d", ptype, start, numFound));
+     }
       if ( start + ndocs < numFound ) {
 	       let rest = await this.list(ptype, start + ndocs);
 	       return list.concat(rest);
