@@ -16,6 +16,7 @@ export class RDA extends BaseRedbox implements Redbox {
 
   solrURL: string;
   solrAi: AxiosInstance;
+  bucket: any;
 
   constructor(cf: Object) {
     super(cf)
@@ -23,7 +24,7 @@ export class RDA extends BaseRedbox implements Redbox {
     this.solrURL = cf['solrURL'];
     console.log("solrURL = " + this.solrURL);
     this.initApiClient();
-    this.initSolrClient();
+    // this.initSolrClient();
   }
 
   initApiClient() {
@@ -36,6 +37,7 @@ export class RDA extends BaseRedbox implements Redbox {
 	      return qs.stringify(params, { encode: false });
       }
     });
+
   }
 
   // a separate axios instance to do solr queries, which are used
@@ -80,12 +82,17 @@ export class RDA extends BaseRedbox implements Redbox {
       let docs = response["docs"];
       let ndocs = docs.length
       let list = docs.map(d => d.id);
+      _.each(docs, (d) => {
+        if (!this.bucket) {
+          this.bucket = {}
+        }
+        this.bucket[d.id] = d;
+      });
       if ( start + ndocs < numFound ) {
 	       let rest = await this.list(ptype, start + ndocs);
-	       return list.concat(rest);
-      } else {
-	       return list;
+	       list = list.concat(rest);
       }
+      return list;
     } catch(e) {
       console.log("Error " + e);
       return [];
@@ -115,30 +122,15 @@ export class RDA extends BaseRedbox implements Redbox {
     }
   }
 
-  // async deleteRecord(oid: string): Promise<bool> {
-  //   let url = '/object/' + oid + '/delete';
-  //   let resp = await this.apidelete(url);
-  //   if( resp ) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
-
   /* TODO - updated record */
 
   /* Returns the record, or undefined if it's not
      found */
 
   async getRecord(oid: string): Promise<Object|undefined> {
-    try {
-      let response = await this.apiget('recordmetadata/' + oid);
-      return response;
-    } catch(e) {
-      console.log("Error " + e);
-      return undefined;
-    }
+    console.log(`Get record:`);
+    console.log(oid);
+    return this.bucket[oid];
   }
 
   /* The record's metadata is metadata about the record, not the
