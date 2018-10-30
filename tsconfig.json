@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "lib": [ "ES2015", "dom" ]
+    "lib": [ "ES2015", "dom" ],
+    "outDir": "dist",
+    "sourceMap": true
   },
   "include": [
     "src/**/*"
