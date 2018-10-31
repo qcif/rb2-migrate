@@ -66,7 +66,7 @@ async function migrate(options: Object): Promise<void> {
   const source = options['source'];
   const dest = options['dest'];
   const source_type = options['type'];
-  const outdir = options['outdir'];
+  const outdir = options['outdir'] || path.join(process.cwd(), 'report');
   const limit = options['number'];
 
   const cw = await loadcrosswalk(source_type);
