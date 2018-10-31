@@ -12,6 +12,22 @@ export class LookupPerson extends HandlerBase implements Handler {
     // const templateData = { imports: _.extend({id: o}, this)};
     // const lookupData = JSON.parse(_.template(this.config['lookupData'], templateData)());
     const role = this.config["role"];
+    
+    if (_.isArray(o)) {
+      if (!this.config["array"]) {
+        return this.lookup(o[0], role);
+      }
+      const lookupData = [];
+      for (var i=0; i<_.size(o); i++) {
+        lookupData.push(await this.lookup(o[i], role));
+      }
+      return lookupData;
+    } else {
+      return this.lookup(o, role);
+    }
+  }
+
+  async lookup(o: any, role: any) {
     const lookupData = await this.rbSource.getRecord(o);
     const output = {role: role, username: "", email: ""};
     if (!_.isUndefined(lookupData) && !_.isEmpty(lookupData)) {

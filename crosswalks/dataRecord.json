@@ -28,7 +28,15 @@
       "name": "contributor_ci",
       "type": "record",
       "handler": "LookupPerson",
-      "role": "Chief Investigator"
+      "role": "Chief Investigator",
+      "array": false
+    },
+    "related_party_one_id": {
+      "name": "contributors",
+      "type": "record",
+      "handler": "LookupPerson",
+      "role": "Contributors",
+      "array": true
     },
     "dc:relation.bibo:Website": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
@@ -90,20 +98,6 @@
         "foaf:email": "email",
         "foaf:givenName": "givenname",
         "foaf:familyName": "familyname"
-      }
-    },
-    "locrel:clb.foaf:Person": {
-      "name": "contributors",
-      "type": "record",
-      "handler": "Person",
-      "role": "Contributor",
-      "repeatable": 1,
-      "fields": {
-        "person.dc:identifier": "dc:identifier",
-        "person.foaf:title": "honorific",
-        "person.foaf:email": "email",
-        "person.foaf:givenName": "givenname",
-        "person.foaf:familyName": "familyname"
       }
     },
     "swrc:supervisor.foaf:Person": {
