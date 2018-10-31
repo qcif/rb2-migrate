@@ -69,19 +69,8 @@ async function migrate(options: Object): Promise<void> {
   const dest = options['dest'];
   const source_type = options['type'];
   const outdir = options['outdir'];
-  const limit = options['number'];
-
-  const cw = await loadcrosswalk(source_type);
-  if( ! cw ) {
-    return;
-  }
-
-  if( source_type !== cw['source_type'] ) {
-    log.error("Source type mismatch: " + source_type + '/' + cw['source_type']);
-    return;
-  }
-
-  const dest_type = cw['dest_type'];
+  let limit = options['number'];
+  let start = options['start'];
 
   var rbSource, rbDest;
 
@@ -99,75 +88,109 @@ async function migrate(options: Object): Promise<void> {
     return;
   }
 
+  const cw = await loadcrosswalk(source_type);
+  if( ! cw ) {
+    return;
+  }
+
+  if( source_type !== cw['source_type'] ) {
+    log.error("Source type mismatch: " + source_type + '/' + cw['source_type']);
+    return;
+  }
+
+  const dest_type = cw['dest_type'];
+
   if( outdir ) {
     await(fs.ensureDir(path.join(outdir, 'originals')));
     await(fs.ensureDir(path.join(outdir, 'new')));
   }
 
-  try {
-    var spinner = new Spinner("Listing records: " + source_type);
-    spinner.setSpinnerString(17);
-    spinner.start();
-    rbSource.setProgress(s => spinner.setSpinnerTitle(s));
-    var results = await rbSource.list(source_type);
-    if( limit && parseInt(limit) > 0 ) {
-      results = results.splice(0, limit);
-    }
-    let n = results.length;
-    var report = [ [ 'oid', 'stage', 'ofield', 'nfield', 'status', 'value' ] ];
-    for( var i in results ) {
-      let md = await rbSource.getRecord(results[i]);
-      spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
-      const oid = md[cw['idfield']];
-      const logger = ( stage, ofield, nfield, msg, value ) => {
-        report.push([oid, stage, ofield, nfield, msg, value]);
-      };
-      const [ mdu, md2 ] = crosswalk(cw, md, logger);
-      var noid = 'new_' + oid;
-      if( rbDest ) {
-        if( validate(cw['required'], md2, logger) ) {
-          try {
-            noid = await rbDest.createRecord(md2, dest_type);
-            if( noid ) {
-              logger("create", "", "", "", noid);
-            } else {
-              logger("create", "", "", "null noid", "");
-            }
-          } catch(e) {
-            logger("create", "", "", "create failed", e);
-          }
-        } else {
-          console.log("\nInvalid or incomplete JSON for " + oid +", not migrating");
-        }
-        if( noid && noid !== 'new_' + oid ) {
-          const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
-          if( perms ) {
-            if( 'error' in perms ) {
-              logger("permissions", "", "", "permissions failed", perms['error']);
-            } else {
-              logger("permissions", "", "", "set", perms);
-            }
-          } else {
-            logger("permissions", "", "", "permissions failed", "unknown error");
-          }
-        }
-      }
 
-      if( outdir ) {
-        dumpjson(outdir, oid, noid, md, mdu, md2);
-      }
-    }
+  let runCounter = 0;
+  let numRuns = 1;
+  let batch = options['batch']
 
-    spinner.setSpinnerTitle("Done.");
-    spinner.stop();
-    console.log("\n");
-    await writereport(outdir, report);
-  } catch (e) {
-    log.error("Migration error:" + e);
-    var stack = e.stack;
-    log.error(stack);
+  if (batch > 0) {
+      limit = batch;
+      const numFound = await rbSource.getNumRecords();
+      numRuns = Math.ceil( numFound / batch );
+      const maxBatchCount = options['maxbatchcount'];
+      if (maxBatchCount > 0) {
+        numRuns = maxBatchCount;
+      }
   }
 
+  while (runCounter < numRuns) {
+    console.log(`Execution ${runCounter + 1} of ${numRuns}...\n`);
+    try {
+      var spinner = new Spinner(`Listing up to ${limit} records: ${source_type}`);
+      spinner.setSpinnerString(17);
+      spinner.start();
+      rbSource.setProgress(s => spinner.setSpinnerTitle(s));
+      var results = await rbSource.list(source_type, start, limit);
+      if( limit && parseInt(limit) > 0 && results.length > limit) {
+        results = results.splice(0, limit);
+      }
+      let n = results.length;
+      var report = [ [ 'oid', 'stage', 'ofield', 'nfield', 'status', 'value' ] ];
+      for( var i in results ) {
+        let md = await rbSource.getRecord(results[i]);
+        spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
+        const oid = md[cw['idfield']];
+        const logger = ( stage, ofield, nfield, msg, value ) => {
+          report.push([oid, stage, ofield, nfield, msg, value]);
+        };
+        const [ mdu, md2 ] = await crosswalk(cw, md, logger, rbSource, rbDest);
+        var noid = 'new_' + oid;
+        if( rbDest ) {
+          if( validate(cw['required'], md2, logger) ) {
+            try {
+              noid = await rbDest.createRecord(md2, dest_type);
+              if( noid ) {
+                logger("create", "", "", "", noid);
+              } else {
+                logger("create", "", "", "null noid", "");
+              }
+            } catch(e) {
+              logger("create", "", "", "create failed", e);
+            }
+          } else {
+            console.log("\nInvalid or incomplete JSON for " + oid +", not migrating");
+          }
+          if( noid && noid !== 'new_' + oid && !_.isEmpty(cw['permissions'])) {
+            const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
+            if( perms ) {
+              if( 'error' in perms ) {
+                logger("permissions", "", "", "permissions failed", perms['error']);
+              } else {
+                logger("permissions", "", "", "set", perms);
+              }
+            } else {
+              logger("permissions", "", "", "permissions failed", "unknown error");
+            }
+          }
+        }
+  
+        if (outdir) {
+          dumpjson(outdir, oid, noid, md, mdu, md2);
+        }
+      }
+  
+      spinner.setSpinnerTitle("Done.");
+      spinner.stop();
+      console.log("\n");
+    } catch (e) {
+      log.error("Migration error:" + e);
+      var stack = e.stack;
+      log.error(stack);
+    }
+
+    runCounter++;
+    start += (limit + 1);
+  }
+  if (outdir) {
+    await writereport(outdir, report);
+  }
 }
 
 
@@ -318,7 +341,29 @@ parser.addArgument(
   }
 );
 
+parser.addArgument(
+  [ '-b', '--batch'],
+  {
+    help: "If set, the tool will split migrations in batches. Provide number of records per batch.",
+    defaultValue: 0
+  }
+);
 
+parser.addArgument(
+  [ '-a', '--start'],
+  {
+    help: "If set, sets the starting record number, note to consider sorting order.",
+    defaultValue: 0
+  }
+);
+
+parser.addArgument(
+  [ '-m', '--maxbatchcount'],
+  {
+    help: "If set, sets a hard limit on the number of batches to run. Zero (default), means no limit.",
+    defaultValue: 0
+  }
+);
 
 var args = parser.parseArgs();
 

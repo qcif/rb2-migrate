@@ -23,11 +23,11 @@ import * as Handlers from './handlers/';
 
 
 
-function get_handler(logger:LogCallback, spec:Object): Handlers.Handler|undefined {
+function get_handler(logger:LogCallback, spec:Object, masterConfig:any = undefined, rbSource: any = undefined, rbDest: any = undefined): Handlers.Handler|undefined {
   const className = spec['handler'];
   if( className in Handlers ) {
     const cl = Handlers[className];
-    var instance = new cl(logger, spec);
+    var instance = new cl(logger, spec, masterConfig, rbSource, rbDest);
     return instance;
   } else {
     return undefined;
@@ -37,8 +37,8 @@ function get_handler(logger:LogCallback, spec:Object): Handlers.Handler|undefine
 // apply_handler - run a handler and if the result is undefined, replace it with
 // {}
 
-function apply_handler(h: Handlers.Handler, original:Object): Object {
-  const out = h.crosswalk(original);
+async function apply_handler(h: Handlers.Handler, original:Object) {
+  const out = await h.crosswalk(original);
   if( _.isUndefined(out) ) {
     return {};
   } else {
@@ -49,13 +49,13 @@ function apply_handler(h: Handlers.Handler, original:Object): Object {
 // repeat_handler - map a handler over multiple inputs and collapse any undefined
 // results
 
-function repeat_handler(h: Handlers.Handler, originals: Object[]):Object[] {
-  return originals.map((o) => h.crosswalk(o)).filter((o) => o)
+async function repeat_handler(h: Handlers.Handler, originals: Object[]) {
+  return originals.map( async (o) => await h.crosswalk(o)).filter((o) => o)
 }
 
 
 
-export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Object[] {
+export async function crosswalk(cwjson: Object, original: any, logger: LogCallback, rbSource: any = undefined, rbDest: any = undefined) {
   var dest = {};
   const idfield = cwjson['idfield'];
   const oid = original[idfield];
@@ -89,17 +89,17 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
           delete src[srcfield];
         } else if( spec["type"] === "record" ) {
           if( "handler" in spec ) {
-            const h = get_handler(logger, spec);
+            const h = get_handler(logger, spec, cwjson, rbSource, rbDest);
             if( h ) {
               if( spec['repeatable'] ) {
                 if( Array.isArray(src[srcfield]) ) {
-                  dest[destfield] = repeat_handler(h, src[srcfield]);
+                  dest[destfield] = await repeat_handler(h, src[srcfield]);
                 } else {
                   logger('crosswalk', srcfield, destfield, "error: repeatable handler with non-array input", JSON.stringify(src[srcfield]));
                   dest[destfield] = [];
                 }
               } else {
-                dest[destfield] = apply_handler(h, src[srcfield]);
+                dest[destfield] = await apply_handler(h, src[srcfield]);
               }
             } else {
               logger('crosswalk', srcfield, destfield, "error: handler", spec["handler"])

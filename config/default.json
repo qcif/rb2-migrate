@@ -2,14 +2,14 @@
   "servers": {
     "RDA": {
       "version": "RDA",
-      "baseURL": "https://researchdata.ands.org.au/registry/services/c7fdfc313e3e/",
-      "apiKey": "#############",
+      "baseURL": "https://researchdata.ands.org.au/registry/services/",
+      "apiKey": "c7fdfc313e3e",
       "packageTypes": [ "dataRecord" ]
     },
     "ReDBox2": {
       "version": "Redbox2",
-      "baseURL": "http://localhost:1500/",
-      "apiKey": "d210eeee-0063-4729-8d24-8d3a9abaaf84",
+      "baseURL": "http://localhost:1500",
+      "apiKey": "b6256aef-7717-45b1-9f1b-b3dda2718bd3",
       "packageTypes": [ "dataRecord" ],
       "branding": "default",
       "portal": "rdmp"
@@ -18,11 +18,11 @@
   "crosswalks": "./crosswalks/",
   "logs": [
     {
-      "level": "error"
+      "level": "debug"
     },
     {
       "filename": "./logs/debug.log",
-      "level": "error"
+      "level": "debug"
     }
   ]
 }

@@ -23,10 +23,16 @@ export abstract class HandlerBase {
 
 	logger: LogCallback;
 	config: Object; 
+	mainConfig: any;
+	rbDest: any;
+	rbSource: any;
 
-	constructor(l: LogCallback, c: Object) {
+	constructor(l: LogCallback, c: Object, mConfig: any = undefined, rbSource: any = undefined, rbDest: any = undefined) {
 		this.logger = l;
 		this.config = c;
+		this.mainConfig = mConfig;
+		this.rbDest = rbDest;
+		this.rbSource = rbSource;
 	}
 
 	abstract crosswalk(orig: object): Object;

@@ -17,20 +17,21 @@ export class RDA extends BaseRedbox implements Redbox {
   solrURL: string;
   solrAi: AxiosInstance;
   bucket: any;
+  apiUrl: string;
 
   constructor(cf: Object) {
     super(cf)
     this.version = 'RDA';
-    this.solrURL = cf['solrURL'];
-    console.log("solrURL = " + this.solrURL);
+    // this.solrURL = cf['solrURL'];
+    // console.log("solrURL = " + this.solrURL);
     this.initApiClient();
     // this.initSolrClient();
   }
 
   initApiClient() {
-    let apiUrl = `${this.baseURL}${this.apiKey}/`
+    this.apiUrl = `${this.baseURL}${this.apiKey}/`
     this.ai = axios.create({
-      baseURL: apiUrl,
+      baseURL: this.apiUrl,
       headers: {
 	      "Content-Type": "application/json"
       },
@@ -63,22 +64,40 @@ export class RDA extends BaseRedbox implements Redbox {
     }
   }
 
+  async getNumRecords(ptype?: string): Promise<number> {
+    const q = "class:collection";
+    try {
+
+      let params = { q: q, fl: '*', rows: '1', start: '0' };
+      let resp = await this.apiget('getMetadata.json', params);
+      let response = resp["message"];
+      const numFound = response["numFound"];
+      return numFound;
+    } catch(e) {
+      console.log("Error " + e);
+      return -1;
+    }
+  }
+
   /* returns a list of all the items in the
      Redbox of the specified type */
 
-  async list(ptype: string, start?:number): Promise<string[]> {
+  async list(ptype: string, start?:number, limit?:number): Promise<string[]> {
     let q = `class:collection`;
-    // let q = `class:collection%20AND%20id:1332683`
+    // let q = `class:collection%20AND%20id:185577`
     if( start === undefined ) {
       start = 0;
     }
+
     try {
 
       let params = { q: q, start: start, fl: '*' };
+      if (limit > 0) {
+        params['rows'] = limit;
+      }
       let resp = await this.apiget('getMetadata.json', params);
       let response = resp["message"];
-      // let numFound = response["numFound"];
-      let numFound = 1000;
+      let numFound = response["numFound"];
       let docs = response["docs"];
       let ndocs = docs.length
       let list = docs.map(d => d.id);
@@ -91,7 +110,7 @@ export class RDA extends BaseRedbox implements Redbox {
       if (this.progress) {
         this.progress(util.format("Searching for %s: %d of %d", ptype, start, numFound));
       }
-      if ( start + ndocs < numFound ) {
+      if ( limit <= 0 && start + ndocs < numFound ) {
 	       let rest = await this.list(ptype, start + ndocs);
 	       list = list.concat(rest);
       }
@@ -131,8 +150,17 @@ export class RDA extends BaseRedbox implements Redbox {
      found */
 
   async getRecord(oid: string): Promise<Object|undefined> {
-    console.log(`Get record:`);
-    console.log(oid);
+    if (!_.isEmpty(this.bucket[oid])) {
+      return this.bucket[oid];
+    }
+    // try to lookup one record...
+    let params = { q: `id:${oid}`, start: 0, fl: '*' };
+    let resp = await this.apiget('getMetadata.json', params);
+    let response = resp["message"];
+    if (response.numFound == 0) {
+      return undefined;
+    }
+    this.bucket[oid] = response.docs[0];
     return this.bucket[oid];
   }
 
@@ -170,50 +198,12 @@ export class RDA extends BaseRedbox implements Redbox {
 
   async getPermissions(oid: string): Promise<Object|undefined> {
     try {
-      let perms = { view: [], edit: [] };
-      let response = await this.getRecordMetadata(oid);
-      if( response ) {
-        const owner = response['owner'];
-        if( owner ) {
-          perms['view'].push(owner);
-          perms['edit'].push(owner);
-        }
-
-        const viewers = await this.getSecurityExceptions(oid);
-        perms['view'] = _.union(perms['view'], viewers);
-        return perms;
-      } else {
-        return undefined;
-      }
+      return { view: ["admin"], edit: ["admin"] };
     } catch(e) {
       console.log("Error " + e);
     }
   }
 
-
-
-  // looks up the oid's security_exception in the Solr index, which gives
-  // a list of other users who have been granted view access
-
-  async getSecurityExceptions(oid: string): Promise<string[]> {
-    const url = 'select';
-    const params = {
-      q: util.format('(id:%s AND item_type:object)', oid),
-      fl: 'security_exception',
-      wt: 'json'
-    };
-    console.log("solr url: " + url);
-    console.log("params: " + JSON.stringify(params));
-    let response = await this.solrAi.get(url, { params: params });
-    if( response.status === 200 ) {
-      const sresp = response.data['response'];
-      if( sresp['numFound'] ) {
-        return sresp['docs'][0]['security_exception'];
-      } else {
-        return [];
-      }
-    }
-  }
 
 
   /* the next two are stubs to satisfy the interface */
@@ -258,4 +248,16 @@ export class RDA extends BaseRedbox implements Redbox {
       console.log("Error " + e);
     }
   }
+
+  getConfigValue(key:string) {
+    switch(key) {
+      case 'baseUrl':
+        return this.baseURL;
+      case 'apiUrl':
+        return this.apiUrl;
+      // TODO: return other configuration items for this RB server... 
+    }
+    return undefined;
+  }
+
 }
