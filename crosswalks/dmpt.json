@@ -1,3 +1,4 @@
+
 {
   "idfield": "oid",
   "source_type": "dmpt",
@@ -26,7 +27,7 @@
     "contributor_ci",
     "contributor_data_manager",
     "vivo:Dataset_redbox:DataCollectionMethodology",
-    "vivo:Dataset_dc_format",
+    "vivo:Dataset_dc:format",
     "vivo:Dataset_dc:extent",
     "vivo:Dataset_dc:location_rdf:PlainLiteral",
     "vivo:Dataset_dc:source_dc:location_rdf:PlainLiteral",
@@ -144,7 +145,7 @@
     "swrc:supervisor.foaf:Person": {
       "name": "contributor_supervisor",
       "type": "record",
-      "handler": "Pe1rson",
+      "handler": "Person",
       "role": "Supervisor",
       "fields": {
         "dc:identifier": "dc:identifier",

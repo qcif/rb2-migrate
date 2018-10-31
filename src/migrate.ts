@@ -6,6 +6,18 @@ import { Redbox, Redbox1, Redbox2 } from './Redbox';
 import { crosswalk, validate } from './crosswalk';
 import { ArgumentParser } from 'argparse';
 
+const MANDATORY_CW = [
+  "idfield",
+  "source_type",
+  "dest_type",
+  "workflow",
+  "permissions",
+  "required",
+  "fields",
+];
+
+
+
 const fs = require('fs-extra');
 const config = require('config');
 const util = require('util');
@@ -52,7 +64,18 @@ async function loadcrosswalk(packagetype: string): Promise<Object|undefined> {
   try {
     log.info("Loading crosswalk " + cwf);
     const cw = await fs.readJson(cwf);
-    return cw
+    var bad = false;
+    MANDATORY_CW.map((f) => {
+      if( !(f in cw) ) {
+        console.log("Crosswalk section missing: " + f);
+        bad = true;
+      }
+    });
+    if( bad ) {
+      return null;
+    } else {
+      return cw
+    }
   } catch(e) {
     log.error("Error loading crosswalk " + cwf + ": " + e);
     return null;
@@ -70,6 +93,7 @@ async function migrate(options: Object): Promise<void> {
   const limit = options['number'];
 
   const cw = await loadcrosswalk(source_type);
+  
   if( ! cw ) {
     return;
   }
@@ -125,7 +149,6 @@ async function migrate(options: Object): Promise<void> {
       if( rbDest ) {
         if( validate(cw['required'], md2, logger) ) {
           try {
-            console.log(md2);
             noid = await rbDest.createRecord(md2, dest_type);
             if( noid ) {
               logger("create", "", "", "", noid);
@@ -139,16 +162,16 @@ async function migrate(options: Object): Promise<void> {
           console.log("\nInvalid or incomplete JSON for " + oid +", not migrating");
         }
         if( noid && noid !== 'new_' + oid ) {
-          const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
-          if( perms ) {
-            if( 'error' in perms ) {
-              logger("permissions", "", "", "permissions failed", perms['error']);
-            } else {
-              logger("permissions", "", "", "set", perms);
-            }
-          } else {
-            logger("permissions", "", "", "permissions failed", "unknown error");
-          }
+          // const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
+          // if( perms ) {
+          //   if( 'error' in perms ) {
+          //     logger("permissions", "", "", "permissions failed", perms['error']);
+          //   } else {
+          //     logger("permissions", "", "", "set", perms);
+          //   }
+          // } else {
+          //   logger("permissions", "", "", "permissions failed", "unknown error");
+          // }
         }
       }
 
