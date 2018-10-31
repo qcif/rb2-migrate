@@ -7,7 +7,7 @@ This is a node.js package for migrating records from ReDBox 1.8+ to ReDBox 2.0 u
 
 ## Usage
 
-    > node src/migrate.js --source SourceServer --dest DestServer --type dmpt
+    > node src/migrate.js --source SourceServer --dest DestServer --type dmpt --outdir ./report
 
 'SourceServer' and 'DestServer' are references to the 'servers' section of the configuration file.
 
