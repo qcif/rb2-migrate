@@ -69,8 +69,8 @@ async function migrate(options: Object): Promise<void> {
   const dest = options['dest'];
   const source_type = options['type'];
   const outdir = options['outdir'];
-  let limit = options['number'];
-  let start = options['start'];
+  let limit = _.toInteger(options['number']);
+  let start = _.toInteger(options['start']);
 
   var rbSource, rbDest;
 
@@ -128,7 +128,7 @@ async function migrate(options: Object): Promise<void> {
       spinner.start();
       rbSource.setProgress(s => spinner.setSpinnerTitle(s));
       var results = await rbSource.list(source_type, start, limit);
-      if( limit && parseInt(limit) > 0 && results.length > limit) {
+      if(limit > 0 && results.length > limit) {
         results = results.splice(0, limit);
       }
       let n = results.length;
@@ -186,7 +186,7 @@ async function migrate(options: Object): Promise<void> {
     }
 
     runCounter++;
-    start += (limit + 1);
+    start = (runCounter * batch);
   }
   if (outdir) {
     await writereport(outdir, report);
