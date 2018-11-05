@@ -8,9 +8,7 @@ const util = require('util');
 
 export class LookupPerson extends HandlerBase implements Handler {
 
-  async crosswalk(o: Object) {
-    // const templateData = { imports: _.extend({id: o}, this)};
-    // const lookupData = JSON.parse(_.template(this.config['lookupData'], templateData)());
+  async crosswalk(o: Object, mainObj?:any) {
     const role = this.config["role"];
     
     if (_.isArray(o)) {
@@ -39,6 +37,7 @@ export class LookupPerson extends HandlerBase implements Handler {
       output['family_name'] = parsed['lastName'];
       output['honorific'] = parsed['salutation'];
       output['full_name_family_name_first'] = `${output['family_name']}, ${output['given_name']}`;   
+      output['email'] = parsed['email'];
       return output;
     }
     this.logger('handler', "Person", role, "missing", `Failed to lookup data for id: ${o}`);

@@ -39,6 +39,7 @@
     "humanname": "0.2.2",
     "lodash": "^4.17.10",
     "mocha": "^5.1.1",
+    "parse-domain": "2.1.6",
     "qs": "^6.5.2",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",

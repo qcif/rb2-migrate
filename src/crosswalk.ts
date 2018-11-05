@@ -37,8 +37,8 @@ function get_handler(logger:LogCallback, spec:Object, masterConfig:any = undefin
 // apply_handler - run a handler and if the result is undefined, replace it with
 // {}
 
-async function apply_handler(h: Handlers.Handler, original:Object) {
-  const out = await h.crosswalk(original);
+async function apply_handler(h: Handlers.Handler, original:Object, mainObj?:any) {
+  const out = await h.crosswalk(original, mainObj);
   if( _.isUndefined(out) ) {
     return {};
   } else {
@@ -49,8 +49,8 @@ async function apply_handler(h: Handlers.Handler, original:Object) {
 // repeat_handler - map a handler over multiple inputs and collapse any undefined
 // results
 
-async function repeat_handler(h: Handlers.Handler, originals: Object[]) {
-  return originals.map( async (o) => await h.crosswalk(o)).filter((o) => o)
+async function repeat_handler(h: Handlers.Handler, originals: Object[], mainObj?:any) {
+  return originals.map( async (o) => await h.crosswalk(o, mainObj)).filter((o) => o)
 }
 
 
@@ -71,7 +71,7 @@ export async function crosswalk(cwjson: Object, original: any, logger: LogCallba
     var destfield = trfield(cwspec[srcfield], srcfield);
     if( srcfield in src ) {
       if( typeof(cwspec[srcfield]) === 'string' ) {
-        dest[destfield] = src[srcfield];
+        _.set(dest, destfield, _.get(src, srcfield));
         if( dest[destfield] ) {
           logger('crosswalk', srcfield, destfield, "copied", dest[destfield]);
         } else {
@@ -93,13 +93,13 @@ export async function crosswalk(cwjson: Object, original: any, logger: LogCallba
             if( h ) {
               if( spec['repeatable'] ) {
                 if( Array.isArray(src[srcfield]) ) {
-                  dest[destfield] = await repeat_handler(h, src[srcfield]);
+                  dest[destfield] = await repeat_handler(h, src[srcfield], src);
                 } else {
                   logger('crosswalk', srcfield, destfield, "error: repeatable handler with non-array input", JSON.stringify(src[srcfield]));
                   dest[destfield] = [];
                 }
               } else {
-                dest[destfield] = await apply_handler(h, src[srcfield]);
+                dest[destfield] = await apply_handler(h, src[srcfield], src);
               }
             } else {
               logger('crosswalk', srcfield, destfield, "error: handler", spec["handler"])

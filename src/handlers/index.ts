@@ -13,3 +13,4 @@ export { ForSeo } from './ForSeo';
 export { Person } from './Person';
 export { FundingBody } from './FundingBody';
 export { LookupPerson } from './LookupPerson';
+export { DummyLookupPerson } from './DummyLookupPerson';

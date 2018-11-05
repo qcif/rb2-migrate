@@ -27,17 +27,38 @@
     "relationType_hasPrincipalInvestigator_id": {
       "name": "contributor_ci",
       "type": "record",
-      "handler": "LookupPerson",
+      "handler": "DummyLookupPerson",
       "role": "Chief Investigator",
       "array": false
     },
     "related_party_one_id": {
       "name": "contributors",
       "type": "record",
-      "handler": "LookupPerson",
+      "handler": "DummyLookupPerson",
       "role": "Contributors",
       "array": true
     },
+    "subject_anzsrcfor": {
+      "name": "dc:subject_anzsrc:for",
+      "type": "record",
+      "handler": "ForSeo",
+      "useSubFields": true,
+      "array": true,
+      "subFields": {
+        "tsubject_anzsrc-for": "notation"
+      }
+    },
+    "subject_anzsrcseo": {
+      "name": "dc:subject_anzsrc:seo",
+      "type": "record",
+      "handler": "ForSeo",
+      "useSubFields": true,
+      "array": true,
+      "subFields": {
+        "tsubject_anzsrc": "notation"
+      }
+    },
+    "related_activity_title": "aim_project_name[0]",
     "dc:relation.bibo:Website": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",
@@ -64,17 +85,6 @@
     },
 
     "dc:subject.anzsrc:toa.rdf:resource": "_",
-
-    "dc:subject.anzsrc:for": {
-      "name": "_",
-      "type": "record",
-      "handler": "ForSeo",
-      "repeatable": 1,
-      "fields": {
-        "skos:prefLabel": "skos:prefLabel",
-        "rdf:resource": "rdf:resource"
-      }
-    },
 
     "dc:subject.anzsrc:seo": {
       "name": "_",

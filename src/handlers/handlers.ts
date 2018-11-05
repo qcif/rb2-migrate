@@ -12,7 +12,7 @@ export interface Handler {
 	// note: might need crosswalk to be async if it needs to do a lookup
 	// somewhere
 
-	crosswalk(orig: Object): Object|undefined; 
+	crosswalk(orig: Object, mainObj?:any): Object|undefined; 
 
 }
 
@@ -35,6 +35,6 @@ export abstract class HandlerBase {
 		this.rbSource = rbSource;
 	}
 
-	abstract crosswalk(orig: object): Object;
+	abstract crosswalk(orig: object, mainObj?:any): Object;
 
 }
