@@ -41,7 +41,9 @@ export class LookupPerson extends HandlerBase implements Handler {
       output['email'] = parsed['email'];
       if (_.isEmpty(output['email']) || _.isUndefined(output['email'])) {
         const domainParsed = parseDomain(mainObj['data_source_key'])
-        output['email'] = `${output['given_name']}.${output['family_name']}@${domainParsed.domain}.${domainParsed.tld}`;
+        if (!_.isNull(domainParsed) && !_.isUndefined(domainParsed)) {
+          output['email'] = `${output['given_name']}.${output['family_name']}@${domainParsed.domain}.${domainParsed.tld}`;
+        }
       }
       return output;
     }
