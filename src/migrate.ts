@@ -186,7 +186,7 @@ async function migrate(options: Object): Promise<void> {
     }
 
     runCounter++;
-    start = (runCounter * batch);
+    start += (runCounter * batch);
   }
   if (outdir) {
     await writereport(outdir, report);
