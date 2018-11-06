@@ -1,6 +1,6 @@
 {
   "idfield": "id",
-  "source_type": "dataRecord",
+  "source_type": "RDADataRecord",
   "dest_type": "dataRecord",
 
   "workflow": {
@@ -58,7 +58,8 @@
         "tsubject_anzsrc": "notation"
       }
     },
-    "related_activity_title": "aim_project_name[0]",
+    "related_activity_title[0]": "aim_project_name",
+    "type": "datatype",
     "dc:relation.bibo:Website": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",
@@ -97,34 +98,44 @@
       }
     },
 
-    "locrel:prc.foaf:Person": {
+    "rda_has_no_identified_data_manager_field_yet_set_it_here_when_identified": {
       "name": "contributor_data_manager",
-      "type": "record",
-      "handler": "Person",
-      "role": "Data Manager",
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
+      "default": {
+        "text_full_name": "John Doe",
+        "full_name_honorific": "John Doe",
+        "full_name_family_name_first": "Doe, John",
+        "given_name": "John",
+        "family_name": "Doe",
+        "email": "johndoe@redboxresearchdata.com.au",
+        "role": "Data Manager"
       }
     },
-    "swrc:supervisor.foaf:Person": {
+
+    "rda_has_no_identified_supervisor_field_yet_set_it_here_when_identified": {
       "name": "contributor_supervisor",
-      "type": "record",
-      "handler": "Pe1rson",
-      "role": "Supervisor",
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
+      "default": {
+        "text_full_name": "John Doe",
+        "full_name_honorific": "John Doe",
+        "full_name_family_name_first": "Doe, John",
+        "given_name": "John",
+        "family_name": "Doe",
+        "email": "johndoe@redboxresearchdata.com.au",
+        "role": "Supervisor"
       }
     },
 
-
+    "redbox:retentionPeriod.dc:date": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "12months": "1year",
+        "5years": "5years",
+        "15years": "15years",
+        "permanent": "permanent"
+      },
+      "default": "5years"
+    },
+    
     "vivo:Dataset.redbox:DataCollectionMethodology": "_",
     "vivo:Dataset.dc.format": "vivo:Dataset_dc:format",
     "vivo:Dataset.redbox:DataCollectionResources": "_",
@@ -183,18 +194,6 @@
 
 
     "vivo:Dataset.dc:source.dc:location.skos:note": "_",
-
-
-    "redbox:retentionPeriod.dc:date": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "12months": "1year",
-        "5years": "5years",
-        "15years": "15years",
-        "permanent": "permanent"
-      }
-    },
 
     "redbox:retentionPeriod.dc:date.skos:note": {
       "name": "_",

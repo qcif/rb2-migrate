@@ -9,7 +9,7 @@ export class ForSeo extends HandlerBase implements Handler {
 
   crosswalk(o:Object, mainObj?:any): Object|undefined {
     if (this.config['useSubFields'] && mainObj) {
-      const output = [];
+      let output = [];
       _.forOwn(o, (label, idx) => {
         const curObj = {label: label};
         _.forOwn(this.config['subFields'], (dest, src) => {
@@ -25,6 +25,7 @@ export class ForSeo extends HandlerBase implements Handler {
         }
         output.push(curObj);
       });
+      output = _.sortBy(output, (o) => { return _.toInteger(o.notation) });
       return output;
     }
     const url = o['rdf:resource']; 

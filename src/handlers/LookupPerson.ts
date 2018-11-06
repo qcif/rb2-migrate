@@ -1,6 +1,7 @@
 import { Handler, HandlerBase } from './handlers';
 import * as _ from 'lodash';
 import * as humanname from 'humanname';
+import * as parseDomain from 'parse-domain';
 
 const util = require('util');
 
@@ -13,19 +14,19 @@ export class LookupPerson extends HandlerBase implements Handler {
     
     if (_.isArray(o)) {
       if (!this.config["array"]) {
-        return this.lookup(o[0], role);
+        return this.lookup(o[0], role, mainObj);
       }
       const lookupData = [];
       for (var i=0; i<_.size(o); i++) {
-        lookupData.push(await this.lookup(o[i], role));
+        lookupData.push(await this.lookup(o[i], role, mainObj));
       }
       return lookupData;
     } else {
-      return this.lookup(o, role);
+      return this.lookup(o, role, mainObj);
     }
   }
 
-  async lookup(o: any, role: any) {
+  async lookup(o: any, role: any, mainObj:any) {
     const lookupData = await this.rbSource.getRecord(o);
     const output = {role: role, username: "", email: ""};
     if (!_.isUndefined(lookupData) && !_.isEmpty(lookupData)) {
@@ -38,6 +39,10 @@ export class LookupPerson extends HandlerBase implements Handler {
       output['honorific'] = parsed['salutation'];
       output['full_name_family_name_first'] = `${output['family_name']}, ${output['given_name']}`;   
       output['email'] = parsed['email'];
+      if (_.isEmpty(output['email']) || _.isUndefined(output['email'])) {
+        const domainParsed = parseDomain(mainObj['data_source_key'])
+        output['email'] = `${output['given_name']}.${output['family_name']}@${domainParsed.domain}.${domainParsed.tld}`;
+      }
       return output;
     }
     this.logger('handler', "Person", role, "missing", `Failed to lookup data for id: ${o}`);

@@ -69,7 +69,8 @@ export async function crosswalk(cwjson: Object, original: any, logger: LogCallba
 
   for( const srcfield in cwspec ) {
     var destfield = trfield(cwspec[srcfield], srcfield);
-    if( srcfield in src ) {
+    // changed to lodash's way of accessing objects using complex paths
+    if( !_.isUndefined(_.get(src, srcfield)) ) {
       if( typeof(cwspec[srcfield]) === 'string' ) {
         _.set(dest, destfield, _.get(src, srcfield));
         if( dest[destfield] ) {
@@ -114,6 +115,10 @@ export async function crosswalk(cwjson: Object, original: any, logger: LogCallba
         }
       }
     } else {
+      const spec = cwspec[srcfield];
+      if (!_.isEmpty(spec['default'])  && !_.isUndefined(spec['default'])) {
+        _.set(dest, destfield, spec['default']);
+      }
       if( reqd.includes(destfield) ) {
         logger("crosswalk", srcfield, destfield, "required", null);
       } else {
@@ -330,7 +335,7 @@ function valuemap(spec: Object, srcfield: string, destfield: string, srcval: str
       return spec["map"][srcval];
     } else {
       logger("crosswalk", srcfield, destfield, "unmapped", srcval);
-      return "";
+      return spec["default"] ? spec["default"] : "";
     }
   }
   logger("crosswalk", srcfield, destfield, "no map!", srcval);
