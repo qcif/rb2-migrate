@@ -113,7 +113,7 @@ async function migrate(options: Object): Promise<void> {
   if (batch > 0) {
       limit = batch;
       const numFound = await rbSource.getNumRecords();
-      numRuns = Math.ceil( numFound / batch );
+      numRuns = Math.ceil( (numFound - start ) / batch );
       const maxBatchCount = options['maxbatchcount'];
       if (maxBatchCount > 0) {
         numRuns = maxBatchCount;
