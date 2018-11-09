@@ -65,18 +65,20 @@
         "skos:prefLabel": "dc_title"
       }
     },
+
     "foaf:fundedBy.vivo:Grant": {
       "name": "_",
       "type": "record",
       "repeatable": 1,
+      "handler": "GrantBody",
       "fields": {
         "warning": "mint_lookup",
         "dc:identifier": "dc:identifier",
         "skos.prefLabel": "dc:title",
-        "redbox.grantNumber": "grant_number"
+        "redbox:grantNumber": "grant_number"
       }
     },
-    
+
     "dc:subject.anzsrc:toa.rdf:resource": "_",
     
     "dc:subject.anzsrc:for": {

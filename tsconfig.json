@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
-    "lib": [ "ES2015" ]
+    "lib": [
+      "ES2015"
+    ],
+    "sourceMap": true,
+    "inlineSources": true
   },
   "include": [
-    "src/**/*" 
+    "src/**/*"
   ]
 }

@@ -4,5 +4,6 @@ config/default.json
 .idea
 node_modules
 src/**/*.js
+src/**/*.js.map
 logs/*.log
-report/**
+report*/**
