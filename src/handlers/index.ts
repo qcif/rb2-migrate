@@ -12,3 +12,4 @@ export { Handler } from './handlers';
 export { ForSeo } from './ForSeo';
 export { Person } from './Person';
 export { FundingBody } from './FundingBody';
+export { GrantBody } from './GrantBody';
