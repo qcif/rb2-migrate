@@ -1,0 +1,65 @@
+/*
+* Test: Inject 1 object into redbox 2 using crosswalk and redbox1
+*       Use process.env.aRecord to grab a record from redbox1 to migrate.
+* Author: Moises Sacal <moisbo@gmail.com>
+*/
+
+import {Redbox1, Redbox2} from '../src/Redbox';
+import * as path from 'path';
+import * as fs from 'fs-extra';
+import {expect} from 'chai';
+import * as assert from 'assert';
+
+import 'mocha';
+import {crosswalk} from "../src/crosswalk";
+
+
+const config = require('config');
+const source = 'redbox1';
+const server = source;
+const cf = config.get('servers.' + server);
+
+const dmpt = process.env.rdmpt || 'dmpt';
+const dataset = process.env.dataset || 'dataset';
+const dataRecord = process.env.selfSubmission || 'dataRecord';
+
+const rbSource = new Redbox1(cf);
+
+const server2 = 'redbox2';
+const cf2 = config.get('servers.' + server2);
+const rbDest = new Redbox2(cf2);
+
+
+describe('insert into rb2', () => {
+
+	const aRecord = process.env.aRecord;
+	assert.notEqual(aRecord, undefined, 'Define a record <aRecord> with environment variable as process.env.aRecord');
+
+	let cw;
+	let md;
+	let [mdu, md2] = [{}, {}];
+
+	let report = [ [ 'oid', 'stage', 'ofield', 'nfield', 'status', 'value' ] ];
+	const logger = ( stage, ofield, nfield, msg, value ) => {
+		report.push([aRecord, stage, ofield, nfield, msg, value]);
+	};
+
+	beforeEach(async () => {
+		const cwf = path.join(config.get("crosswalks"), dataset + '.json');
+		cw = await fs.readJson(cwf);
+		assert.notEqual(cw, undefined, 'could not crosswalk from file');
+		md = await rbSource.getRecord(aRecord);
+		assert.notEqual(md, undefined, 'could not getRecord from rbSource');
+		[mdu, md2] = crosswalk(cw, md, logger);
+		assert.notEqual(mdu, undefined, 'could not unflatten crosswalk from rbSource');
+		assert.notEqual(md2, undefined, 'could not crosswalk from rbSource');
+	});
+
+
+	it('should insert record', async () => {
+		const dest_type = dataRecord;
+		const noid = await rbDest.createRecord(md2, dest_type);
+		expect(noid).to.not.equal(undefined);
+	});
+
+});

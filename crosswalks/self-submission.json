@@ -1,7 +1,7 @@
 
 {
   "idfield": "oid",
-  "source_type": "collection",
+  "source_type": "self-submission",
   "dest_type": "dataRecord",
 
   "workflow": {
@@ -21,7 +21,8 @@
   },
 
   "required": [
-    "title"
+    "title",
+    "description"
   ],
 
   "ignore": [
@@ -34,7 +35,7 @@
     "description": "description",
     "bibo:DataLocation": {
       "name": "dataLocations",
-      "handler": "dataLocation",
+      "handler": "DataLocations",
       "repeatable": 1,
       "fields": {
         "dc:location": "location",

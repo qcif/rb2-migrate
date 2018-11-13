@@ -5,5 +5,7 @@ config/default.json
 node_modules
 src/**/*.js
 src/**/*.js.map
+test/**/*.js
+test/**/*.js.map
 logs/*.log
 report*/**
