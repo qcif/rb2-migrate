@@ -1,11 +1,10 @@
-// GrantBody handler
+// DataLocations handler
 
 import {Handler, HandlerBase} from './handlers';
 
 export class DataLocations extends HandlerBase implements Handler {
 
 	crosswalk(o: Object): Object | undefined {
-
 
 		let type = '';
 		if (o['type']) {
