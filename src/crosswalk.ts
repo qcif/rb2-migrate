@@ -64,7 +64,7 @@ export async function crosswalk(cwjson: Object, original: any, logger: LogCallba
   const unflat = {... src};
 
   const reqd = cwjson['required'];
-  const cwspec = cwjson['crosswalk'];
+  const cwspec = cwjson['fields'];
   const ignore = cwjson['ignore'];
 
   for( const srcfield in cwspec ) {
@@ -285,9 +285,9 @@ function notempty(x) {
 
 function getrecordspecs(cwjson: Object): Object {
   var rspecs = {};
-  for( const field in cwjson['crosswalk'] ) {
-    if( cwjson['crosswalk'][field]['type'] === 'record' ) {
-      rspecs[field] = cwjson['crosswalk'][field];
+  for( const field in cwjson['fields'] ) {
+    if( cwjson['fields'][field]['type'] === 'record' ) {
+      rspecs[field] = cwjson['fields'][field];
     }
   }
   return rspecs;
@@ -309,7 +309,7 @@ function trfield(cf: string, old: string): string {
 }
 
 export function validate(required: string[], js: Object, logger:LogCallback): boolean {
-  var r = required;
+  var r = _.clone(required);
   var ok = true;
   for( var key in js ) {
     if( key.match(/\./) ) {
@@ -318,8 +318,7 @@ export function validate(required: string[], js: Object, logger:LogCallback): bo
     }
     _.pull(r, key);
   }
-  // Modified to check if the array is empty, instead of `if (r)`, just revert if this is incorrect. - Shilo
-  if( !_.isEmpty(r) ) {
+  if( r.length > 0 ) {
     r.map(rf => logger("validate", "", rf, "missing", ""));
     ok = false;
   }

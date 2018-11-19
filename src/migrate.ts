@@ -2,9 +2,19 @@
 // Typescript version of Stash 2 -> 3 migration code
 //
 
-import { Redbox, Redbox1, Redbox2, RDA } from './Redbox';
-import { crosswalk, validate } from './crosswalk';
-import { ArgumentParser } from 'argparse';
+import {Redbox, Redbox1, Redbox2, RDA} from './Redbox';
+import {crosswalk, validate} from './crosswalk';
+import {ArgumentParser} from 'argparse';
+
+const MANDATORY_CW = [
+	"idfield",
+	"source_type",
+	"dest_type",
+	"workflow",
+	"permissions",
+	"required",
+	"fields",
+];
 
 const fs = require('fs-extra');
 const config = require('config');
@@ -13,22 +23,22 @@ const path = require('path');
 const winston = require('winston');
 const stringify = require('csv-stringify/lib/sync');
 const _ = require('lodash');
-import { Spinner } from 'cli-spinner';
+import {Spinner} from 'cli-spinner';
 
 
 function getlogger() {
-  const logcfs = config.get('logs');
-  return winston.createLogger({
-    level: 'error',
-    format: winston.format.simple(),
-    transports: logcfs.map((cf) => {
-      if( 'filename' in cf ) {
-        return new winston.transports.File(cf);
-      } else {
-        return new winston.transports.Console();
-      }
-    })
-  });
+	const logcfs = config.get('logs');
+	return winston.createLogger({
+		level: 'error',
+		format: winston.format.simple(),
+		transports: logcfs.map((cf) => {
+			if ('filename' in cf) {
+				return new winston.transports.File(cf);
+			} else {
+				return new winston.transports.Console();
+			}
+		})
+	});
 }
 
 
@@ -46,22 +56,28 @@ function connect(server: string): Redbox {
 }
 
 
-
-
-
-async function loadcrosswalk(packagetype: string): Promise<Object|undefined> {
-  const cwf = path.join(config.get("crosswalks"), packagetype + '.json');
-  try {
-    log.info("Loading crosswalk " + cwf);
-    const cw = await fs.readJson(cwf);
-    return cw
-  } catch(e) {
-    log.error("Error loading crosswalk " + cwf + ": " + e);
-    return null;
-  }
+async function loadcrosswalk(packagetype: string): Promise<Object | undefined> {
+	const cwf = path.join(config.get("crosswalks"), packagetype + '.json');
+	try {
+		log.info("Loading crosswalk " + cwf);
+		const cw = await fs.readJson(cwf);
+		var bad = false;
+		MANDATORY_CW.map((f) => {
+			if (!(f in cw)) {
+				console.log("Crosswalk section missing: " + f);
+				bad = true;
+			}
+		});
+		if (bad) {
+			return null;
+		} else {
+			return cw
+		}
+	} catch (e) {
+		log.error("Error loading crosswalk " + cwf + ": " + e);
+		return null;
+	}
 }
-
-
 
 
 async function migrate(options: Object): Promise<void> {
@@ -170,12 +186,12 @@ async function migrate(options: Object): Promise<void> {
             }
           }
         }
-  
+
         if (outdir) {
           dumpjson(outdir, oid, noid, md, mdu, md2);
         }
       }
-  
+
       spinner.setSpinnerTitle("Done.");
       spinner.stop();
       console.log("\n");
@@ -203,142 +219,138 @@ async function migrate(options: Object): Promise<void> {
 // This preserves any extra people granted view access in RB 1.9
 
 async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oid: string, md2: Object, pcw: Object): Promise<Object> {
-  var perms = await rbSource.getPermissions(oid);
-  var nperms = { view: [], edit: [] };
-  if( !perms ) {
-    perms = { view: [], edit: [] };
-  }
-  const users = await usermap(rbSource, oid, md2, pcw);
-  for ( const cat in users ) {
-    for( const user in users[cat] ) {
-      for( const p in pcw[cat] ) {
-        if( !( user in perms[p]) ) {
-          perms[p].push(user);
-      }
-    }
-  }
-  [ 'view, edit '].map((p) => perms[p] = _.union(perms[p], nperms[p]));
-  }
-  try {
-    await rbDest.grantPermission(noid, 'view', perms['view']);
-    return await rbDest.grantPermission(noid, 'edit', perms['edit']);
-  } catch (e) {
-    return { 'error': e };
-  }
+	var perms = await rbSource.getPermissions(oid);
+	var nperms = {view: [], edit: []};
+	if (!perms) {
+		perms = {view: [], edit: []};
+	}
+	const users = await usermap(rbSource, oid, md2, pcw);
+	for (const cat in users) {
+		for (const user in users[cat]) {
+			for (const p in pcw[cat]) {
+				if (!(user in perms[p])) {
+					perms[p].push(user);
+				}
+			}
+		}
+		['view, edit '].map((p) => perms[p] = _.union(perms[p], nperms[p]));
+	}
+	try {
+		await rbDest.grantPermission(noid, 'view', perms['view']);
+		return await rbDest.grantPermission(noid, 'edit', perms['edit']);
+	} catch (e) {
+		return {'error': e};
+	}
 }
 
 
 // build a dict of user categories (ie contributor_ci) to lists of user IDs
 
-async function usermap(rbSource: Redbox, oid: string, md2: Object, pcw: Object): Promise<{ [ cat: string ]: [ string ]}> {
-  var users = {};
+async function usermap(rbSource: Redbox, oid: string, md2: Object, pcw: Object): Promise<{ [cat: string]: [string] }> {
+	var users = {};
 
-  const id_field = pcw['user_id'];
+	const id_field = pcw['user_id'];
 
-  for( var c in pcw['permissions'] ) {
-    if( c === '_owner' ) {
-      const oldperms = await rbSource.getPermissions(oid);
-      users[c] = [ oldperms['edit'][0] ];
-    } else if( c in md2 ) {
-      if( Array.isArray(md2[c]) ) {
-        users[c] = md2[c].map((u) => u[id_field])
-      } else {
-        users[c] = [ md2[c][id_field] ];
-      }
-    }
-  }
-  return users;
+	for (var c in pcw['permissions']) {
+		if (c === '_owner') {
+			const oldperms = await rbSource.getPermissions(oid);
+			users[c] = [oldperms['edit'][0]];
+		} else if (c in md2) {
+			if (Array.isArray(md2[c])) {
+				users[c] = md2[c].map((u) => u[id_field])
+			} else {
+				users[c] = [md2[c][id_field]];
+			}
+		}
+	}
+	return users;
 }
-
-
-
 
 
 async function dumpjson(outdir: string, oid: string, noid: string, md: Object, mdu: Object, md2: Object): Promise<void> {
-  await fs.writeJson(
-    path.join(outdir, 'originals', util.format("%s.json", oid)),
-    md,
-    { spaces: 4 }
-    );
-  await fs.writeJson(
-    path.join(outdir, 'originals', util.format("%s_unflat.json", oid)),
-    mdu,
-    { spaces: 4 }
-    );
-  if( !noid ) {
-    noid = '_' + oid;
-  }
-  await fs.writeJson(
-    path.join(outdir, 'new', util.format("%s.json", noid)),
-    md2,
-    { spaces: 4 }
-  );
+	await fs.writeJson(
+		path.join(outdir, 'originals', util.format("%s.json", oid)),
+		md,
+		{spaces: 4}
+	);
+	await fs.writeJson(
+		path.join(outdir, 'originals', util.format("%s_unflat.json", oid)),
+		mdu,
+		{spaces: 4}
+	);
+	if (!noid) {
+		noid = '_' + oid;
+	}
+	await fs.writeJson(
+		path.join(outdir, 'new', util.format("%s.json", noid)),
+		md2,
+		{spaces: 4}
+	);
 }
 
 
-
-async function writereport(outdir: string, report: Object):Promise<void> {
-  const csvfn = path.join(outdir, "report.csv");
-  const csvstr = stringify(report);
-  await fs.outputFile(csvfn, csvstr);
+async function writereport(outdir: string, report: Object): Promise<void> {
+	const csvfn = path.join(outdir, "report.csv");
+	const csvstr = stringify(report);
+	await fs.outputFile(csvfn, csvstr);
 }
 
 
 async function info(source: string) {
-  console.log("Source");
-  const rbSource = connect(source);
-  const r = await rbSource.info();
-  console.log(r);
+	console.log("Source");
+	const rbSource = connect(source);
+	const r = await rbSource.info();
+	console.log(r);
 }
 
 const log = getlogger();
 
 var parser = new ArgumentParser({
-  version: '0.0.1',
-  addHelp: true,
-  description: "ReDBox 1.x -> 2.0 migration script"
+	version: '0.0.1',
+	addHelp: true,
+	description: "ReDBox 1.x -> 2.0 migration script"
 });
 
 
 parser.addArgument(
-  [ '-t', '--type'],
-  {
-    help: "Record type to migrate. Leave out for a list of types.",
-    defaultValue: null
-  }
+	['-t', '--type'],
+	{
+		help: "Record type to migrate. Leave out for a list of types.",
+		defaultValue: null
+	}
 );
 
 parser.addArgument(
-  [ '-s', '--source'],
-  {
-    help: "ReDBox server to migrate records from.",
-    defaultValue: "Test1_9"
-  }
+	['-s', '--source'],
+	{
+		help: "ReDBox server to migrate records from.",
+		defaultValue: "Test1_9"
+	}
 );
 
 parser.addArgument(
-  [ '-d', '--dest' ],
-  {
-    help: "ReDBox server to migrate records to. Leave out to run in test mode.",
-    defaultValue: null
-  }
+	['-d', '--dest'],
+	{
+		help: "ReDBox server to migrate records to. Leave out to run in test mode.",
+		defaultValue: null
+	}
 );
 
 
 parser.addArgument(
-  [ '-o', '--outdir' ],
-  {
-    help: "Write diagnostics and logs to this directory.",
-    defaultValue: null
-  }
+	['-o', '--outdir'],
+	{
+		help: "Write diagnostics and logs to this directory.",
+		defaultValue: null
+	}
 );
 
 parser.addArgument(
-  [ '-n', '--number'],
-  {
-    help: "Limit migration to first n records",
-    defaultValue: null
-  }
+	['-n', '--number'],
+	{
+		help: "Limit migration to first n records",
+		defaultValue: null
+	}
 );
 
 parser.addArgument(
@@ -370,5 +382,5 @@ var args = parser.parseArgs();
 if( 'type' in args && args['type'] ){
   migrate(args);
 } else {
-  info(args['source']);
+	info(args['source']);
 }

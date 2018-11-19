@@ -1,3 +1,11 @@
-*.js
-node_modules/
-dist/
+.DS_Store
+config/default.json
+~$*.xls*
+.idea
+node_modules
+src/**/*.js
+src/**/*.js.map
+test/**/*.js
+test/**/*.js.map
+logs/*.log
+report*/**

@@ -14,3 +14,5 @@ export { Person } from './Person';
 export { FundingBody } from './FundingBody';
 export { LookupPerson } from './LookupPerson';
 export { DummyLookupPerson } from './DummyLookupPerson';
+export { GrantBody } from './GrantBody';
+export { DataLocations } from './DataLocations';
