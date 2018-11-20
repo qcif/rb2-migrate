@@ -19,7 +19,10 @@
     "objMeta"
   ],
 
-  "crosswalk": {
+  "permissions": {
+  },
+
+  "fields": {
     "title": "title",
     "description": "description",
     "identifier_value": "dc:identifier",
@@ -144,7 +147,7 @@
       },
       "default": "5years"
     },
-    
+
     "vivo:Dataset.redbox:DataCollectionMethodology": "_",
     "vivo:Dataset.dc.format": "vivo:Dataset_dc:format",
     "vivo:Dataset.redbox:DataCollectionResources": "_",
