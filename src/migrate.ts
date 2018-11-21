@@ -200,9 +200,8 @@ async function migrate(options: Object): Promise<void> {
       var stack = e.stack;
       log.error(stack);
     }
-
     runCounter++;
-    start += (runCounter * batch);
+    start = (runCounter * batch);
   }
   if (outdir) {
     await writereport(outdir, report);

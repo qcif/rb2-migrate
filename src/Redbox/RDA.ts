@@ -80,14 +80,17 @@ export class RDA extends BaseRedbox implements Redbox {
   }
 
   /* returns a list of all the items in the
-     Redbox of the specified type */
+     Redbox of the specified type
+     Additionally, for RDA the 'cache' is cleared in between list calls
+     */
 
   async list(ptype: string, start?:number, limit?:number): Promise<string[]> {
     let q = `class:collection`;
-    // let q = `class:collection%20AND%20id:185577`
     if( start === undefined ) {
       start = 0;
     }
+    // clear the bucket cache, don't hold on forever
+    this.bucket = {};
 
     try {
 
@@ -95,16 +98,13 @@ export class RDA extends BaseRedbox implements Redbox {
       if (limit > 0) {
         params['rows'] = limit;
       }
-      let resp = await this.apiget('getMetadata.json', params);
+      let resp:any = await this.apiget('getMetadata.json', params);
       let response = resp["message"];
       let numFound = response["numFound"];
       let docs = response["docs"];
       let ndocs = docs.length
       let list = docs.map(d => d.id);
       _.each(docs, (d) => {
-        if (!this.bucket) {
-          this.bucket = {}
-        }
         this.bucket[d.id] = d;
       });
       if (this.progress) {
