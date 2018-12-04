@@ -67,7 +67,7 @@ async function loadcrosswalk(packagetype: string): Promise<Object|undefined> {
     var bad = false;
     MANDATORY_CW.map((f) => {
       if( !(f in cw) ) {
-        console.log("Crosswalk section missing: " + f);
+        log.error("Crosswalk section missing: " + f);
         bad = true;
       }
     });
@@ -141,37 +141,44 @@ async function migrate(options: Object): Promise<void> {
       let md = await rbSource.getRecord(results[i]);
       spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
       const oid = md[cw['idfield']];
+      log.info("Loaded record " + oid);
       const logger = ( stage, ofield, nfield, msg, value ) => {
         report.push([oid, stage, ofield, nfield, msg, value]);
       };
       const [ mdu, md2 ] = crosswalk(cw, md, logger);
+      log.info("Crosswalked record " + oid)
       var noid = 'new_' + oid;
       if( rbDest ) {
         if( validate(cw['required'], md2, logger) ) {
+   	      log.info("Validated record " + oid);
           try {
             noid = await rbDest.createRecord(md2, dest_type);
             if( noid ) {
+   	      		log.info("Created new record " + noid);
               logger("create", "", "", "", noid);
             } else {
+   	      		log.error("New record returned empty oid");
               logger("create", "", "", "null noid", "");
             }
           } catch(e) {
+   	      	log.error("Create new record failed: " + e);
             logger("create", "", "", "create failed", e);
           }
         } else {
-          console.log("\nInvalid or incomplete JSON for " + oid +", not migrating");
+          log.error("Invalid or incomplete JSON for " + oid +", not migrating");
         }
         if( noid && noid !== 'new_' + oid ) {
-          // const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
-          // if( perms ) {
-          //   if( 'error' in perms ) {
-          //     logger("permissions", "", "", "permissions failed", perms['error']);
-          //   } else {
-          //     logger("permissions", "", "", "set", perms);
-          //   }
-          // } else {
-          //   logger("permissions", "", "", "permissions failed", "unknown error");
-          // }
+          const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
+          if( perms ) {
+            if( 'error' in perms ) {
+              logger("permissions", "", "", "permissions failed", perms['error']);
+            } else {
+            	log.info("Set permissions on " + noid);
+              logger("permissions", "", "", "set", perms);
+            }
+          } else {
+             logger("permissions", "", "", "permissions failed", "unknown error");
+          }
         }
       }
 
