@@ -29,7 +29,7 @@ const SKIP = {
 	'Test1_9': {
 		create_record: 1,
 		grant_view_permission: 1,
-		grant_edit_permission:2
+		grant_edit_permission: 1
 	},
 	'Test2_0': { }
 };
