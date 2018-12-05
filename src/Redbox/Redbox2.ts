@@ -85,7 +85,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
 
     try {
       if( this.progress ) {
-	this.progress(util.format("Searching for %s: %d", ptype, start));
+				this.progress(util.format("Searching for %s: %d", ptype, start));
       }
       let params = { recordType: ptype, start: start, rows: String(pagen) };
       let resp = await this.apiget('listRecords', params);
@@ -95,10 +95,10 @@ export class Redbox2 extends BaseRedbox implements Redbox {
       let ndocs = docs.length
       let list = docs.map(d => d.id);
       if( start + ndocs < numFound ) {
-	let rest = await this.list(ptype, start + ndocs);
-	return list.concat(rest);
+				let rest = await this.list(ptype, start + ndocs);
+				return list.concat(rest);
       } else {
-	return list;
+				return list;
       }
     } catch(e) {
       console.log("Error " + e);

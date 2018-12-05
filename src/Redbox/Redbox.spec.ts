@@ -16,7 +16,7 @@ const fs = require('fs-extra');
 const config = require('config');
 const _ = require('lodash');
 
-const SERVERS = [ 'Test2_0' ]; //, Test1_9 'Test2_0' ];
+const SERVERS = [ 'Test1_9', 'Test2_0' ]; //, Test1_9 'Test2_0' ];
 
 const PTS = {
   'Test1_9': [ 'dmpt', 'dataset', 'self-submission' ],
@@ -26,7 +26,11 @@ const PTS = {
 // mark
 
 const SKIP = {
-	'Test1_9': { grant_view_permission: 1, grant_edit_permission:2 },
+	'Test1_9': {
+		create_record: 1,
+		grant_view_permission: 1,
+		grant_edit_permission:2
+	},
 	'Test2_0': { }
 };
 
@@ -89,37 +93,41 @@ describe('Redbox', function() {
     
   
     it('can fetch lists of objects from ' + server, async () => {
-      for( var i in PTS[server] ) {
-        let pt = PTS[server][i];
-        console.log("Package type " + pt);
-        const oids = await rb.list(pt);
-        expect(oids).to.not.be.empty;
+    	if( !SKIP[server]['fetch_list'] ) {
+      	for( var i in PTS[server] ) {
+        	let pt = PTS[server][i];
+        	const oids = await rb.list(pt);
+        	expect(oids).to.not.be.empty;
+      	}
       }
     });
     
     it('can fetch a record from ' + server, async () => {
-      const oids = await rb.list(PTS[server][0]);
-      expect(oids).to.not.be.empty;
-      const oid = oids[0];
-      const md = await rb.getRecord(oid);
-      expect(md).to.not.be.null;
-      expect(md['oid']).to.equal(oid);
-      
+    	if( !SKIP[server]['fetch_record'] ) {
+	      const oids = await rb.list(PTS[server][0]);
+  	    expect(oids).to.not.be.empty;
+    	  const oid = oids[0];
+     	 	const md = await rb.getRecord(oid);
+     	 	expect(md).to.not.be.null;
+      	expect(md['oid']).to.equal(oid);
+    	} 
     });
     
-    it.skip('can create a record in ' + server, async () => {
-      const oid = await makerecord(rb, server);
-      expect(oid).to.not.be.null;
+    it('can create a record in ' + server, async () => {
+    	if( !SKIP[server]['create_record'] ) {
+      	const oid = await makerecord(rb, server);
+      	expect(oid).to.not.be.null;
 
-      var md2 = await rb.getRecord(oid);
-      expect(md2).to.not.be.null;
+      	var md2 = await rb.getRecord(oid);
+      	expect(md2).to.not.be.null;
 
-      const mdf2 = path.join(FIXTURES['rdmp'][server]['diag'], oid + '.out.json');
-      await fs.writeJson(mdf2, md2);
-      console.log("Wrote retrieved JSON to " + mdf2); 
-      const mdj = await fs.readFile(FIXTURES['rdmp'][server]['data']);
-      const md1 = JSON.parse(mdj);
-      expect(md2).to.deep.equal(md1);
+      	const mdf2 = path.join(FIXTURES['rdmp'][server]['diag'], oid + '.out.json');
+      	await fs.writeJson(mdf2, md2);
+      	console.log("Wrote retrieved JSON to " + mdf2); 
+      	const mdj = await fs.readFile(FIXTURES['rdmp'][server]['data']);
+      	const md1 = JSON.parse(mdj);
+      	expect(md2).to.deep.equal(md1);
+      }
     });
 
     it('can read permissions from ' + server, async () => {
