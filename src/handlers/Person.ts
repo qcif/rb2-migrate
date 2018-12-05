@@ -1,4 +1,5 @@
-import { Handler, HandlerBase } from './handlers';
+import {Handler, HandlerBase} from './handlers';
+import {isEmailValid, decodeEmail} from "../utils/helpers";
 
 const util = require('util');
 
@@ -17,32 +18,34 @@ const util = require('util');
 
 export class Person extends HandlerBase implements Handler {
 
-  crosswalk(o: Object): Object|undefined {
-    const fullname = util.format("%s %s", o["givenname"].trim(), o["familyname"].trim());
-    var honorific = o["honorific"].trim();
-    if( honorific ) {
-      honorific = honorific + ' ';
-    }
-    const role = this.config["role"];
-    const output = {
-      "dc:identifier": o["dc:identifier"],
-      text_full_name: fullname,
-      full_name_honorific: honorific + fullname,
-      email: o["email"],
-      username: "",
-      role: role
-    };
-    if( o["familyname"] ) {
-      this.logger('handler', "Person", role, "succeeded", JSON.stringify(output));
-      if( !o["dc:identifier"] ) {
-        this.logger('handler', "Person", role, "warning", "No dc:identifier for " + fullname);
-      }
-      return output;
-    } else {
-      this.logger('handler', "Person", role, "missing", "No familyname for " + JSON.stringify(output));
-    }
-    return undefined;
-  }
+	crosswalk(o: Object): Object | undefined {
+		const fullname = util.format("%s %s", o["givenname"].trim(), o["familyname"].trim());
+		var honorific = o["honorific"].trim();
+		if (honorific) {
+			honorific = honorific + ' ';
+		}
+		const role = this.config["role"];
+		let email = decodeEmail(o["email"]);
+		email = isEmailValid(email) ? email : '';
+		const output = {
+			"dc:identifier": o["dc:identifier"],
+			text_full_name: fullname,
+			full_name_honorific: honorific + fullname,
+			email: email,
+			username: "",
+			role: role
+		};
+		if (o["familyname"]) {
+			this.logger('handler', "Person", role, "succeeded", JSON.stringify(output));
+			if (!o["dc:identifier"]) {
+				this.logger('handler', "Person", role, "warning", "No dc:identifier for " + fullname);
+			}
+			return output;
+		} else {
+			this.logger('handler', "Person", role, "missing", "No familyname for " + JSON.stringify(output));
+		}
+		return undefined;
+	}
 }
 
 

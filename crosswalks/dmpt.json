@@ -27,7 +27,7 @@
     "contributor_ci",
     "contributor_data_manager",
     "vivo:Dataset_redbox:DataCollectionMethodology",
-    "vivo:Dataset_dc:format",
+    "vivo:Dataset.dc.format",
     "vivo:Dataset_dc:extent",
     "vivo:Dataset_dc:location_rdf:PlainLiteral",
     "vivo:Dataset_dc:source_dc:location_rdf:PlainLiteral",
@@ -117,6 +117,7 @@
         "foaf:familyName": "familyname"
       }
     },
+
     "locrel:prc.foaf:Person": {
       "name": "contributor_data_manager",
       "type": "record",
@@ -160,10 +161,15 @@
 
     
     "vivo:Dataset.redbox:DataCollectionMethodology": "_",
-    "vivo:Dataset.dc.format": "vivo:Dataset_dc:format",
+
+    "vivo:Dataset.dc.format": "vivo:Dataset_dc_format",
+
     "vivo:Dataset.redbox:DataCollectionResources": "_",
+
     "vivo:Dataset.redbox:DataAnalysisResources": "_",
+
     "vivo:Dataset.redbox:MetadataStandard": "_",
+
     "vivo:Dataset.redbox:DataStructureStandard": "_",
 
 
@@ -218,14 +224,14 @@
     
     "vivo:Dataset.dc:source.dc:location.skos:note": "_",
 
-
     "redbox:retentionPeriod.dc:date": {
       "name": "_",
       "type": "valuemap",
       "map": {
-        "12months": "1year",
+        "1year": "1year",
         "5years": "5years",
-        "15years": "15years",
+        "7years": "7years",
+        "25years": "25years",
         "permanent": "permanent"
       }
     },
@@ -243,10 +249,9 @@
     },
     
     "dataowner_name": "dataRetention_data_owner",
-    
-    
+
     "dc:rightsHolder.dc:name": {
-      "name": "_",
+      "name": "dc:rightsHolder_dc:name",
       "type": "valuemap",
       "map": {
         "myUni": "myUni",
@@ -256,12 +261,15 @@
     },
     
     "dc:rightsHolder.dc:description": "_",
+
     "redbox:ContractualObligations": "_",
+
     "dc:coverage.dc:identifier": {
       "type": "record",
       "name": "_",
       "repeatable": 1
     },
+
     "dc:accessRights": {
       "name": "_",
       "type": "valuemap",
@@ -271,15 +279,17 @@
         "no access due to sensitivities": "none"
       }
     },
-    
-    
+
     "agls:policy.dc:identifier": "_",
+
     "agls:policy.skos:note": "_",
+
     "agls:protectiveMarking.dc:type": {
       "type": "record",
       "repeatable": 1,
       "name": "_"
     },
+
     "agls:protectiveMarking.skos:note": "_"
   }
 }
