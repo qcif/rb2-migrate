@@ -11,7 +11,6 @@
 // then crosswalk all fields into the new record unless they
 // have an entry in the CROSSWALK dict: if they do, change
 // fieldname
--> 
 
 const fs = require('fs-extra');
 const util = require('util');
