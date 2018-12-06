@@ -75,7 +75,7 @@ describe('insert dmpt into rb2:rdmp', () => {
 
 });
 
-describe('insert into rb2', () => {
+describe('insert dataset into rb2:dataRecord', () => {
 
 	const aRecord = process.env.aRecord;
 	assert.notEqual(aRecord, undefined, 'Define a record <aRecord> with environment variable as process.env.aRecord');
@@ -95,7 +95,9 @@ describe('insert into rb2', () => {
 		assert.notEqual(cw, undefined, 'could not crosswalk from file');
 		md = await rbSource.getRecord(aRecord);
 		assert.notEqual(md, undefined, 'could not getRecord from rbSource');
-		[mdu, md2] = crosswalk(cw, md, logger);
+		const res = crosswalk(cw, md, logger);
+		mdu = res[0];
+		md2 = res[1];
 		assert.notEqual(mdu, undefined, 'could not unflatten crosswalk from rbSource');
 		assert.notEqual(md2, undefined, 'could not crosswalk from rbSource');
 	});
@@ -105,6 +107,48 @@ describe('insert into rb2', () => {
 		const dest_type = dataRecord;
 		const noid = await rbDest.createRecord(md2, dest_type);
 		expect(noid).to.not.equal(undefined);
+	});
+
+});
+
+describe('should insert all <workflow_steps> into a destination type', () => {
+	let cw;
+	let md;
+	let res: any;
+	let mdu: any;
+	let md2: any;
+
+	let report = [['oid', 'stage', 'ofield', 'nfield', 'status', 'value']];
+	const workflowStep = 'investigation';
+  const packageType = 'dataset';
+  
+	let list = null;
+
+	beforeEach(async () => {
+		list = await rbSource.listByWorkflowStep(packageType, workflowStep);
+	});
+
+	it('should insert each record into ' + workflowStep + ':', () => {
+		const insertedRecords = list.map(async aRecord => {
+			const logger = (stage, ofield, nfield, msg, value) => {
+				report.push([aRecord, stage, ofield, nfield, msg, value]);
+			};
+			const cwf = path.join(config.get("crosswalks"), dataset + '.json');
+			cw = await fs.readJson(cwf);
+			assert.notEqual(cw, undefined, 'could not crosswalk from file');
+			md = await rbSource.getRecord(aRecord);
+			assert.notEqual(md, undefined, 'could not getRecord from rbSource');
+			const res = crosswalk(cw, md, logger);
+			mdu = res[0];
+			md2 = res[1];
+			assert.notEqual(mdu, undefined, 'could not unflatten crosswalk from rbSource');
+			assert.notEqual(md2, undefined, 'could not crosswalk from rbSource');
+			const dest_type = dataRecord;
+			const noid = await rbDest.createRecord(md2, dest_type);
+			//const permissions = await rbDest.grantPermission(noid, 'edit', md2['edit']);
+			return noid;
+		});
+		expect(insertedRecords).to.not.be.undefined;
 	});
 
 });

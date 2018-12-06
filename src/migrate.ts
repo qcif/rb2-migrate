@@ -56,6 +56,7 @@ function connect(server: string): Redbox {
 
 
 async function loadcrosswalk(packagetype: string): Promise<Object | undefined> {
+
 	const cwf = path.join(config.get("crosswalks"), packagetype + '.json');
 	try {
 		log.info("Loading crosswalk " + cwf);
@@ -82,20 +83,21 @@ async function loadcrosswalk(packagetype: string): Promise<Object | undefined> {
 async function migrate(options: Object): Promise<void> {
 	const source = options['source'];
 	const dest = options['dest'];
-	const source_type = options['type'];
+	const crosswalk_file = options['file'];
 	const outdir = options['outdir'] || path.join(process.cwd(), 'report');
 	const limit = options['number'];
 
-	const cw = await loadcrosswalk(source_type);
+	const cw = await loadcrosswalk(crosswalk_file);
+	const source_type = cw['source_type'];
 
 	if (!cw) {
 		return;
 	}
 
-	if (source_type !== cw['source_type']) {
-		log.error("Source type mismatch: " + source_type + '/' + cw['source_type']);
-		return;
-	}
+	// if (source_type !== cw['source_type']) {
+	// 	log.error("Source type mismatch: " + source_type + '/' + cw['source_type']);
+	//  throw new Error(e);;
+	// }
 
 	const dest_type = cw['dest_type'];
 
@@ -105,27 +107,32 @@ async function migrate(options: Object): Promise<void> {
 		rbSource = connect(source);
 	} catch (e) {
 		log.error("Error connecting to source rb " + source + ": " + e);
-		return;
+		throw new Error(e);
 	}
 
 	try {
 		rbDest = connect(dest);
 	} catch (e) {
 		log.error("Error connecting to dest rb " + dest + ": " + e);
-		return;
+		throw new Error(e);
 	}
 
 	if (outdir) {
-		await(fs.ensureDir(path.join(outdir, 'originals')));
-		await(fs.ensureDir(path.join(outdir, 'new')));
+		fs.ensureDirSync(path.join(outdir, 'originals'));
+		fs.ensureDirSync(path.join(outdir, 'new'));
 	}
 
 	try {
-		var spinner = new Spinner("Listing records: " + source_type);
-		spinner.setSpinnerString(17);
-		spinner.start();
-		rbSource.setProgress(s => spinner.setSpinnerTitle(s));
-		var results = await rbSource.list(source_type);
+		// var spinner = new Spinner("Listing records: " + source_type);
+		// spinner.setSpinnerString(17);
+		// spinner.start();
+		// rbSource.setProgress(s => spinner.setSpinnerTitle(s));
+		var results;
+		if (cw['workflow_step']) {
+			results = await rbSource.listByWorkflowStep(source_type, cw['workflow_step']);
+		} else {
+			results = await rbSource.list(source_type);
+		}
 		if (limit && parseInt(limit) > 0) {
 			results = results.splice(0, limit);
 		}
@@ -133,7 +140,7 @@ async function migrate(options: Object): Promise<void> {
 		var report = [['oid', 'stage', 'ofield', 'nfield', 'status', 'value']];
 		for (var i in results) {
 			let md = await rbSource.getRecord(results[i]);
-			spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
+			//spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
 			const oid = md[cw['idfield']];
 			const logger = (stage, ofield, nfield, msg, value) => {
 				report.push([oid, stage, ofield, nfield, msg, value]);
@@ -156,16 +163,16 @@ async function migrate(options: Object): Promise<void> {
 					console.log("\nInvalid or incomplete JSON for " + oid + ", not migrating");
 				}
 				if (noid && noid !== 'new_' + oid) {
-					// const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
-					// if( perms ) {
-					//   if( 'error' in perms ) {
-					//     logger("permissions", "", "", "permissions failed", perms['error']);
-					//   } else {
-					//     logger("permissions", "", "", "set", perms);
-					//   }
-					// } else {
-					//   logger("permissions", "", "", "permissions failed", "unknown error");
-					// }
+					const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
+					if (perms) {
+						if ('error' in perms) {
+							logger("permissions", "", "", "permissions failed", perms['error']);
+						} else {
+							logger("permissions", "", "", "set", perms);
+						}
+					} else {
+						logger("permissions", "", "", "permissions failed", "unknown error");
+					}
 				}
 			}
 
@@ -174,8 +181,8 @@ async function migrate(options: Object): Promise<void> {
 			}
 		}
 
-		spinner.setSpinnerTitle("Done.");
-		spinner.stop();
+		//spinner.setSpinnerTitle("Done.");
+		//spinner.stop();
 		console.log("\n");
 		await writereport(outdir, report);
 	} catch (e) {
@@ -290,7 +297,7 @@ var parser = new ArgumentParser({
 
 
 parser.addArgument(
-	['-t', '--type'],
+	['-f', '--file'],
 	{
 		help: "Record type to migrate. Leave out for a list of types.",
 		defaultValue: null
@@ -333,7 +340,7 @@ parser.addArgument(
 
 var args = parser.parseArgs();
 
-if ('type' in args && args['type']) {
+if ('file' in args && args['file']) {
 	migrate(args);
 } else {
 	info(args['source']);

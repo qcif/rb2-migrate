@@ -20,10 +20,12 @@ export function isEmailValid(email: string) {
 
 export function decodeEmail(email) {
 
-	let theEmail = email.split('&#64;');
-	if (theEmail.length > 0) {
-		return `${theEmail[0]}@${theEmail[1]}`;
-	}
-	else return null;
-
+	const atEncoded = RegExp('&#64;');
+	if (atEncoded.test(email)) {
+		let theEmail = email.split('&#64;');
+		if (theEmail.length > 0) {
+			return `${theEmail[0]}@${theEmail[1]}`;
+		}
+		else return email;
+	} else return email;
 }
