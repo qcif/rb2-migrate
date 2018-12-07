@@ -84,34 +84,35 @@ export class Redbox1 extends BaseRedbox implements Redbox {
 		}
 	}
 
-async listByWorkflowStep(packageType: string, workflowStep: string, start?: number) {
-	let q = `workflow_step:${workflowStep}%20AND%20packageType:${packageType}`;
-	if (start === undefined) {
-		start = 0;
-	}
-	try {
-		if (this.progress) {
-			this.progress(util.format("Searching for %s: %d", workflowStep, start));
+	async listByWorkflowStep(packageType: string, workflowStep: string, start?: number) {
+		let q = `workflow_step:${workflowStep}%20AND%20packageType:${packageType}`;
+		if (start === undefined) {
+			start = 0;
 		}
-		let params = {q: q, start: start};
-		let resp = await this.apiget('search', params);
-		let response = resp["response"];
-		let numFound = response["numFound"];
-		let docs = response["docs"];
-		let ndocs = docs.length;
-		let list = docs.map(d => d.id);
-		if (start + ndocs < numFound) {
-			let rest = await this.listByWorkflowStep(packageType, workflowStep, start + ndocs);
-			list = list.concat(rest);
-			return list
-		} else {
-			return list;
+		try {
+			if (this.progress) {
+				this.progress(util.format("Searching for %s: %d", workflowStep, start));
+			}
+			let params = {q: q, start: start};
+			let resp = await this.apiget('search', params);
+			let response = resp["response"];
+			let numFound = response["numFound"];
+			let docs = response["docs"];
+			let ndocs = docs.length;
+			let list = docs.map(d => d.id);
+			if (start + ndocs < numFound) {
+				let rest = await this.listByWorkflowStep(packageType, workflowStep, start + ndocs);
+				list = list.concat(rest);
+				return list
+			} else {
+				return list;
+			}
+		} catch (e) {
+			console.log("Error " + e);
+			return [];
 		}
-	} catch (e) {
-		console.log("Error " + e);
-		return [];
 	}
-}
+
 	/* createRecord - add an object via the api.
 
 		 @metadata -> object containing the metadata
@@ -156,7 +157,9 @@ async listByWorkflowStep(packageType: string, workflowStep: string, start?: numb
 			return response;
 		} catch (e) {
 			console.log("Error " + e);
-			return undefined;
+			return Promise.reject(() => {
+				throw new Error(e)
+			});
 		}
 	}
 

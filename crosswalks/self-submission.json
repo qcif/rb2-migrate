@@ -2,6 +2,7 @@
 {
   "idfield": "oid",
   "source_type": "self-submission",
+  "workflow_step": "self-submission-draft",
   "dest_type": "dataRecord",
 
   "workflow": {
@@ -32,7 +33,13 @@
   ],
   "fields": {
     "dc:title": "title",
+
+    "dc:description":"description",
+
+    "dc_description":"description",
+
     "description": "description",
+
     "bibo:DataLocation": {
       "name": "dataLocations",
       "handler": "DataLocations",
@@ -43,6 +50,38 @@
         "dc:privacy": "privacy",
         "dc:notes": "notes"
       }
+    },
+
+    "keywords": {
+      "name": "finalKeywords",
+      "type": "record",
+      "repeatable": 1
+    },
+
+
+    "redbox:retentionPeriod.dc:date": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "1year": "1year",
+        "5years": "5years",
+        "7years": "7years",
+        "25years": "25years",
+        "permanent": "permanent"
+      }
+    },
+
+    "redbox:retentionPeriod.dc:date.skos:note": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "heritage": "heritage",
+        "controversial": "controversial",
+        "ofinterest": "ofinterest",
+        "costly_impossible": "costly_impossible",
+        "commercial": "commercial"
+      }
     }
+
   }
 }

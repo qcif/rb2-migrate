@@ -34,8 +34,10 @@
   "fields": {
 
     "dc_title":"title",
+    "dc:title":"title",
 
     "description": "description",
+    "dc:description": "description",
 
     "finalKeywords": {
       "name": "_",
@@ -90,6 +92,7 @@
         "rdf:resource": "rdf:resource"
       }
     },
+
 
     "locrel:rth.foaf:Person": {
       "name": "contributor_ci",
