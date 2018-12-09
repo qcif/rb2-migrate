@@ -155,6 +155,50 @@ describe('should insert all <workflow_steps> into a destination type', () => {
 });
 
 
+describe('insert self-submission-draft into rb2:dataRecord', () => {
+	const aRecord = process.env.aRecord;
+	assert.notEqual(aRecord, undefined, 'Define a record <aRecord> with environment variable as process.env.aRecord');
+
+	let cw;
+	let md;
+	let [mdu, md2] = [{}, {}];
+	const workflowStep = 'self-submission-draft';
+	const packageType = 'self-submission';
+	const dest_type = dataRecord;
+
+	let report = [['oid', 'stage', 'ofield', 'nfield', 'status', 'value']];
+	const logger = (stage, ofield, nfield, msg, value) => {
+		report.push([aRecord, stage, ofield, nfield, msg, value]);
+	};
+
+	beforeEach(async () => {
+		const cwf = path.join(config.get("crosswalks"), `${packageType}_${workflowStep}.json`);
+		cw = await fs.readJson(cwf);
+		assert.notEqual(cw, undefined, 'could not crosswalk from file');
+		md = await rbSource.getRecord(aRecord);
+		assert.notEqual(md, undefined, 'could not getRecord from rbSource');
+		const res = crosswalk(cw, md, logger);
+		mdu = res[0];
+		md2 = res[1];
+		assert.notEqual(mdu, undefined, 'could not unflatten crosswalk from rbSource');
+		assert.notEqual(md2, undefined, 'could not crosswalk from rbSource');
+	});
+
+
+	it('should insert record', async () => {
+		const noid = await rbDest.createRecord(md2, dest_type);
+		const permissions = await rbDest.grantPermission(noid,
+			'edit',
+			{
+				"users": ["moises.sacal@uts.edu.au"],
+				"pendingUsers": ["moises.sacal@uts.edu.au"]
+			});
+		permissions;
+		expect(noid).to.not.equal(undefined);
+	});
+
+});
+
 describe('insert dataset_metadata-review into rb2:dataRecord', () => {
 
 	const aRecord = process.env.aRecord;

@@ -88,8 +88,8 @@ describe('dmp metadata', () => {
 
 describe('list by workflow step', () => {
 
-	const workflowStep = 'live';
-	const packageType = 'dataset';
+	const workflowStep = 'self-submission-draft';
+	const packageType = 'self-submission';
 
 	it('should return metadata from record in redbox1', async () => {
 		let list = await rbSource.listByWorkflowStep(packageType, workflowStep);
