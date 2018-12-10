@@ -16,7 +16,7 @@ const fs = require('fs-extra');
 const config = require('config');
 const _ = require('lodash');
 
-const SERVERS = [ 'Test1_9', 'Test2_0' ]; //, Test1_9 'Test2_0' ];
+const SERVERS = [ 'Test2_0' ]; //, Test1_9 'Test2_0' ];
 
 const PTS = {
   'Test1_9': [ 'dmpt', 'dataset', 'self-submission' ],
@@ -31,14 +31,30 @@ const SKIP = {
 		grant_view_permission: 1,
 		grant_edit_permission: 1
 	},
-	'Test2_0': { }
+	'Test2_0': { 
+		fetch_list: 1,
+		create_record: 1
+	}
 };
 
 const DIAG = './diag';
 
+// most of these fixtures don't need to be set by
+// package type
 
 const FIXTURES = {
   'rdmp': {
+    'Test1_9': {
+      'type': 'dmpt',
+      'data': './test/rdmp.json',
+      'diag': './test/diag/Test1_9',
+      'apiuser': 'admin',
+      'user': 'user1',
+      'permissions': {
+        'view' : [ 'admin' ],
+        'edit' : [ 'admin' ]
+      }
+    },
     'Test2_0': {
       'type': 'rdmp',
       'data': './test/rdmp.json',
@@ -49,18 +65,9 @@ const FIXTURES = {
         'viewRoles' : [ 'Admin', 'Librarians' ],
         'editRoles' : [ 'Admin', 'Librarians' ],
         'view' : [ 'admin' ],
-        'edit' : [ 'admin' ]
-      }
-    },
-    'Test1_9': {
-      'type': 'dmpt',
-      'data': './test/rdmp.json',
-      'diag': './test/diag/Test1_9',
-      'apiuser': 'admin',
-      'user': 'user1',
-      'permissions': {
-        'view' : [ 'admin' ],
-        'edit' : [ 'admin' ]
+        'edit' : [ 'admin' ],
+        'viewPending': [],
+        'editPending': []
       }
     },
   },
@@ -131,46 +138,27 @@ describe('Redbox', function() {
     });
 
     it('can read permissions from ' + server, async () => {
-      const oid = await makerecord(rb, server);
+    	if( !SKIP[server]['read_permissions'] ) {
+      	const oid = await makerecord(rb, server);
 
-      const perms = await rb.getPermissions(oid);
-      expect(perms).to.not.be.undefined;
+      	const perms = await rb.getPermissions(oid);
+      	expect(perms).to.not.be.undefined;
 
-      expect(perms).to.deep.equal(FIXTURES['rdmp'][server]['permissions']);
+      	expect(perms).to.deep.equal(FIXTURES['rdmp'][server]['permissions']);
+      }
     })
 
     it('can set view permissions in ' + server, async () => {
     	if( !SKIP[server]['grant_view_permission'] ) {
-      	const oid = await makerecord(rb, server);
-
-      	const perms1 = await rb.getPermissions(oid);
-      	expect(perms1).to.not.be.undefined;
-
-      	const resp = await rb.grantPermission(oid, 'view', {
-        	'users': [ FIXTURES['rdmp'][server]['user'] ]
-      	});
-
-      	var nperms = _.cloneDeep(FIXTURES['rdmp'][server]['permissions']);
-      	nperms['view'].push(FIXTURES['rdmp'][server]['user']);
-
-      	expect(resp).to.deep.equal(nperms);
+    		const users = [ FIXTURES['rdmp'][server]['user'] ];
+    		await test_permissions(rb, server, 'view', 'user', users);
       } 
     })
 
     it('can set edit permissions in ' + server, async () => {
     	if( !SKIP[server]['grant_edit_permission'] ) {
-      	const oid = await makerecord(rb, server);
-
- 	     	const perms1 = await rb.getPermissions(oid);
-  	    expect(perms1).to.not.be.undefined;
-
-      	const resp = await rb.grantPermission(oid, 'edit', {
-        	'users': [ FIXTURES['rdmp'][server]['user'] ]
-      	});
-      	var nperms = _.cloneDeep(FIXTURES['rdmp'][server]['permissions']);
-      	nperms['edit'].push(FIXTURES['rdmp'][server]['user']);
-
-      	expect(resp).to.deep.equal(nperms);
+    		const users = [ FIXTURES['rdmp'][server]['user'] ];
+    		await test_permissions(rb, server, 'edit', 'user', users);
       }
     })
 
@@ -194,5 +182,30 @@ describe('Redbox', function() {
     
   });
 });
+
+
+// generalised permission test
+// usertype = 'view', 'edit', 'viewPending', 'editPending'
+// perm = 'view' or 'edit' (even for pending)
+// users = list of user ids
+
+async function test_permissions(rb, server, perm, usertype, users) {
+
+ 	const oid = await makerecord(rb, server);
+
+ 	const perms1 = await rb.getPermissions(oid);
+ 	expect(perms1).to.not.be.undefined;
+
+ 	const resp = await rb.grantPermission(oid, perm, { usertype: users}  );
+
+ 	var nperms = _.cloneDeep(FIXTURES['rdmp'][server]['permissions']);
+ 	nperms[perm].push(users);
+
+ 	expect(resp).to.deep.equal(nperms);
+}
+
+
+
+
 
 
