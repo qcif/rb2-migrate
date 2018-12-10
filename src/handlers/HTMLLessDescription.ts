@@ -5,7 +5,7 @@ import * as striptags from 'striptags';
 
 export class HTMLLessDescription extends HandlerBase implements Handler {
 
-	crosswalk(o: Object): string | undefined {
+	crosswalk(o: any): string | undefined {
 
 		const stripped = striptags(o);
 
