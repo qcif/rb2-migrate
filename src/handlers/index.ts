@@ -1,3 +1,4 @@
+import {HTMLLessDescription} from "./HTMLLessDescription";
 
 export { Handler } from './handlers';
 
@@ -15,3 +16,4 @@ export { FundingBody } from './FundingBody';
 export { GrantBody } from './GrantBody';
 export { DataLocations } from './DataLocations';
 export {FlatKeywords} from './FlatKeywords';
+export {HTMLLessDescription} from './HTMLLessDescription';

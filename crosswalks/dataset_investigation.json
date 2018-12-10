@@ -52,11 +52,6 @@
         "rdf:PlainLiteral": ""
       }
     },
-    "finalKeywords": {
-      "name": "_",
-      "type": "record",
-      "repeatable": 1
-    },
     "bibo:DataLocation": {
       "name": "dataLocations",
       "type": "record",

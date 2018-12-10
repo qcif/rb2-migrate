@@ -44,6 +44,20 @@
     "dc:description": "description",
     "dc_description": "description",
     "description": "description",
+    "dc:subject.vivo:keyword": {
+      "name": "finalKeywords",
+      "type": "record",
+      "handler": "FlatKeywords",
+      "repeatable": 1,
+      "fields": {
+        "rdf:PlainLiteral": ""
+      }
+    },
+    "dc:description.1.text": {
+      "name": "description",
+      "type": "record",
+      "handler": "HTMLLessDescription"
+    },
     "foaf:fundedBy.vivo:Grant": {
       "name": "_",
       "type": "record",
@@ -135,10 +149,10 @@
       }
     },
     "dc:creator.foaf:Person": {
-      "name": "contributor_data_manager",
+      "name": "contributor_ci",
       "type": "record",
       "handler": "Person",
-      "role": "Data Manager",
+      "role": "Chief Investigator",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -146,6 +160,24 @@
         "foaf:givenName": "givenname",
         "foaf:familyName": "familyname"
       }
+    }
+  },
+  "dc:accessRights": {
+    "name": "_",
+    "type": "valuemap",
+    "map": {
+      "permission from the data manager": "manager",
+      "open, free access under license": "open",
+      "no access due to sensitivities": "none"
+    }
+  },
+  "dc:rightsHolder.dc:name": {
+    "name": "dc:rightsHolder_dc:name",
+    "type": "valuemap",
+    "map": {
+      "myUni": "myUni",
+      "myUnjount": "myUnjount",
+      "student": "student"
     }
   }
 }
