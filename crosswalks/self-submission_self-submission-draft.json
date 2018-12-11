@@ -126,7 +126,6 @@
       "type": "record",
       "handler": "Person",
       "role": "Contributor",
-      "repeatable": 1,
       "fields": {
         "foaf:Agent.dc:identifier": "dc:identifier",
         "foaf:Agent.foaf:title": "honorific",

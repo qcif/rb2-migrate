@@ -68,7 +68,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
   const ignore = cwjson['ignore'];
 
   for( const srcfield in cwspec ) {
-    var destfield = trfield(cwspec[srcfield], srcfield); 
+  	var destfield = trfield(cwspec[srcfield], srcfield);
     if( srcfield in src ) {
       if( typeof(cwspec[srcfield]) === 'string' ) {
         dest[destfield] = src[srcfield];
@@ -93,13 +93,22 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
             if( h ) {
               if( spec['repeatable'] ) {
                 if( Array.isArray(src[srcfield]) ) {
-                  dest[destfield] = repeat_handler(h, src[srcfield]);
+                	if("changeDestination" in spec) {
+                		const repeatedHandler = repeat_handler(h, src[srcfield]);
+                		repeatedHandler.forEach(rH => {
+			                destfield = rH["destination"];
+			                delete(rH["destination"]);
+			                dest[destfield] = rH;
+		                });
+	                } else{
+			                dest[destfield] = repeat_handler(h, src[srcfield]);
+		                }
                 } else {
                   logger('crosswalk', srcfield, destfield, "error: repeatable handler with non-array input", JSON.stringify(src[srcfield]));
                   dest[destfield] = [];
                 }
-              } else { 
-                dest[destfield] = apply_handler(h, src[srcfield]);
+              } else {
+              	dest[destfield] = apply_handler(h, src[srcfield]);
               }
             } else {
               logger('crosswalk', srcfield, destfield, "error: handler", spec["handler"])
@@ -184,7 +193,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback):Ob
    output unchanged.
 
 
-*/ 
+*/
 
 function unflatten(cwjson: Object, original: Object, logger: LogCallback): Object {
   const repeatrecord = /^(\d+)\.?(.*)$/;
@@ -198,7 +207,7 @@ function unflatten(cwjson: Object, original: Object, logger: LogCallback): Objec
       const m = field.match(pattern);
       if( m ) {
         // check to see if the field looks like a repeatable
-        // record by matching on a leading (\d)\. 
+        // record by matching on a leading (\d)\.
         var sfield = m[1];
         const m2 = sfield.match(repeatrecord);
         if( m2 ) {
@@ -287,8 +296,8 @@ function getrecordspecs(cwjson: Object): Object {
   }
   return rspecs;
 }
-            
-         
+
+
 
 function trfield(cf: string, old: string): string {
   var f = cf;
@@ -320,7 +329,7 @@ export function validate(required: string[], js: Object, logger:LogCallback): bo
   return ok;
 }
 
-      
+
 
 function valuemap(spec: Object, srcfield: string, destfield: string, srcval: string, logger: LogCallback): string {
   if( "map" in spec ) {
