@@ -44,10 +44,14 @@
     "dc:title": "title",
     "description": "description",
     "dc:description": "description",
-    "finalKeywords": {
-      "name": "_",
+    "dc:subject.vivo:keyword": {
+      "name": "finalKeywords",
       "type": "record",
-      "repeatable": 1
+      "repeatable": 1,
+      "handler": "FlatKeywords",
+      "fields": {
+        "rdf:PlainLiteral": ""
+      }
     },
     "bibo:DataLocation": {
       "name": "dataLocations",
@@ -59,6 +63,17 @@
         "dc:type": "type",
         "dc:privacy": "privacy",
         "dc:notes": "notes"
+      }
+    },
+    "redbox:retentionPeriod": {
+      "name": "redbox:retentionPeriod_dc:date",
+      "type": "valuemap",
+      "map": {
+        "1year": "1year",
+        "5years": "5years",
+        "7years": "7years",
+        "25years": "25years",
+        "permanent": "permanent"
       }
     },
     "foaf:fundedBy.foaf:Agent": {
