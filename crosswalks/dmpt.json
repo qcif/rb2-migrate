@@ -82,7 +82,7 @@
     "dc:subject.anzsrc:toa.rdf:resource": "_",
     
     "dc:subject.anzsrc:for": {
-      "name": "_",
+      "name": "dc:subject_anzsrc:for",
       "type": "record",
       "handler": "ForSeo",
       "repeatable": 1,
