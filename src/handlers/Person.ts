@@ -25,24 +25,24 @@ export class Person extends HandlerBase implements Handler {
 			honorific = honorific + ' ';
 		}
 		let role = this.config["role"];
+		let defaultRole = this.config["defaultRole"];
+		let defaultField = this.config["defaultField"];
 		let destination = '';
 		let email = decodeEmail(o["email"]);
+		let repeatable: boolean = false;
 		email = isEmailValid(email) ? email : '';
 		if (role === '') {
 			const changeDest = this.config["destinations"].find(dest => {
+				repeatable = dest['repeatable'];
 				return o[dest['from']] === dest['value'];
 			});
-			role = changeDest['role'];
-			destination = changeDest['to'];
-			// if (o['isPrimaryInvestigator'] === 'on') {
-			// 	role = 'Chief Investigator';
-			// 	delete(o['isPrimaryInvestigator']);
-			// 	this.config['name'] = "contributor_ci";
-			// } else if (o['isCoPrimaryInvestigator'] === 'on') {
-			// 	role = 'Data Manager';
-			// 	delete(o['isCoPrimaryInvestigator']);
-			// 	this.config['name'] = "contributor_data_manager";
-			// }
+			if(changeDest) {
+				role = changeDest['role'] || defaultRole;
+				destination = changeDest['to'];
+			}else {
+				role = defaultRole;
+				destination = defaultField;
+			}
 		}
 		const output = {
 			"dc:identifier": o["dc:identifier"],
@@ -51,7 +51,8 @@ export class Person extends HandlerBase implements Handler {
 			email: email,
 			username: "",
 			role: role,
-			destination: destination
+			destination: destination,
+			repeatable: repeatable
 		};
 		if (o["familyname"]) {
 			this.logger('handler', "Person", role, "succeeded", JSON.stringify(output));

@@ -12,7 +12,7 @@ import * as assert from 'assert';
 
 import 'mocha';
 import {crosswalk} from "../src/crosswalk";
-
+import {postwalk} from "../src/postwalk";
 
 const config = require('config');
 const source = 'redbox1';
@@ -29,6 +29,7 @@ const rbSource = new Redbox1(cf);
 const server2 = 'redbox2';
 const cf2 = config.get('servers.' + server2);
 const rbDest = new Redbox2(cf2);
+
 
 describe('insert dmpt into rb2:rdmp', () => {
 
@@ -70,7 +71,6 @@ describe('insert dmpt into rb2:rdmp', () => {
 		const noid = await rbDest.createRecord(md2, dest_type);
 		console.log(noid);
 		expect(noid).to.not.equal(undefined);
-
 	});
 
 });
@@ -240,6 +240,63 @@ describe('insert dataset_metadata-review into rb2:dataRecord', () => {
 			});
 		permissions;
 		expect(noid).to.not.equal(undefined);
+	});
+
+});
+
+describe('insert dataset_live into rb2:dataRecord then into rb2:dataPublications', () => {
+
+	const aRecord = process.env.aRecord;
+	assert.notEqual(aRecord, undefined, 'Define a record <aRecord> with environment variable as process.env.aRecord');
+
+	let cw;
+	let md;
+	let [mdu, md2] = [{}, {}];
+	const workflowStep = 'live';
+	const packageType = 'dataset';
+	const dest_type = dataRecord;
+
+	let noid = null;
+	let report = [['oid', 'stage', 'ofield', 'nfield', 'status', 'value']];
+	const logger = (stage, ofield, nfield, msg, value) => {
+		report.push([aRecord, stage, ofield, nfield, msg, value]);
+	};
+
+	beforeEach(async () => {
+		const cwf = path.join(config.get("crosswalks"), `${packageType}_${workflowStep}.json`);
+		cw = await fs.readJson(cwf);
+		assert.notEqual(cw, undefined, 'could not crosswalk from file');
+		md = await rbSource.getRecord(aRecord);
+		assert.notEqual(md, undefined, 'could not getRecord from rbSource');
+		const res = crosswalk(cw, md, logger);
+		mdu = res[0];
+		md2 = res[1];
+		assert.notEqual(mdu, undefined, 'could not unflatten crosswalk from rbSource');
+		assert.notEqual(md2, undefined, 'could not crosswalk from rbSource');
+	});
+
+
+	it('should insert record', async () => {
+		noid = await rbDest.createRecord(md2, dest_type);
+		expect(noid).to.not.equal(undefined);
+	});
+
+	it('should run post crosswalk', async () => {
+		const recordMeta = await rbDest.getRecord(noid);
+		assert.notEqual(recordMeta, undefined, 'could not get Record from rbDest');
+		const newRecordMeta = postwalk(cw['postTasks'], recordMeta, logger);
+		const enoid = await rbDest.updateRecordMetadata(newRecordMeta['oid'], newRecordMeta);
+		expect(enoid).to.not.equal(undefined);
+	});
+
+	it('should add permissions', async () => {
+		const permissions = await rbDest.grantPermission(noid,
+			'edit',
+			{
+				"users": ["moises.sacal@uts.edu.au"],
+				"pendingUsers": ["moises.sacal@uts.edu.au"]
+			});
+		expect(permissions).to.not.equal(undefined);
 	});
 
 });

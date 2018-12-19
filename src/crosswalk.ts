@@ -95,8 +95,17 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
 										const repeatedHandler = repeat_handler(h, src[srcfield]);
 										repeatedHandler.forEach(rH => {
 											destfield = rH["destination"];
+											if (rH["repeatable"]) {
+												if (Array.isArray(dest[destfield])) {
+													dest[destfield] = dest[destfield].concat(rH);
+												} else {
+													dest[destfield] = new Array(rH);
+												}
+											} else {
+												dest[destfield] = rH;
+											}
 											delete(rH["destination"]);
-											dest[destfield] = rH;
+											delete(rH["repeatable"]);
 										});
 									} else {
 										dest[destfield] = repeat_handler(h, src[srcfield]);

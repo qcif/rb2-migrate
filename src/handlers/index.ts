@@ -1,6 +1,4 @@
-import {HTMLLessDescription} from "./HTMLLessDescription";
-
-export { Handler } from './handlers';
+export {Handler} from './handlers';
 
 /* To add your own handlers, write a TypeScript class which implements the
    Handler interface, put them in this directory and add an export statement
@@ -10,10 +8,10 @@ export { Handler } from './handlers';
 
  */
 
-export { ForSeo } from './ForSeo';
-export { Person } from './Person';
-export { FundingBody } from './FundingBody';
-export { GrantBody } from './GrantBody';
-export { DataLocations } from './DataLocations';
+export {ForSeo} from './ForSeo';
+export {Person} from './Person';
+export {FundingBody} from './FundingBody';
+export {GrantBody} from './GrantBody';
+export {DataLocations} from './DataLocations';
 export {FlatKeywords} from './FlatKeywords';
 export {HTMLLessDescription} from './HTMLLessDescription';
