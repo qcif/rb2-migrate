@@ -255,6 +255,8 @@ describe('insert dataset_live into rb2:dataRecord then into rb2:dataPublications
 	const workflowStep = 'live';
 	const packageType = 'dataset';
 	const dest_type = dataRecord;
+	const pub_dest_type = 'dataPublication';
+	let recordMeta = {};
 
 	let noid = null;
 	let report = [['oid', 'stage', 'ofield', 'nfield', 'status', 'value']];
@@ -282,11 +284,22 @@ describe('insert dataset_live into rb2:dataRecord then into rb2:dataPublications
 	});
 
 	it('should run post crosswalk', async () => {
-		const recordMeta = await rbDest.getRecord(noid);
+		recordMeta = await rbDest.getRecord(noid);
 		assert.notEqual(recordMeta, undefined, 'could not get Record from rbDest');
 		const newRecordMeta = postwalk(cw['postTasks'], recordMeta, logger);
-		const enoid = await rbDest.updateRecordMetadata(newRecordMeta['oid'], newRecordMeta);
-		expect(enoid).to.not.equal(undefined);
+		const enoid = await rbDest.updateRecordMetadata(noid, newRecordMeta);
+		expect(enoid).to.equal(noid);
+	});
+
+	it('should insert a data publication if its a workflowStep:live', async () => {
+		// with noid auto populate data publication
+		md2['dataRecord'] = {
+			oid: noid,
+			title: recordMeta['title']
+		};
+		const pubOid = await rbDest.createRecord(md2, pub_dest_type);
+		// then after fill up the rest of the available data from original dataset:live
+		expect(pubOid).to.not.equal(undefined);
 	});
 
 	it('should add permissions', async () => {

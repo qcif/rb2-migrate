@@ -132,7 +132,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
 
   async updateRecordMetadata(oid: string, md: Object): Promise<Object|undefined> {
     try {
-      let response = await this.apipost('/records/metadata/' + oid, md);
+      let response = await this.apiput('api/records/metadata/' + oid, md);
       return response;
     } catch(e) {
       console.log("Error " + e);

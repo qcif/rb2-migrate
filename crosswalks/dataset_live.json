@@ -217,5 +217,39 @@
         "no access due to sensitivities": "none"
       }
     }
+  },
+  "transform": {
+    "to": "dataPublication",
+    "fields": {
+      "dc:type.rdf:PlainLiteral": {
+        "name": "dc:subject_anzsrc:toa_rdf:resource",
+        "type": "valuemap",
+        "map": {
+          "catalogueOrIndex": "catalogueOrIndex",
+          "collection": "collection",
+          "dataset": "dataset",
+          "registry": "registry",
+          "repository": "repository",
+          "software": "software"
+        }
+      },
+      "dc:coverage.vivo:DateTimeInterval.vivo:start": {
+        "name": "startDate",
+        "type": "record",
+        "handler": "DateTime"
+      },
+      "dc:coverage.vivo:DateTimeInterval.vivo:end": {
+        "name": "endDate",
+        "type": "record",
+        "handler": "DateTime"
+      },
+      "dc:coverage.vivo:GeographicLocation": {
+        "name": "geolocations",
+        "repeatable": 1,
+        "fields": {
+          "rdf:PlainLiteral": ""
+        }
+      }
+    }
   }
 }
