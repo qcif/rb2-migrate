@@ -264,7 +264,9 @@ describe('insert dataset_live into rb2:dataRecord then into rb2:dataPublications
 		report.push([aRecord, stage, ofield, nfield, msg, value]);
 	};
 
-	beforeEach(async () => {
+	let cwPub, mdPub, mduPub, md2Pub = null;
+
+	before(async () => {
 		const cwf = path.join(config.get("crosswalks"), `${packageType}_${workflowStep}.json`);
 		cw = await fs.readJson(cwf);
 		assert.notEqual(cw, undefined, 'could not crosswalk from file');
@@ -275,6 +277,17 @@ describe('insert dataset_live into rb2:dataRecord then into rb2:dataPublications
 		md2 = res[1];
 		assert.notEqual(mdu, undefined, 'could not unflatten crosswalk from rbSource');
 		assert.notEqual(md2, undefined, 'could not crosswalk from rbSource');
+
+		const cwfPub = path.join(config.get("crosswalks"), `${packageType}_${workflowStep}.publication.json`);
+		cwPub = await fs.readJson(cwfPub);
+		assert.notEqual(cwPub, undefined, 'could not crosswalk from file');
+		mdPub = await rbSource.getRecord(aRecord);
+		assert.notEqual(mdPub, undefined, 'could not getRecord from rbSource');
+		const resPub = crosswalk(cwPub, mdPub, logger);
+		mduPub = resPub[0];
+		md2Pub = resPub[1];
+		assert.notEqual(mduPub, undefined, 'could not unflatten crosswalk from rbSource');
+		assert.notEqual(md2Pub, undefined, 'could not crosswalk from rbSource');
 	});
 
 
@@ -288,16 +301,16 @@ describe('insert dataset_live into rb2:dataRecord then into rb2:dataPublications
 		assert.notEqual(recordMeta, undefined, 'could not get Record from rbDest');
 		const newRecordMeta = postwalk(cw['postTasks'], recordMeta, logger);
 		const enoid = await rbDest.updateRecordMetadata(noid, newRecordMeta);
-		expect(enoid).to.equal(noid);
+		expect(enoid['oid']).to.equal(noid);
 	});
 
 	it('should insert a data publication if its a workflowStep:live', async () => {
 		// with noid auto populate data publication
-		md2['dataRecord'] = {
+		md2Pub['dataRecord'] = {
 			oid: noid,
 			title: recordMeta['title']
 		};
-		const pubOid = await rbDest.createRecord(md2, pub_dest_type);
+		const pubOid = await rbDest.createRecord(md2Pub, pub_dest_type);
 		// then after fill up the rest of the available data from original dataset:live
 		expect(pubOid).to.not.equal(undefined);
 	});

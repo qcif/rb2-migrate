@@ -7,13 +7,13 @@ import {crosswalk, validate} from './crosswalk';
 import {ArgumentParser} from 'argparse';
 
 const MANDATORY_CW = [
-	"idfield",
-	"source_type",
-	"dest_type",
-	"workflow",
-	"permissions",
-	"required",
-	"fields",
+	'idfield',
+	'source_type',
+	'dest_type',
+	'workflow',
+	'permissions',
+	'required',
+	'fields',
 ];
 
 
@@ -25,6 +25,7 @@ const winston = require('winston');
 const stringify = require('csv-stringify/lib/sync');
 const _ = require('lodash');
 import {Spinner} from 'cli-spinner';
+import {postwalk} from './postwalk';
 
 
 function getlogger() {
@@ -57,14 +58,14 @@ function connect(server: string): Redbox {
 
 async function loadcrosswalk(packagetype: string): Promise<Object | undefined> {
 
-	const cwf = path.join(config.get("crosswalks"), packagetype + '.json');
+	const cwf = path.join(config.get('crosswalks'), packagetype);
 	try {
-		log.info("Loading crosswalk " + cwf);
+		log.info('Loading crosswalk ' + cwf);
 		const cw = await fs.readJson(cwf);
 		var bad = false;
 		MANDATORY_CW.map((f) => {
 			if (!(f in cw)) {
-				console.log("Crosswalk section missing: " + f);
+				console.log('Crosswalk section missing: ' + f);
 				bad = true;
 			}
 		});
@@ -74,7 +75,7 @@ async function loadcrosswalk(packagetype: string): Promise<Object | undefined> {
 			return cw
 		}
 	} catch (e) {
-		log.error("Error loading crosswalk " + cwf + ": " + e);
+		log.error('Error loading crosswalk ' + cwf + ': ' + e);
 		return null;
 	}
 }
@@ -87,7 +88,13 @@ async function migrate(options: Object): Promise<void> {
 	const outdir = options['outdir'] || path.join(process.cwd(), 'report');
 	const limit = options['number'];
 
-	const cw = await loadcrosswalk(crosswalk_file);
+	const cw = await loadcrosswalk(`${crosswalk_file}.json`);
+	let cwPub, mdPub, mduPub, md2Pub = null;
+	let recordMeta = {};
+	let pubDestType;
+	if (options['publish']) {
+		cwPub = await loadcrosswalk(`${crosswalk_file}.publication.json`);
+	}
 	const source_type = cw['source_type'];
 
 	if (!cw) {
@@ -106,14 +113,14 @@ async function migrate(options: Object): Promise<void> {
 	try {
 		rbSource = connect(source);
 	} catch (e) {
-		log.error("Error connecting to source rb " + source + ": " + e);
+		log.error('Error connecting to source rb ' + source + ': ' + e);
 		throw new Error(e);
 	}
 
 	try {
 		rbDest = connect(dest);
 	} catch (e) {
-		log.error("Error connecting to dest rb " + dest + ": " + e);
+		log.error('Error connecting to dest rb ' + dest + ': ' + e);
 		throw new Error(e);
 	}
 
@@ -152,26 +159,56 @@ async function migrate(options: Object): Promise<void> {
 					try {
 						noid = await rbDest.createRecord(md2, dest_type);
 						if (noid) {
-							logger("create", "", "", "", noid);
+							logger('create', '', '', '', noid);
 						} else {
-							logger("create", "", "", "null noid", "");
+							logger('create', '', '', 'null noid', '');
 						}
 					} catch (e) {
-						logger("create", "", "", "create failed", e);
+						logger('create', '', '', 'create failed', e);
 					}
 				} else {
-					console.log("\nInvalid or incomplete JSON for " + oid + ", not migrating");
+					console.log('\nInvalid or incomplete JSON for ' + oid + ', not migrating');
 				}
 				if (noid && noid !== 'new_' + oid) {
-					const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
-					if (perms) {
-						if ('error' in perms) {
-							logger("permissions", "", "", "permissions failed", perms['error']);
+					try {
+						const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
+						if (perms) {
+							if ('error' in perms) {
+								logger('permissions', '', '', 'permissions failed', perms['error']);
+							} else {
+								logger('permissions', '', '', 'set', perms);
+							}
 						} else {
-							logger("permissions", "", "", "set", perms);
+							logger('permissions', '', '', 'permissions failed', 'unknown error');
 						}
-					} else {
-						logger("permissions", "", "", "permissions failed", "unknown error");
+					} catch (e) {
+						logger('setpermissions', '', '', 'setpermissions failed', e);
+					}
+					try {
+						recordMeta = await rbDest.getRecord(noid);
+					} catch (e) {
+						logger('getRecord', '', '', 'getRecord failed', e);
+					}
+					try {
+						const newRecordMeta = postwalk(cw['postTasks'], recordMeta, logger);
+						const enoid = await rbDest.updateRecordMetadata(noid, newRecordMeta);
+					} catch (e) {
+						logger('updateRecordMetadata', '', '', 'updateRecordMetadata postwalk failed', e);
+					}
+					if (cwPub) {
+						try {
+							let mdPub = await rbSource.getRecord(noid);
+							const resPub = crosswalk(cwPub, mdPub, logger);
+							mduPub = resPub[0];
+							md2Pub = resPub[1];
+							md2Pub[cwPub['dest_type']] = {
+								oid: noid,
+								title: recordMeta['title']
+							};
+						} catch (e) {
+							logger('getRecord', '', '', 'getRecord for publication failed', e);
+						}
+						const pubOid = await rbDest.createRecord(md2Pub, cwPub['dest_type']);
 					}
 				}
 			}
@@ -181,12 +218,12 @@ async function migrate(options: Object): Promise<void> {
 			}
 		}
 
-		//spinner.setSpinnerTitle("Done.");
+		//spinner.setSpinnerTitle('Done.');
 		//spinner.stop();
-		console.log("\n");
+		console.log('\n');
 		await writereport(outdir, report);
 	} catch (e) {
-		log.error("Migration error:" + e);
+		log.error('Migration error:' + e);
 		var stack = e.stack;
 		log.error(stack);
 	}
@@ -253,12 +290,12 @@ async function usermap(rbSource: Redbox, oid: string, md2: Object, pcw: Object):
 
 async function dumpjson(outdir: string, oid: string, noid: string, md: Object, mdu: Object, md2: Object): Promise<void> {
 	await fs.writeJson(
-		path.join(outdir, 'originals', util.format("%s.json", oid)),
+		path.join(outdir, 'originals', util.format('%s.json', oid)),
 		md,
 		{spaces: 4}
 	);
 	await fs.writeJson(
-		path.join(outdir, 'originals', util.format("%s_unflat.json", oid)),
+		path.join(outdir, 'originals', util.format('%s_unflat.json', oid)),
 		mdu,
 		{spaces: 4}
 	);
@@ -266,7 +303,7 @@ async function dumpjson(outdir: string, oid: string, noid: string, md: Object, m
 		noid = '_' + oid;
 	}
 	await fs.writeJson(
-		path.join(outdir, 'new', util.format("%s.json", noid)),
+		path.join(outdir, 'new', util.format('%s.json', noid)),
 		md2,
 		{spaces: 4}
 	);
@@ -274,14 +311,14 @@ async function dumpjson(outdir: string, oid: string, noid: string, md: Object, m
 
 
 async function writereport(outdir: string, report: Object): Promise<void> {
-	const csvfn = path.join(outdir, "report.csv");
+	const csvfn = path.join(outdir, 'report.csv');
 	const csvstr = stringify(report);
 	await fs.outputFile(csvfn, csvstr);
 }
 
 
 async function info(source: string) {
-	console.log("Source");
+	console.log('Source');
 	const rbSource = connect(source);
 	const r = await rbSource.info();
 	console.log(r);
@@ -292,14 +329,14 @@ const log = getlogger();
 var parser = new ArgumentParser({
 	version: '0.0.1',
 	addHelp: true,
-	description: "ReDBox 1.x -> 2.0 migration script"
+	description: 'ReDBox 1.x -> 2.0 migration script'
 });
 
 
 parser.addArgument(
 	['-f', '--file'],
 	{
-		help: "Record type to migrate. Leave out for a list of types.",
+		help: 'Record type to migrate. Leave out for a list of types.',
 		defaultValue: null
 	}
 );
@@ -307,15 +344,15 @@ parser.addArgument(
 parser.addArgument(
 	['-s', '--source'],
 	{
-		help: "ReDBox server to migrate records from.",
-		defaultValue: "Test1_9"
+		help: 'ReDBox server to migrate records from.',
+		defaultValue: 'Test1_9'
 	}
 );
 
 parser.addArgument(
 	['-d', '--dest'],
 	{
-		help: "ReDBox server to migrate records to. Leave out to run in test mode.",
+		help: 'ReDBox server to migrate records to. Leave out to run in test mode.',
 		defaultValue: null
 	}
 );
@@ -324,7 +361,7 @@ parser.addArgument(
 parser.addArgument(
 	['-o', '--outdir'],
 	{
-		help: "Write diagnostics and logs to this directory.",
+		help: 'Write diagnostics and logs to this directory.',
 		defaultValue: null
 	}
 );
@@ -332,11 +369,18 @@ parser.addArgument(
 parser.addArgument(
 	['-n', '--number'],
 	{
-		help: "Limit migration to first n records",
+		help: 'Limit migration to first n records',
 		defaultValue: null
 	}
 );
 
+parser.addArgument(
+	['-p', '--publish'],
+	{
+		help: 'Copys records into publication draft',
+		defaultValue: false
+	}
+);
 
 var args = parser.parseArgs();
 

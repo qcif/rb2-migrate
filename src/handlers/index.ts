@@ -15,3 +15,5 @@ export {GrantBody} from './GrantBody';
 export {DataLocations} from './DataLocations';
 export {FlatKeywords} from './FlatKeywords';
 export {HTMLLessDescription} from './HTMLLessDescription';
+export {DateTime} from './DateTime';
+export {Creator} from './Creator';

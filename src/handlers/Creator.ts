@@ -16,7 +16,7 @@ const util = require('util');
 // done before the Person handler is used to crosswalk the
 // records.
 
-export class Person extends HandlerBase implements Handler {
+export class Creator extends HandlerBase implements Handler {
 
 	crosswalk(o: Object): Object | undefined {
 		const givenName = o["givenname"] || o["given_name"] || '';
@@ -49,10 +49,10 @@ export class Person extends HandlerBase implements Handler {
 		}
 		const output = {
 			"dc:identifier": o["dc:identifier"],
-			text_full_name: fullname,
-			full_name_honorific: honorific + fullname,
+			family_name: familyName,
+			given_name: givenName,
 			email: email,
-			username: "",
+			username: ""  ,
 			role: role,
 			destination: destination,
 			repeatable: repeatable

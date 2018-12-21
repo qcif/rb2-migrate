@@ -2,8 +2,7 @@
   "idfield": "oid",
   "source_type": "dataset",
   "workflow_step": "live",
-  "dest_type": "dataRecord",
-  "publish": true,
+  "dest_type": "dataPublication",
   "workflow": {
     "stageold1": "stagenew1",
     "stageold2": "stagenew2"
@@ -68,37 +67,18 @@
   ],
   "fields": {
     "dc:creator.foaf:Person": {
-      "changeDestination": true,
-      "destinations": [
-        {
-          "from": "isPrimaryInvestigator",
-          "to": "contributor_ci",
-          "value": "on",
-          "role": "Chief Investigator"
-        },
-        {
-          "from": "isCoPrimaryInvestigator",
-          "to": "contributors",
-          "value": "on",
-          "role": "Contributor",
-          "repeatable": true
-        }
-      ],
-      "name": "",
+      "name": "creators",
       "type": "record",
       "handler": "Person",
       "role": "",
-      "defaultRole": "Contributor",
-      "defaultField": "contributors",
       "repeatable": 1,
+      "destIsArray": true,
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
         "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname",
-        "redbox:isPrimaryInvestigator": "isPrimaryInvestigator",
-        "redbox:isCoPrimaryInvestigator": "isCoPrimaryInvestigator"
+        "foaf:givenName": "given_name",
+        "foaf:familyName": "family_name"
       }
     },
     "dc_title": "title",
@@ -170,43 +150,48 @@
       }
     },
     "locrel:clb.foaf:Person": {
-      "name": "contributors",
+      "name": "creators",
       "type": "record",
-      "handler": "Person",
-      "role": "Contributor",
+      "handler": "Creator",
       "repeatable": 1,
+      "destIsArray": true,
+      "role": "",
       "fields": {
         "person.dc:identifier": "dc:identifier",
         "person.foaf:title": "honorific",
         "person.foaf:email": "email",
-        "person.foaf:givenName": "givenname",
-        "person.foaf:familyName": "familyname"
+        "person.foaf:givenName": "given_name",
+        "person.foaf:familyName": "family_name"
       }
     },
     "swrc:supervisor.foaf:Person": {
-      "name": "contributor_supervisor",
+      "name": "creators",
       "type": "record",
-      "handler": "Person",
-      "role": "Supervisor",
+      "handler": "Creator",
+      "role": "",
+      "repeatable": 1,
+      "destIsArray": true,
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
         "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
+        "foaf:givenName": "given_name",
+        "foaf:familyName": "family_name"
       }
     },
     "locrel:prc.foaf:Person": {
-      "name": "contributor_data_manager",
+      "name": "creators",
       "type": "record",
-      "handler": "Person",
-      "role": "Data Manager",
+      "handler": "Creator",
+      "role": "",
+      "repeatable": 1,
+      "destIsArray": true,
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
         "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
+        "foaf:givenName": "given_name",
+        "foaf:familyName": "family_name"
       }
     },
     "dc:accessRights": {
@@ -216,6 +201,39 @@
         "permission from the data manager": "manager",
         "open, free access under license": "open",
         "no access due to sensitivities": "none"
+      }
+    },
+    "dc:type.rdf:PlainLiteral": {
+      "name": "dc:subject_anzsrc:toa_rdf:resource",
+      "type": "valuemap",
+      "map": {
+        "catalogueOrIndex": "catalogueOrIndex",
+        "collection": "collection",
+        "dataset": "dataset",
+        "registry": "registry",
+        "repository": "repository",
+        "software": "software"
+      }
+    },
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": {
+      "name": "startDate",
+      "type": "record",
+      "handler": "DateTime",
+      "fromFormat": "YYYY-MM-DD",
+      "toFormat":"YYYY/MM/DD"
+    },
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": {
+      "name": "endDate",
+      "type": "record",
+      "handler": "DateTime",
+      "fromFormat": "YYYY-MM-DD",
+      "toFormat":"YYYY/MM/DD"
+    },
+    "dc:coverage.vivo:GeographicLocation": {
+      "name": "geolocations",
+      "repeatable": 1,
+      "fields": {
+        "rdf:PlainLiteral": ""
       }
     }
   }
