@@ -5,6 +5,7 @@
 import {Redbox, Redbox1, Redbox2} from './Redbox';
 import {crosswalk, validate} from './crosswalk';
 import {ArgumentParser} from 'argparse';
+import * as moment from 'moment';
 
 const MANDATORY_CW = [
 	'idfield',
@@ -85,7 +86,8 @@ async function migrate(options: Object): Promise<void> {
 	const source = options['source'];
 	const dest = options['dest'];
 	const crosswalk_file = options['file'];
-	const outdir = options['outdir'] || path.join(process.cwd(), 'report');
+	const dateReport = moment().format('DDMMYYHHMMSS');
+	const outdir = options['outdir'] || path.join(process.cwd(), `report_${dateReport}`);
 	const limit = options['number'];
 
 	const cw = await loadcrosswalk(`${crosswalk_file}.json`);
