@@ -66,20 +66,24 @@ export class Redbox1 extends BaseRedbox implements Redbox {
 			}
 			let params = {q: q, start: start};
 			let resp = await this.apiget('search', params);
-			let response = resp["response"];
-			let numFound = response["numFound"];
-			let docs = response["docs"];
-			let ndocs = docs.length;
-			let list = docs.map(d => d.id);
-			if (start + ndocs < numFound) {
-				let rest = await this.list(ptype, start + ndocs);
-				list = list.concat(rest);
-				return list;
+			if (resp) {
+				let response = resp["response"];
+				let numFound = response["numFound"];
+				let docs = response["docs"];
+				let ndocs = docs.length;
+				let list = docs.map(d => d.id);
+				if (start + ndocs < numFound) {
+					let rest = await this.list(ptype, start + ndocs);
+					list = list.concat(rest);
+					return list;
+				} else {
+					return list;
+				}
 			} else {
-				return list;
+				throw new Error('cannot search');
 			}
 		} catch (e) {
-			console.log("Error " + e);
+			console.log("List Redbox1 Items Error " + e);
 			return [];
 		}
 	}
@@ -108,7 +112,7 @@ export class Redbox1 extends BaseRedbox implements Redbox {
 				return list;
 			}
 		} catch (e) {
-			console.log("Error " + e);
+			console.log("listByWorkflowStep Redbox1 Items Error " + e);
 			return [];
 		}
 	}
