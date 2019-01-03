@@ -57,6 +57,17 @@ describe('packages', () => {
 
 });
 
+describe('DMP Permissions', () => {
+
+	const aRecord = process.env.aRecord;
+	assert.notEqual(aRecord, undefined, 'Define a record <aRecord> with environment variable as process.env.aRecord');
+
+	it('should get permissions from redbox1', async () => {
+		let md = await rbSource.getPermissions(aRecord);
+		console.log(md);
+		expect(md).to.not.equal(undefined);
+	});
+});
 
 describe('dmp metadata', () => {
 
