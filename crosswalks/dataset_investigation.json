@@ -41,6 +41,7 @@
     "objMeta"
   ],
   "fields": {
+    "title": "title",
     "dc_title": "title",
     "description": "description",
     "dc:subject.vivo:keyword": {
