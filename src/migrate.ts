@@ -199,7 +199,7 @@ async function migrate(options: Object): Promise<void> {
 					}
 					if (cwPub) {
 						try {
-							let mdPub = await rbSource.getRecord(noid);
+							let mdPub = await rbSource.getRecord(oid);
 							const resPub = crosswalk(cwPub, mdPub, logger);
 							mduPub = resPub[0];
 							md2Pub = resPub[1];
