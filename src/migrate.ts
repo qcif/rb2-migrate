@@ -87,7 +87,7 @@ async function migrate(options: Object): Promise<void> {
 	const dest = options['dest'];
 	const crosswalk_file = options['file'];
 	const dateReport = moment().format('DDMMYYHHMMSS');
-	const outdir = options['outdir'] || path.join(process.cwd(), `report_${dateReport}`);
+	const outdir = options['outdir'] || path.join(process.cwd(), `report_${crosswalk_file}_${dateReport}`);
 	const limit = options['number'];
 
 	const cw = await loadcrosswalk(`${crosswalk_file}.json`);
