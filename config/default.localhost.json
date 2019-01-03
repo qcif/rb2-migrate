@@ -1,0 +1,38 @@
+{
+  "servers": {
+    "redbox1": {
+      "version": "Redbox1",
+      "baseURL": "https://test-redbox.research.uts.edu.au/redbox/api/v1",
+      "solrURL": "redbox-solr",
+      "apiKey": "29us0fw984yrw9",
+      "packageTypes": [
+        "dmpt",
+        "dataset",
+        "self-submission"
+      ]
+    },
+    "redbox2": {
+      "version": "Redbox2",
+      "baseURL": "http://localhost:1500",
+      "apiKey": "5a71f4c6-0c5c-4380-9028-a3dd2731540b",
+      "packageTypes": [
+        "rdmp",
+        "dataRecord",
+        "workspace"
+      ],
+      "branding": "default",
+      "portal": "rdmp"
+    }
+  },
+  "crosswalks": "./crosswalks/",
+  "logs": [
+    {
+      "level": "debug"
+    },
+    {
+      "filename": "./logs/debug.log",
+      "level": "debug"
+    }
+  ]
+}
+

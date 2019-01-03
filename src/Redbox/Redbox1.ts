@@ -23,7 +23,7 @@ export class Redbox1 extends BaseRedbox implements Redbox {
 	constructor(cf: Object) {
 		super(cf);
 		this.version = 'Redbox1';
-		this.solrURL = cf['solrURL']; // Default could be 'solr' but depends on implementation.
+		this.solrURL = cf['solrURL']; //solrURL works with full http address, example: http://localhost:8000/solr/fascinator
 		assert.notEqual(this.solrURL, undefined, 'Undefined solrURL in Redbox1 config');
 		console.log("solrURL = " + this.solrURL);
 		this.initApiClient();
@@ -80,23 +80,56 @@ export class Redbox1 extends BaseRedbox implements Redbox {
 			}
 			let params = {q: q, start: start};
 			let resp = await this.apiget('search', params);
+			if (resp) {
+				let response = resp["response"];
+				let numFound = response["numFound"];
+				let docs = response["docs"];
+				let ndocs = docs.length;
+				let list = docs.map(d => d.id);
+				if (start + ndocs < numFound) {
+					let rest = await this.list(ptype, start + ndocs);
+					list = list.concat(rest);
+					return list;
+				} else {
+					return list;
+				}
+			} else {
+				throw new Error('cannot search');
+			}
+		} catch (e) {
+			console.log("List Redbox1 Items Error " + e);
+			return [];
+		}
+	}
+
+	async listByWorkflowStep(packageType: string, workflowStep: string, start?: number) {
+		let q = `workflow_step:${workflowStep}%20AND%20packageType:${packageType}`;
+		if (start === undefined) {
+			start = 0;
+		}
+		try {
+			if (this.progress) {
+				this.progress(util.format("Searching for %s: %d", workflowStep, start));
+			}
+			let params = {q: q, start: start};
+			let resp = await this.apiget('search', params);
 			let response = resp["response"];
 			let numFound = response["numFound"];
 			let docs = response["docs"];
 			let ndocs = docs.length;
 			let list = docs.map(d => d.id);
 			if (start + ndocs < numFound) {
-				let rest = await this.list(ptype, start + ndocs);
-				return list.concat(rest);
+				let rest = await this.listByWorkflowStep(packageType, workflowStep, start + ndocs);
+				list = list.concat(rest);
+				return list
 			} else {
 				return list;
 			}
 		} catch (e) {
-			console.log("Error " + e);
+			console.log("listByWorkflowStep Redbox1 Items Error " + e);
 			return [];
 		}
 	}
-
 
 	/* createRecord - add an object via the api.
 
@@ -142,7 +175,9 @@ export class Redbox1 extends BaseRedbox implements Redbox {
 			return response;
 		} catch (e) {
 			console.log("Error " + e);
-			return undefined;
+			return Promise.reject(() => {
+				throw new Error(e)
+			});
 		}
 	}
 

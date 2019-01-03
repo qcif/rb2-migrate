@@ -57,6 +57,17 @@ describe('packages', () => {
 
 });
 
+describe('DMP Permissions', () => {
+
+	const aRecord = process.env.aRecord;
+	assert.notEqual(aRecord, undefined, 'Define a record <aRecord> with environment variable as process.env.aRecord');
+
+	it('should get permissions from redbox1', async () => {
+		let md = await rbSource.getPermissions(aRecord);
+		console.log(md);
+		expect(md).to.not.equal(undefined);
+	});
+});
 
 describe('dmp metadata', () => {
 
@@ -83,5 +94,18 @@ describe('dmp metadata', () => {
 		console.log(md);
 		expect(oid).to.not.equal(undefined);
 	})
+
+});
+
+describe('list by workflow step', () => {
+
+	const workflowStep = 'live';
+	const packageType = 'dataset';
+
+	it('should return metadata from record in redbox1', async () => {
+		let list = await rbSource.listByWorkflowStep(packageType, workflowStep);
+		console.log(list);
+		expect(list).to.not.equal(undefined);
+	});
 
 });
