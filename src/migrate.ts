@@ -150,7 +150,7 @@ async function migrate(options: Object): Promise<void> {
 		for (var i in results) {
 			let md = await rbSource.getRecord(results[i]);
 			//spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
-			const oid = md[cw['idfield']];
+			const oid = md[cw['idfield']] || results[i]; //Some records do not contain the oid in its metadata!
 			const logger = (stage, ofield, nfield, msg, value) => {
 				report.push([oid, stage, ofield, nfield, msg, value]);
 			};
@@ -173,7 +173,7 @@ async function migrate(options: Object): Promise<void> {
 				}
 				if (noid && noid !== 'new_' + oid) {
 					try {
-						const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
+						const perms = await setpermissions(rbSource, rbDest, noid, oid, md2, cw['permissions']);
 						if (perms) {
 							if ('error' in perms) {
 								logger('permissions', '', '', 'permissions failed', perms['error']);
@@ -259,10 +259,10 @@ async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oi
 		['view, edit '].map((p) => perms[p] = _.union(perms[p], nperms[p]));
 	}
 	try {
-		await rbDest.grantPermission(noid, 'view', perms['view']);
-		return await rbDest.grantPermission(noid, 'edit', perms['edit']);
+		const view = await rbDest.grantPermission(noid, 'view', perms['view']);
+		const edit = await rbDest.grantPermission(noid, 'edit', perms['edit']);
 	} catch (e) {
-		return {'error': e};
+		return {'error granting permissions': e};
 	}
 }
 
