@@ -5,15 +5,16 @@
 import {Redbox, Redbox1, Redbox2, RDA} from './Redbox';
 import {crosswalk, validate} from './crosswalk';
 import {ArgumentParser} from 'argparse';
+import * as moment from 'moment';
 
 const MANDATORY_CW = [
-	"idfield",
-	"source_type",
-	"dest_type",
-	"workflow",
-	"permissions",
-	"required",
-	"fields",
+	'idfield',
+	'source_type',
+	'dest_type',
+	'workflow',
+	'permissions',
+	'required',
+	'fields',
 ];
 
 const fs = require('fs-extra');
@@ -24,6 +25,7 @@ const winston = require('winston');
 const stringify = require('csv-stringify/lib/sync');
 const _ = require('lodash');
 import {Spinner} from 'cli-spinner';
+import {postwalk} from './postwalk';
 
 
 function getlogger() {
@@ -56,156 +58,179 @@ function connect(server: string): Redbox {
 }
 
 
-async function loadcrosswalk(packagetype: string): Promise<Object|undefined> {
-  const cwf = path.join(config.get("crosswalks"), packagetype + '.json');
-  try {
-    log.info("Loading crosswalk " + cwf);
-    const cw = await fs.readJson(cwf);
-    var bad = false;
-    MANDATORY_CW.map((f) => {
-      if( !(f in cw) ) {
-        log.error("Crosswalk section missing: " + f);
-        bad = true;
-      }
-    });
-    if( bad ) {
-      return null;
-    } else {
-      return cw
-    }
-  } catch(e) {
-    log.error("Error loading crosswalk " + cwf + ": " + e);
-    return null;
-  }
+async function loadcrosswalk(packagetype: string): Promise<Object | undefined> {
+
+	const cwf = path.join(config.get('crosswalks'), packagetype);
+	try {
+		log.info('Loading crosswalk ' + cwf);
+		const cw = await fs.readJson(cwf);
+		var bad = false;
+		MANDATORY_CW.map((f) => {
+			if (!(f in cw)) {
+				console.log('Crosswalk section missing: ' + f);
+				bad = true;
+			}
+		});
+		if (bad) {
+			return null;
+		} else {
+			return cw
+		}
+	} catch (e) {
+		log.error('Error loading crosswalk ' + cwf + ': ' + e);
+		return null;
+	}
 }
 
 
 async function migrate(options: Object): Promise<void> {
-  const source = options['source'];
-  const dest = options['dest'];
-  const source_type = options['type'];
-  const outdir = options['outdir'];
-  let limit = _.toInteger(options['number']);
-  let start = _.toInteger(options['start']);
+	const source = options['source'];
+	const dest = options['dest'];
+	const crosswalk_file = options['file'];
+	const dateReport = moment().format('DDMMYYHHMMSS');
+	const outdir = options['outdir'] || path.join(process.cwd(), `report_${crosswalk_file}_${dateReport}`);
+	const limit = options['number'];
 
-  var rbSource, rbDest;
+	const cw = await loadcrosswalk(`${crosswalk_file}.json`);
+	let cwPub, mdPub, mduPub, md2Pub = null;
+	let recordMeta = {};
+	let pubDestType;
+	if (options['publish']) {
+		cwPub = await loadcrosswalk(`${crosswalk_file}.publication.json`);
+	}
+	const source_type = cw['source_type'];
 
-  try {
-    rbSource = connect(source);
-  } catch(e) {
-    log.error("Error connecting to source rb " + source + ": " + e);
-    return;
-  }
+	if (!cw) {
+		return;
+	}
 
-  try {
-    rbDest = connect(dest);
-  } catch(e) {
-    log.error("Error connecting to dest rb " + dest + ": " + e);
-    return;
-  }
+	// if (source_type !== cw['source_type']) {
+	// 	log.error("Source type mismatch: " + source_type + '/' + cw['source_type']);
+	//  throw new Error(e);;
+	// }
 
-  const cw = await loadcrosswalk(source_type);
-  if( ! cw ) {
-    return;
-  }
+	const dest_type = cw['dest_type'];
 
-  if( source_type !== cw['source_type'] ) {
-    log.error("Source type mismatch: " + source_type + '/' + cw['source_type']);
-    return;
-  }
+	var rbSource, rbDest;
 
-  const dest_type = cw['dest_type'];
+	try {
+		rbSource = connect(source);
+	} catch (e) {
+		log.error('Error connecting to source rb ' + source + ': ' + e);
+		throw new Error(e);
+	}
 
-  if( outdir ) {
-    await(fs.ensureDir(path.join(outdir, 'originals')));
-    await(fs.ensureDir(path.join(outdir, 'new')));
-  }
+	try {
+		rbDest = connect(dest);
+	} catch (e) {
+		log.error('Error connecting to dest rb ' + dest + ': ' + e);
+		throw new Error(e);
+	}
 
+	if (outdir) {
+		fs.ensureDirSync(path.join(outdir, 'originals'));
+		fs.ensureDirSync(path.join(outdir, 'new'));
+	}
 
-  let runCounter = 0;
-  let numRuns = 1;
-  let batch = options['batch']
+	try {
+		// var spinner = new Spinner("Listing records: " + source_type);
+		// spinner.setSpinnerString(17);
+		// spinner.start();
+		// rbSource.setProgress(s => spinner.setSpinnerTitle(s));
+		var results;
+		if (cw['workflow_step']) {
+			results = await rbSource.listByWorkflowStep(source_type, cw['workflow_step']);
+		} else {
+			results = await rbSource.list(source_type);
+		}
+		if (limit && parseInt(limit) > 0) {
+			results = results.splice(0, limit);
+		}
+		let n = results.length;
+		var report = [['oid', 'stage', 'ofield', 'nfield', 'status', 'value']];
+		for (var i in results) {
+			let md = await rbSource.getRecord(results[i]);
+			//spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
+			const oid = md[cw['idfield']] || results[i]; //Some records do not contain the oid in its metadata!
+			const logger = (stage, ofield, nfield, msg, value) => {
+				report.push([oid, stage, ofield, nfield, msg, value]);
+			};
+			const [mdu, md2] = crosswalk(cw, md, logger);
+			var noid = 'new_' + oid;
+			if (rbDest) {
+				if (validate(cw['required'], md2, logger)) {
+					try {
+						noid = await rbDest.createRecord(md2, dest_type);
+						if (noid) {
+							logger('create', '', '', '', noid);
+						} else {
+							logger('create', '', '', 'null noid', '');
+						}
+					} catch (e) {
+						logger('create', '', '', 'create failed', e);
+					}
+				} else {
+					console.log('\nInvalid or incomplete JSON for ' + oid + ', not migrating');
+				}
+				if (noid && noid !== 'new_' + oid) {
+					try {
+						const perms = await setpermissions(rbSource, rbDest, noid, oid, md2, cw['permissions']);
+						if (perms) {
+							if ('error' in perms) {
+								logger('permissions', '', '', 'permissions failed', perms['error']);
+							} else {
+								logger('permissions', '', '', 'set', perms);
+							}
+						} else {
+							logger('permissions', '', '', 'permissions failed', 'unknown error');
+						}
+					} catch (e) {
+						logger('setpermissions', '', '', 'setpermissions failed', e);
+					}
+					try {
+						recordMeta = await rbDest.getRecord(noid);
+					} catch (e) {
+						logger('getRecord', '', '', 'getRecord failed', e);
+					}
+					try {
+						const newRecordMeta = postwalk(cw['postTasks'], recordMeta, logger);
+						const enoid = await rbDest.updateRecordMetadata(noid, newRecordMeta);
+					} catch (e) {
+						logger('updateRecordMetadata', '', '', 'updateRecordMetadata postwalk failed', e);
+					}
+					if (cwPub) {
+						try {
+							let mdPub = await rbSource.getRecord(oid);
+							const resPub = crosswalk(cwPub, mdPub, logger);
+							mduPub = resPub[0];
+							md2Pub = resPub[1];
+							md2Pub[cwPub['dest_type']] = {
+								oid: noid,
+								title: recordMeta['title']
+							};
+						} catch (e) {
+							logger('getRecord', '', '', 'getRecord for publication failed', e);
+						}
+						const pubOid = await rbDest.createRecord(md2Pub, cwPub['dest_type']);
+					}
+				}
+			}
 
-  if (batch > 0) {
-      limit = batch;
-      const numFound = await rbSource.getNumRecords();
-      numRuns = Math.ceil( (numFound - start ) / batch );
-      const maxBatchCount = options['maxbatchcount'];
-      if (maxBatchCount > 0) {
-        numRuns = maxBatchCount;
-      }
-  }
+			if (outdir) {
+				dumpjson(outdir, oid, noid, md, mdu, md2);
+			}
+		}
 
-  while (runCounter < numRuns) {
-    console.log(`Execution ${runCounter + 1} of ${numRuns}...\n`);
-    try {
-      var spinner = new Spinner(`Listing up to ${limit} records: ${source_type}`);
-      spinner.setSpinnerString(17);
-      spinner.start();
-      rbSource.setProgress(s => spinner.setSpinnerTitle(s));
-      var results = await rbSource.list(source_type, start, limit);
-      if(limit > 0 && results.length > limit) {
-        results = results.splice(0, limit);
-      }
-      let n = results.length;
-      var report = [ [ 'oid', 'stage', 'ofield', 'nfield', 'status', 'value' ] ];
-      for( var i in results ) {
-        let md = await rbSource.getRecord(results[i]);
-        spinner.setSpinnerTitle(util.format("Crosswalking %d of %d", Number(i) + 1, results.length));
-        const oid = md[cw['idfield']];
-        const logger = ( stage, ofield, nfield, msg, value ) => {
-          report.push([oid, stage, ofield, nfield, msg, value]);
-        };
-        const [ mdu, md2 ] = await crosswalk(cw, md, logger, rbSource, rbDest);
-        var noid = 'new_' + oid;
-        if( rbDest ) {
-          if( validate(cw['required'], md2, logger) ) {
-            try {
-              noid = await rbDest.createRecord(md2, dest_type);
-              if( noid ) {
-                logger("create", "", "", "", noid);
-              } else {
-                logger("create", "", "", "null noid", "");
-              }
-            } catch(e) {
-              logger("create", "", "", "create failed", e);
-            }
-          } else {
-            console.log("\nInvalid or incomplete JSON for " + oid +", not migrating");
-          }
-          if( noid && noid !== 'new_' + oid && !_.isEmpty(cw['permissions'])) {
-            const perms = await setpermissions(rbSource, rbDest, oid, noid, md2, cw['permissions']);
-            if( perms ) {
-              if( 'error' in perms ) {
-                logger("permissions", "", "", "permissions failed", perms['error']);
-              } else {
-                logger("permissions", "", "", "set", perms);
-              }
-            } else {
-              logger("permissions", "", "", "permissions failed", "unknown error");
-            }
-          }
-        }
+		//spinner.setSpinnerTitle('Done.');
+		//spinner.stop();
+		console.log('\n');
+		await writereport(outdir, report);
+	} catch (e) {
+		log.error('Migration error:' + e);
+		var stack = e.stack;
+		log.error(stack);
+	}
 
-        if (outdir) {
-          dumpjson(outdir, oid, noid, md, mdu, md2);
-        }
-      }
-
-      spinner.setSpinnerTitle("Done.");
-      spinner.stop();
-      console.log("\n");
-    } catch (e) {
-      log.error("Migration error:" + e);
-      var stack = e.stack;
-      log.error(stack);
-    }
-    runCounter++;
-    start = (runCounter * batch);
-  }
-  if (outdir) {
-    await writereport(outdir, report);
-  }
 }
 
 
@@ -235,10 +260,10 @@ async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oi
 		['view, edit '].map((p) => perms[p] = _.union(perms[p], nperms[p]));
 	}
 	try {
-		await rbDest.grantPermission(noid, 'view', perms['view']);
-		return await rbDest.grantPermission(noid, 'edit', perms['edit']);
+		const view = await rbDest.grantPermission(noid, 'view', perms['view']);
+		const edit = await rbDest.grantPermission(noid, 'edit', perms['edit']);
 	} catch (e) {
-		return {'error': e};
+		return {'error granting permissions': e};
 	}
 }
 
@@ -268,12 +293,12 @@ async function usermap(rbSource: Redbox, oid: string, md2: Object, pcw: Object):
 
 async function dumpjson(outdir: string, oid: string, noid: string, md: Object, mdu: Object, md2: Object): Promise<void> {
 	await fs.writeJson(
-		path.join(outdir, 'originals', util.format("%s.json", oid)),
+		path.join(outdir, 'originals', util.format('%s.json', oid)),
 		md,
 		{spaces: 4}
 	);
 	await fs.writeJson(
-		path.join(outdir, 'originals', util.format("%s_unflat.json", oid)),
+		path.join(outdir, 'originals', util.format('%s_unflat.json', oid)),
 		mdu,
 		{spaces: 4}
 	);
@@ -281,7 +306,7 @@ async function dumpjson(outdir: string, oid: string, noid: string, md: Object, m
 		noid = '_' + oid;
 	}
 	await fs.writeJson(
-		path.join(outdir, 'new', util.format("%s.json", noid)),
+		path.join(outdir, 'new', util.format('%s.json', noid)),
 		md2,
 		{spaces: 4}
 	);
@@ -289,14 +314,14 @@ async function dumpjson(outdir: string, oid: string, noid: string, md: Object, m
 
 
 async function writereport(outdir: string, report: Object): Promise<void> {
-	const csvfn = path.join(outdir, "report.csv");
+	const csvfn = path.join(outdir, 'report.csv');
 	const csvstr = stringify(report);
 	await fs.outputFile(csvfn, csvstr);
 }
 
 
 async function info(source: string) {
-	console.log("Source");
+	console.log('Source');
 	const rbSource = connect(source);
 	const r = await rbSource.info();
 	console.log(r);
@@ -307,14 +332,14 @@ const log = getlogger();
 var parser = new ArgumentParser({
 	version: '0.0.1',
 	addHelp: true,
-	description: "ReDBox 1.x -> 2.0 migration script"
+	description: 'ReDBox 1.x -> 2.0 migration script'
 });
 
 
 parser.addArgument(
-	['-t', '--type'],
+	['-f', '--file'],
 	{
-		help: "Record type to migrate. Leave out for a list of types.",
+		help: 'Record type to migrate. Leave out for a list of types.',
 		defaultValue: null
 	}
 );
@@ -322,15 +347,15 @@ parser.addArgument(
 parser.addArgument(
 	['-s', '--source'],
 	{
-		help: "ReDBox server to migrate records from.",
-		defaultValue: "Test1_9"
+		help: 'ReDBox server to migrate records from.',
+		defaultValue: 'Test1_9'
 	}
 );
 
 parser.addArgument(
 	['-d', '--dest'],
 	{
-		help: "ReDBox server to migrate records to. Leave out to run in test mode.",
+		help: 'ReDBox server to migrate records to. Leave out to run in test mode.',
 		defaultValue: null
 	}
 );
@@ -339,7 +364,7 @@ parser.addArgument(
 parser.addArgument(
 	['-o', '--outdir'],
 	{
-		help: "Write diagnostics and logs to this directory.",
+		help: 'Write diagnostics and logs to this directory.',
 		defaultValue: null
 	}
 );
@@ -347,39 +372,23 @@ parser.addArgument(
 parser.addArgument(
 	['-n', '--number'],
 	{
-		help: "Limit migration to first n records",
+		help: 'Limit migration to first n records',
 		defaultValue: null
 	}
 );
 
 parser.addArgument(
-  [ '-b', '--batch'],
-  {
-    help: "If set, the tool will split migrations in batches. Provide number of records per batch.",
-    defaultValue: 0
-  }
-);
-
-parser.addArgument(
-  [ '-a', '--start'],
-  {
-    help: "If set, sets the starting record number, note to consider sorting order.",
-    defaultValue: 0
-  }
-);
-
-parser.addArgument(
-  [ '-m', '--maxbatchcount'],
-  {
-    help: "If set, sets a hard limit on the number of batches to run. Zero (default), means no limit.",
-    defaultValue: 0
-  }
+	['-p', '--publish'],
+	{
+		help: 'Copys records into publication draft',
+		defaultValue: false
+	}
 );
 
 var args = parser.parseArgs();
 
-if( 'type' in args && args['type'] ){
-  migrate(args);
+if ('file' in args && args['file']) {
+	migrate(args);
 } else {
 	info(args['source']);
 }

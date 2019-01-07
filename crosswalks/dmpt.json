@@ -1,50 +1,53 @@
-
 {
   "idfield": "oid",
   "source_type": "dmpt",
   "dest_type": "rdmp",
-
   "workflow": {
     "stageold1": "stagenew1",
-    "stageold2": "stagenew2" 
+    "stageold2": "stagenew2"
   },
-
   "permissions": {
     "user_id": "email",
     "permissions": {
-      "_owner_": [ "view", "edit" ],
-      "contributor_ci": [ "view", "edit" ],
-      "contributor_data_manager": [ "view", "edit" ],
-      "contributors": [ "view" ],
-      "contributor_supervisor": [ "view" ]
+      "_owner_": [
+        "view",
+        "edit"
+      ],
+      "contributor_ci": [
+        "view",
+        "edit"
+      ],
+      "contributor_data_manager": [
+        "view",
+        "edit"
+      ],
+      "contributors": [
+        "view"
+      ],
+      "contributor_supervisor": [
+        "view"
+      ]
     }
   },
-  
   "required": [
     "title",
-    "description",
     "dc:identifier",
     "contributor_ci",
-    "contributor_data_manager",
-    "vivo:Dataset_redbox:DataCollectionMethodology",
-    "vivo:Dataset_dc:format",
-    "vivo:Dataset_dc:extent",
-    "vivo:Dataset_dc:location_rdf:PlainLiteral",
-    "vivo:Dataset_dc:source_dc:location_rdf:PlainLiteral",
-    "redbox:retentionPeriod_dc:date",
-    "dc:rightsHolder_dc:name",
-    "dc:accessRights"
+    "contributor_data_manager"
   ],
-  
   "ignore": [
     "action",
     "oid",
     "objMeta"
   ],
-
   "fields": {
     "dc:title": "title",
     "dc:description": "description",
+    "dc:description.1.text": {
+      "name": "description",
+      "type": "record",
+      "handler": "HTMLLessDescription"
+    },
     "dc:identifier": "dc:identifier",
     "finalKeywords": {
       "name": "_",
@@ -54,7 +57,6 @@
     "dc:relation.bibo:Website": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",
-
     "foaf:fundedBy.foaf:Agent": {
       "name": "_",
       "type": "record",
@@ -65,7 +67,6 @@
         "skos:prefLabel": "dc_title"
       }
     },
-
     "foaf:fundedBy.vivo:Grant": {
       "name": "_",
       "type": "record",
@@ -78,11 +79,9 @@
         "redbox:grantNumber": "grant_number"
       }
     },
-
     "dc:subject.anzsrc:toa.rdf:resource": "_",
-    
     "dc:subject.anzsrc:for": {
-      "name": "_",
+      "name": "dc:subject_anzsrc:for",
       "type": "record",
       "handler": "ForSeo",
       "repeatable": 1,
@@ -91,7 +90,6 @@
         "rdf:resource": "rdf:resource"
       }
     },
-
     "dc:subject.anzsrc:seo": {
       "name": "_",
       "type": "record",
@@ -102,8 +100,6 @@
         "rdf:resource": "rdf:resource"
       }
     },
-
-    
     "locrel:rth.foaf:Person": {
       "name": "contributor_ci",
       "type": "record",
@@ -157,20 +153,16 @@
         "foaf:familyName": "familyname"
       }
     },
-
-    
     "vivo:Dataset.redbox:DataCollectionMethodology": "_",
-    "vivo:Dataset.dc.format": "vivo:Dataset_dc:format",
+    "vivo:Dataset.dc.format": "vivo:Dataset_dc_format",
     "vivo:Dataset.redbox:DataCollectionResources": "_",
     "vivo:Dataset.redbox:DataAnalysisResources": "_",
     "vivo:Dataset.redbox:MetadataStandard": "_",
     "vivo:Dataset.redbox:DataStructureStandard": "_",
-
-
     "vivo:Dataset.dc:extent": {
       "name": "_",
       "type": "valuemap",
-      "map" : {
+      "map": {
         "Less than 10 GB": "less-than-100GB",
         "Less than 100GB": "less-than-100GB",
         "20GB – 100GB": "less-than-100GB",
@@ -179,7 +171,6 @@
         "": "less-than-100GB"
       }
     },
-
     "vivo:Dataset.dc:location.rdf:PlainLiteral": {
       "name": "_",
       "type": "valuemap",
@@ -194,11 +185,7 @@
         "Other": "other"
       }
     },
-
-    
     "vivo:Dataset.dc:location.skos:note": "_",
-
-    
     "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": {
       "name": "_",
       "type": "valuemap",
@@ -213,23 +200,18 @@
         "Other": "other"
       }
     },
-
-
-    
     "vivo:Dataset.dc:source.dc:location.skos:note": "_",
-
-
     "redbox:retentionPeriod.dc:date": {
       "name": "_",
       "type": "valuemap",
       "map": {
-        "12months": "1year",
+        "1year": "1year",
         "5years": "5years",
-        "15years": "15years",
+        "7years": "7years",
+        "25years": "25years",
         "permanent": "permanent"
       }
     },
-    
     "redbox:retentionPeriod.dc:date.skos:note": {
       "name": "_",
       "type": "valuemap",
@@ -241,12 +223,9 @@
         "commercial": "commercial"
       }
     },
-    
     "dataowner_name": "dataRetention_data_owner",
-    
-    
     "dc:rightsHolder.dc:name": {
-      "name": "_",
+      "name": "dc:rightsHolder_dc:name",
       "type": "valuemap",
       "map": {
         "myUni": "myUni",
@@ -254,7 +233,6 @@
         "student": "student"
       }
     },
-    
     "dc:rightsHolder.dc:description": "_",
     "redbox:ContractualObligations": "_",
     "dc:coverage.dc:identifier": {
@@ -265,14 +243,12 @@
     "dc:accessRights": {
       "name": "_",
       "type": "valuemap",
-      "map" : {
+      "map": {
         "permission from the data manager": "manager",
         "open, free access under license": "open",
         "no access due to sensitivities": "none"
       }
     },
-    
-    
     "agls:policy.dc:identifier": "_",
     "agls:policy.skos:note": "_",
     "agls:protectiveMarking.dc:type": {

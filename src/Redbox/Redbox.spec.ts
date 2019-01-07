@@ -65,9 +65,7 @@ const FIXTURES = {
         'viewRoles' : [ 'Admin', 'Librarians' ],
         'editRoles' : [ 'Admin', 'Librarians' ],
         'view' : [ 'admin' ],
-        'edit' : [ 'admin' ] //,
-        //'viewPending': [],
-        //'editPending': []
+        'edit' : [ 'admin' ]
       }
     },
   },
@@ -146,21 +144,35 @@ describe('Redbox', function() {
       	console.log("Read permissions " + JSON.stringify(perms));
       	expect(perms).to.deep.equal(FIXTURES['rdmp'][server]['permissions']);
       }
-    })
+    });
 
     it('can set view permissions in ' + server, async () => {
     	if( !SKIP[server]['grant_view_permission'] ) {
     		const users = [ FIXTURES['rdmp'][server]['user'] ];
     		await test_permissions(rb, server, 'view', 'users', users);
       } 
-    })
+    });
 
     it('can set edit permissions in ' + server, async () => {
     	if( !SKIP[server]['grant_edit_permission'] ) {
     		const users = [ FIXTURES['rdmp'][server]['user'] ];
     		await test_permissions(rb, server, 'edit', 'users', users);
       }
-    })
+    });
+
+    it('can set pending view permissions in ' + server, async () => {
+    	if( !SKIP[server]['grant_view_permission'] ) {
+    		const users = [ FIXTURES['rdmp'][server]['user'] ];
+    		await test_permissions(rb, server, 'view', 'pendingUsers', users);
+      } 
+    });
+
+    it('can set pending edit permissions in ' + server, async () => {
+    	if( !SKIP[server]['grant_edit_permission'] ) {
+    		const users = [ FIXTURES['rdmp'][server]['user'] ];
+    		await test_permissions(rb, server, 'edit', 'pendingUsers', users);
+      }
+    });
 
     
     // Note: rb.writeObjectDatastream needs to set the
@@ -185,7 +197,7 @@ describe('Redbox', function() {
 
 
 // generalised permission test
-// usertype = 'view', 'edit', 'viewPending', 'editPending'
+// usertype = 'users' or 'pendingUsers'
 // perm = 'view' or 'edit' (even for pending)
 // users = list of user ids
 
@@ -203,8 +215,13 @@ async function test_permissions(rb, server, perm, usertype, users) {
  	const resp = await rb.grantPermission(oid, perm, uobject );
  	console.log("grantPermission returned " + JSON.stringify(resp));
  	var nperms = _.cloneDeep(FIXTURES['rdmp'][server]['permissions']);
- 	nperms[perm] = nperms[perm].concat(users);
 
+ 	if( usertype === 'pendingUsers' ) {
+ 		const p = perm + 'Pending';
+ 		nperms[p] = users;  // these don't already exist on the fixture
+ 	} else {
+ 		nperms[perm] = nperms[perm].concat(users);
+  }
  	expect(resp).to.deep.equal(nperms);
 }
 
