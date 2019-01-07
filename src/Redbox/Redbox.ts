@@ -135,6 +135,31 @@ export abstract class BaseRedbox {
   }
 
 
+	/* low-level method used by POST requests */
+
+	async apiput(path: string, payload: Object, params?: Object): Promise<Object|undefined> {
+		let url = path;
+		let config = {};
+		if( url[0] !== '/' ) {
+			url = '/' + url;
+		}
+		try {
+			if( params ) {
+				config["params"] = params;
+			}
+			let response = await this.ai.put(url, payload, config);
+			if( response.status >= 200 && response.status < 300 ) {
+				return response.data;
+			}
+		} catch ( e ) {
+			console.trace("\n\nPut error " + String(e));
+			console.log("URL: " + url);
+			console.log("payload: " + JSON.stringify(payload).slice(0, 40));
+			console.log("config:" + JSON.stringify(config));
+			return undefined;
+		}
+	}
+
 // see https://github.com/axios/axios/issues/897#issuecomment-343715381
 // on axios' support for adding a body to a delete request, which
 // it does a bit differently than with a post
