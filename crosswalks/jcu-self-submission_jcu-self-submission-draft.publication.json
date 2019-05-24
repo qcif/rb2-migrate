@@ -1,0 +1,315 @@
+{
+  "idfield": "oid",
+  "source_type": "jcu-self-submission",
+  "workflow_step": "jcu-self-submission-draft",
+  "dest_type": "dataPublication",
+  "permissions": {
+    "user_id": "email",
+    "permissions": {
+      "_owner_": [
+        "view",
+        "edit"
+      ],
+      "contributor_ci": [
+        "view",
+        "edit"
+      ],
+      "contributor_data_manager": [
+        "view",
+        "edit"
+      ],
+      "contributors": [
+        "view"
+      ],
+      "contributor_supervisor": [
+        "view"
+      ]
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "ignore": [
+    "action",
+    "oid",
+    "objMeta"
+  ],
+  "fields": {
+    "dc:title": {
+      "destinations": [
+        {
+          "to": "title"
+        },
+        {
+          "to": "citation_title"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "SharedTitle"
+    },
+    "jcu:request.doi": {
+      "name": "requestIdentifier",
+      "type": "record",
+      "handleAll": true,
+      "handler": "RequestIdentifier"
+    },
+    "dc:subject.vivo:keyword": {
+      "name": "finalKeywords",
+      "type": "record",
+      "handler": "FlatKeywords",
+      "repeatable": 1,
+      "fields": {
+        "rdf:PlainLiteral": ""
+      }
+    },
+    "dc:description": {
+      "destinations": [
+        {
+          "to": "other_descriptions"
+        }
+      ],
+      "type": "record",
+      "name": "description",
+      "handleAll": true,
+      "handler": "HTMLMultiDescription",
+      "fields": {
+        "text": "text",
+        "type": "type"
+      }
+    },
+    "foaf:fundedBy.vivo:Grant": {
+      "name": "_",
+      "type": "record",
+      "repeatable": 1,
+      "handler": "GrantBody",
+      "fields": {
+        "warning": "mint_lookup",
+        "dc:identifier": "dc_identifier",
+        "skos.prefLabel": "dc_title",
+        "redbox:grantNumber": "grant_number"
+      }
+    },
+    "locrel:prc.foaf:Person": {
+      "name": "creators",
+      "additive": 1,
+      "type": "record",
+      "handler": "Person",
+      "repeatable": 1,
+      "role": "Data Manager",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "swrc:supervisor.foaf:Person": {
+      "name": "creators",
+      "additive": 1,
+      "repeatable": 1,
+      "type": "record",
+      "handler": "Person",
+      "role": "Supervisor",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "dc:creator.foaf:Person": {
+      "name": "creators",
+      "additive": 1,
+      "type": "record",
+      "handler": "Person",
+      "repeatable": 1,
+      "role": "Chief Investigator",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "dc:rightsHolder.dc:name": {
+      "name": "dc:rightsHolder_dc:name",
+      "type": "valuemap",
+      "map": {
+        "myUni": "myUni",
+        "myUnjount": "myUnjount",
+        "student": "student"
+      }
+    },
+    "bibo:Website": {
+      "name": "dataLocations",
+      "type": "record",
+      "additive": 1,
+      "repeatable": 1,
+      "handler": "URLDataLocations",
+      "fields": {
+        "dc:identifier": "location",
+        "type": "type"
+      }
+    },
+    "vivo:Location.vivo:GeographicLocation": {
+      "name": "dataLocations",
+      "additive": 1,
+      "type": "record",
+      "repeatable": 1,
+      "handler": "PhysicalDataLocations",
+      "fields": {
+        "gn:name": "location",
+        "type": "type"
+      }
+    },
+    "dc:relation.swrc:Publication": {
+      "name": "related_publications",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes"
+      }
+    },
+    "dc:relation.bibo:Website": {
+      "name": "related_websites",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes"
+      }
+    },
+    "dc:relation.vivo:Service": {
+      "name": "related_services",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes",
+        "vivo:Relationship.rdf:PlainLiteral": "related_relationship"
+      }
+    },
+    "dc:relation.vivo:Dataset": {
+      "name": "related_data",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes",
+        "vivo:Relationship.rdf:PlainLiteral": "related_relationship",
+        "redbox:publish": "redbox_publish",
+        "redbox:origin": "redbox_origin"
+      }
+    },
+    "dc:accessRightsType": {
+      "name": "dc:accessRights",
+      "type": "valuemap",
+      "map": {
+        "conditional": "Restricted",
+        "open": "Open",
+        "restricted": "Restricted"
+      }
+    },
+    "dc:accessRights.dc:identifier": "accessRights_url",
+    "dc:type.rdf:PlainLiteral": {
+      "name": "datatype",
+      "type": "valuemap",
+      "map": {
+        "catalogueOrIndex": "catalogueOrIndex",
+        "collection": "collection",
+        "dataset": "dataset",
+        "registry": "registry",
+        "repository": "repository"
+      }
+    },
+    "dc:license.dc:identifier": "license_identifier",
+    "dc:license.rdf:Alt.skos:prefLabel": "license_notes",
+    "dc:license.rdf:Alt.dc:identifier": "license_other_url",
+    "dc:accessRights.dc:RightsStatement.skos:prefLabel": "license_statement",
+    "dc:accessRights.dc:RightsStatement.dc:identifier": "license_statement_url",
+    "dc:subject.anzsrc:for": {
+      "name": "dc:subject_anzsrc:for",
+      "type": "record",
+      "handler": "ForSeo",
+      "repeatable": 1,
+      "fields": {
+        "skos:prefLabel": "skos:prefLabel",
+        "rdf:resource": "rdf:resource"
+      }
+    },
+    "dc:subject.anzsrc:seo": {
+      "name": "dc:subject_anzsrc:seo",
+      "type": "record",
+      "handler": "ForSeo",
+      "repeatable": 1,
+      "fields": {
+        "skos:prefLabel": "skos:prefLabel",
+        "rdf:resource": "rdf:resource"
+      }
+    },
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": {
+      "name": "startDate",
+      "type": "record",
+      "handler": "DateTime",
+      "fromFormat": "YYYY-MM-DD",
+      "toFormat": "YYYY/MM/DD"
+    },
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": {
+      "name": "endDate",
+      "type": "record",
+      "handler": "DateTime",
+      "fromFormat": "YYYY-MM-DD",
+      "toFormat": "YYYY/MM/DD"
+    },
+    "dc:coverage.redbox:timePeriod": "timePeriod",
+    "dc:coverage.vivo:GeographicLocation": {
+      "destinations": [
+        {
+          "to": "geospatial",
+          "repeatable": true,
+          "nestedNames": [
+            "features"
+          ],
+          "additionalKeys": {
+            "type": "FeatureCollection"
+          }
+        },
+        {
+          "to": "geolocations",
+          "repeatable": true
+        }
+      ],
+      "type": "record",
+      "repeatable": true,
+      "handler": "GeoLocation",
+      "fields": {
+        "redbox:wktRaw": "redbox:wktRaw",
+        "redbox:Fid": "redbox:Fid",
+        "dc:identifier": "identifier",
+        "rdf:PlainLiteral": "basic_name",
+        "geo:lat": "lat",
+        "geo:long": "long"
+      }
+    },
+    "redbox:embargo.dc:date": "embargoUntil",
+    "redbox:embargo.skos:note": "embargoNote",
+    "redbox:embargo.redbox:isEmbargoed": {
+      "name": "embargoByDate",
+      "type": "valuemap",
+      "map": {
+        "on": true
+      }
+    },
+    "jcu:data.depositedBy.text": "legal_statement"
+  }
+}
+

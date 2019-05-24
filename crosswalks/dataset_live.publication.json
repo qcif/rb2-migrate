@@ -149,51 +149,6 @@
         "rdf:resource": "rdf:resource"
       }
     },
-    "locrel:clb.foaf:Person": {
-      "name": "creators",
-      "type": "record",
-      "handler": "Creator",
-      "repeatable": 1,
-      "destIsArray": true,
-      "role": "",
-      "fields": {
-        "person.dc:identifier": "dc:identifier",
-        "person.foaf:title": "honorific",
-        "person.foaf:email": "email",
-        "person.foaf:givenName": "given_name",
-        "person.foaf:familyName": "family_name"
-      }
-    },
-    "swrc:supervisor.foaf:Person": {
-      "name": "creators",
-      "type": "record",
-      "handler": "Creator",
-      "role": "",
-      "repeatable": 1,
-      "destIsArray": true,
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "given_name",
-        "foaf:familyName": "family_name"
-      }
-    },
-    "locrel:prc.foaf:Person": {
-      "name": "creators",
-      "type": "record",
-      "handler": "Creator",
-      "role": "",
-      "repeatable": 1,
-      "destIsArray": true,
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "given_name",
-        "foaf:familyName": "family_name"
-      }
-    },
     "dc:accessRights": {
       "name": "_",
       "type": "valuemap",
@@ -231,10 +186,16 @@
     },
     "dc:coverage.vivo:GeographicLocation": {
       "name": "geolocations",
+      "type": "record",
       "repeatable": 1,
       "fields": {
-        "rdf:PlainLiteral": ""
+        "dc:identifier": "identifier",
+        "rdf:PlainLiteral": "basic_name",
+        "geo:lat": "lat",
+        "geo:long": "long"
       }
-    }
+    },
+    "redbox:embargo.redbox:isEmbargoed": "embargoByDate",
+    "redbox:embargo.dc:date": "embargoUntil"
   }
 }

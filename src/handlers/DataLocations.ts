@@ -12,7 +12,7 @@ export class DataLocations extends HandlerBase implements Handler {
 				case 'url':
 					type = 'url';
 					break;
-				case '':
+				case 'physical':
 					type = 'physical';
 					break;
 				case 'file':

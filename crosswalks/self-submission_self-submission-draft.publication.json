@@ -1,8 +1,12 @@
 {
   "idfield": "oid",
-  "source_type": "dataset",
-  "workflow_step": "investigation",
-  "dest_type": "dataRecord",
+  "source_type": "self-submission",
+  "workflow_step": "self-submission-draft",
+  "dest_type": "dataPublication",
+  "workflow": {
+    "stageold1": "stagenew1",
+    "stageold2": "stagenew2"
+  },
   "permissions": {
     "user_id": "email",
     "permissions": {
@@ -27,12 +31,7 @@
     }
   },
   "required": [
-    "title",
-    "description",
-    "finalKeywords",
-    "datatype",
-    "contributor_ci",
-    "contributor_data_manager"
+    "title"
   ],
   "ignore": [
     "action",
@@ -50,13 +49,19 @@
         "rdf:PlainLiteral": ""
       }
     },
-    "dc:description": {
-      "type": "record",
+    "dc:description.1.text": {
       "name": "description",
-      "handler": "HTMLLessFirstFullDescription",
+      "type": "record",
+      "handler": "HTMLLessDescription"
+    },
+    "foaf:fundedBy.foaf:Agent": {
+      "name": "_",
+      "type": "record",
+      "repeatable": 1,
+      "handler": "FundingBody",
       "fields": {
-        "text": "text",
-        "type": "type"
+        "dc:identifier": "dc_identifier",
+        "skos:prefLabel": "dc_title"
       }
     },
     "foaf:fundedBy.vivo:Grant": {
@@ -71,22 +76,18 @@
         "redbox:grantNumber": "grant_number"
       }
     },
-    "locrel:prc.foaf:Person": {
-      "destinations": [
-        {
-          "to": "contributor_data_manager",
-          "role": "Data Manager"
-        },
-        {
-          "repeatable": true,
-          "role": "Data Manager"
-        }
-      ],
+    "keywords": {
+      "name": "finalKeywords",
       "type": "record",
-      "defaultRole": "Contributors",
-      "defaultField": "contributors",
-      "repeatable": 1,
+      "repeatable": 1
+    },
+    "locrel:prc.foaf:Person": {
+      "name": "creators",
+      "additive": 1,
+      "type": "record",
       "handler": "Person",
+      "repeatable": 1,
+      "role": "Data Manager",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -96,32 +97,27 @@
       }
     },
     "dc:contributor.locrel:clb": {
-      "name": "contributors",
+      "name": "creators",
       "type": "record",
-      "handler": "SingleTextFieldPerson",
-      "repeatable": 1,
       "additive": 1,
+      "handler": "Person",
+      "repeatable": 1,
       "role": "Contributors",
       "fields": {
-        "foaf:Agent": "fullname"
+        "foaf:Agent.dc:identifier": "dc:identifier",
+        "foaf:Agent.foaf:title": "honorific",
+        "foaf:Agent.foaf:email": "email",
+        "foaf:Agent.foaf:givenName": "givenname",
+        "foaf:Agent.foaf:familyName": "familyname"
       }
     },
     "swrc:supervisor.foaf:Person": {
-      "destinations": [
-        {
-          "to": "contributor_supervisor",
-          "role": "Supervisor"
-        },
-        {
-          "repeatable": true,
-          "role": "Supervisor"
-        }
-      ],
-      "type": "record",
-      "defaultRole": "Contributors",
-      "defaultField": "contributors",
+      "name": "creators",
+      "additive": 1,
       "repeatable": 1,
+      "type": "record",
       "handler": "Person",
+      "role": "Supervisor",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -131,31 +127,27 @@
       }
     },
     "dc:creator.foaf:Person": {
-      "destinations": [
-        {
-          "to": "contributor_ci",
-          "role": "Chief Investigator"
-        },
-        {
-          "repeatable": true,
-          "role": "Chief Investigator"
-        }
-      ],
+      "name": "creators",
+      "additive": 1,
       "type": "record",
-      "defaultRole": "Contributors",
-      "defaultField": "contributors",
+      "handler": "Person",
       "repeatable": 1,
-      "handler": "AffiliatedPerson",
+      "role": "Chief Investigator",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
         "foaf:email": "email",
         "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname",
-        "foaf:Organization.dc:identifier": "affiliationA",
-        "foaf:Organization.B.dc:identifier": "affiliationB",
-        "foaf:Organization.C.dc:identifier": "affiliationC",
-        "jcu:relationshipType": "relationshipType"
+        "foaf:familyName": "familyname"
+      }
+    },
+    "dc:rightsHolder.dc:name": {
+      "name": "dc:rightsHolder_dc:name",
+      "type": "valuemap",
+      "map": {
+        "myUni": "myUni",
+        "myUnjount": "myUnjount",
+        "student": "student"
       }
     },
     "bibo:Website": {
@@ -165,8 +157,7 @@
       "repeatable": 1,
       "handler": "URLDataLocations",
       "fields": {
-        "dc:identifier": "location",
-        "type": "type"
+        "dc:identifier": "location"
       }
     },
     "vivo:Location.vivo:GeographicLocation": {
@@ -180,16 +171,16 @@
         "type": "type"
       }
     },
-    "dc:relation.swrc:Publication": {
-      "name": "related_publications",
-      "type": "record",
-      "repeatable": 1,
-      "fields": {
-        "dc:identifier": "related_url",
-        "dc:title": "related_title",
-        "skos:note": "related_notes"
+    "dc:accessRightsType": {
+      "name": "dc:accessRights",
+      "type": "valuemap",
+      "map": {
+        "conditional": "Restricted",
+        "open": "Open",
+        "restricted": "Restricted"
       }
     },
+    "dc:accessRights.dc:identifier": "accessRights_url",
     "dc:type.rdf:PlainLiteral": {
       "name": "datatype",
       "type": "valuemap",
@@ -201,6 +192,11 @@
         "repository": "repository"
       }
     },
+    "dc:license.dc:identifier": "license_identifier",
+    "dc:license.rdf:Alt.skos:prefLabel": "license_notes",
+    "dc:license.rdf:Alt.dc:identifier": "license_other_url",
+    "dc:accessRights.dc:RightsStatement.skos:prefLabel": "license_statement",
+    "dc:accessRights.dc:RightsStatement.dc:identifier": "license_statement_url",
     "dc:subject.anzsrc:for": {
       "name": "dc:subject_anzsrc:for",
       "type": "record",
@@ -221,37 +217,40 @@
         "rdf:resource": "rdf:resource"
       }
     },
-    "redbox:retentionPeriod": {
-      "name": "redbox:retentionPeriod_dc:date",
-      "type": "valuemap",
-      "map": {
-        "1year": "1year",
-        "5years": "5years",
-        "7years": "7years",
-        "15years": "15years",
-        "20years": "20years",
-        "permanent": "permanent",
-        "12 months (minor project)": "1year",
-        "5 years (minimum for projects with publications)": "5years",
-        "7 years": "7years",
-        "10 years": "10years",
-        "15 years (all clinical trials)": "15years",
-        "Indefinitely": "permanent",
-        "indefinitely": "permanent"
-      }
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": {
+      "name": "startDate",
+      "type": "record",
+      "handler": "DateTime",
+      "fromFormat": "YYYY-MM-DD",
+      "toFormat": "YYYY/MM/DD"
     },
-    "redbox:retentionPeriod.dc:date.skos:note": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "heritage": "heritage",
-        "controversial": "controversial",
-        "ofinterest": "ofinterest",
-        "costly_impossible": "costly_impossible",
-        "commercial": "commercial"
-      }
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": {
+      "name": "endDate",
+      "type": "record",
+      "handler": "DateTime",
+      "fromFormat": "YYYY-MM-DD",
+      "toFormat": "YYYY/MM/DD"
     },
-    "redbox:disposalDate": "disposalDate"
+    "dc:coverage.redbox:timePeriod": "timePeriod",
+    "dc:coverage.vivo:GeographicLocation": {
+      "name": "geospatial",
+      "type": "record",
+      "nestedNames": [
+        "features"
+      ],
+      "additionalKeys": {
+        "type": "FeatureCollection"
+      },
+      "handler": "GeoLocation",
+      "repeatable": 1,
+      "fields": {
+        "redbox:wktRaw": "redbox:wktRaw",
+        "dc:identifier": "identifier",
+        "rdf:PlainLiteral": "basic_name",
+        "geo:lat": "lat",
+        "geo:long": "long"
+      }
+    }
   }
 }
 

@@ -10,10 +10,19 @@ export {Handler} from './handlers';
 
 export {ForSeo} from './ForSeo';
 export {Person} from './Person';
+export {SingleTextFieldPerson} from './SingleTextFieldPerson';
 export {FundingBody} from './FundingBody';
 export {GrantBody} from './GrantBody';
 export {DataLocations} from './DataLocations';
+export {URLDataLocations} from './URLDataLocations';
+export {PhysicalDataLocations} from './PhysicalDataLocations';
 export {FlatKeywords} from './FlatKeywords';
 export {HTMLLessDescription} from './HTMLLessDescription';
+export {HTMLMultiDescription} from './HTMLMultiDescription';
 export {DateTime} from './DateTime';
-export {Creator} from './Creator';
+export {GeoLocation} from './GeoLocation';
+export {AffiliatedPerson} from './AffiliatedPerson';
+export {HTMLLessFirstFullDescription} from './HTMLLessFirstFullDescription';
+export {SharedTitle} from './SharedTitle';
+export {RequestIdentifier} from './RequestIdentifier';
+

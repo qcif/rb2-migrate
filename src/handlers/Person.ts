@@ -1,15 +1,6 @@
 import {Handler, HandlerBase} from './handlers';
 import {isEmailValid, decodeEmail} from "../utils/helpers";
-
-const util = require('util');
-
-// This expects the incoming person record to have the following:
-
-// dc:identifier
-// familyname
-// givenname
-// honorific
-// email
+import * as _ from 'lodash';
 
 // Use the 'fields' clause in the crosswalk JSON file to map the
 // fields in your rb1.x records to the above keys: this will be
@@ -18,54 +9,87 @@ const util = require('util');
 
 export class Person extends HandlerBase implements Handler {
 
-	crosswalk(o: Object): Object | undefined {
-		const givenName = o["givenname"] || o["given_name"] || '';
-		const familyName = o["familyname"] || o["family_name"] || '';
-		const fullname = `${givenName.trim()} ${familyName.trim()}`;
-		let honorific = o["honorific"].trim();
-		if (honorific) {
-			honorific = honorific + ' ';
-		}
-		let role = this.config["role"];
-		let changeDestination = this.config['changeDestination'];
-		let defaultRole = this.config["defaultRole"];
-		let defaultField = this.config["defaultField"];
-		let destination = '';
-		let email = decodeEmail(o["email"]);
-		let repeatable: boolean = false;
-		email = isEmailValid(email) ? email : '';
-		if (changeDestination) {
-			const changeDest = this.config["destinations"].find(dest => {
-				repeatable = dest['repeatable'];
-				return o[dest['from']] === dest['value'];
-			});
-			if (changeDest) {
-				role = changeDest['role'] || defaultRole;
-				destination = changeDest['to'];
-			} else {
-				role = defaultRole;
-				destination = defaultField;
-			}
-		}
-		const output = {
-			"dc:identifier": o["dc:identifier"],
-			text_full_name: fullname,
-			full_name_honorific: honorific + fullname,
-			email: email,
-			username: "",
-			role: role,
-			destination: destination,
-			repeatable: repeatable
-		};
-		if (familyName !== '') {
-			this.logger('handler', "Person", role, "succeeded", JSON.stringify(output));
-			if (!o["dc:identifier"]) {
-				this.logger('handler', "Person", role, "warning", "No dc:identifier for " + fullname);
-			}
-			return output;
-		} else {
-			this.logger('handler', "Person", role, "missing", "No familyname for " + JSON.stringify(output));
-		}
-		return undefined;
-	}
+  crosswalk(o: Object): Object | undefined {
+    let repeatable: boolean = o['repeatable'] || false;
+    const output = this.buildIdentiferOutput(o, {
+      role: this.config["role"],
+      repeatable: repeatable
+    });
+    if (!output) {
+      return undefined;
+    }
+    if (this.config['destinations']) {
+      const defaultRole = this.config["defaultRole"];
+      const defaultField = this.config["defaultField"];
+      let outputs = this.buildDestinations(o, output);
+      return outputs;
+    } else {
+      return this.getFeedback(output);
+    }
+  }
+
+  buildDestinations(o: Object, output: Object): Object[] {
+    if (this.config['destinations']) {
+      const defaultRole = this.config["defaultRole"];
+      const defaultField = this.config["defaultField"];
+      let outputs = [];
+      for (let dest of this.config["destinations"]) {
+        const outputPostFeedback = this.getFeedback(output);
+        if (outputPostFeedback) {
+          const changeOutput = _.cloneDeep(outputPostFeedback);
+          changeOutput['repeatable'] = dest['repeatable'];
+          if (o[dest['from']] && dest['value'] && o[dest['from']] !== dest['value']) {
+            changeOutput['destination'] = defaultField;
+            changeOutput['role'] = defaultRole;
+          } else {
+            changeOutput['destination'] = dest['to'] || defaultField;
+            changeOutput['role'] = dest['role'] || defaultRole;
+          }
+          outputs.push(changeOutput);
+        } else {
+          outputs.push(undefined);
+        }
+      }
+      return outputs;
+    }
+  }
+
+  buildIdentiferOutput(o: Object, output: Object): Object | undefined {
+    const givenName = o["givenname"] || o["given_name"] || '';
+    const familyName = o["familyname"] || o["family_name"] || '';
+    let fullname = `${givenName.trim()} ${familyName.trim()}`.trim() || o["fullname"] || '';
+    if (!(givenName || familyName || fullname)) {
+      return undefined;
+    }
+    const hrif = o["honorific"] || '';
+    let honorific = hrif.trim();
+    if (honorific) {
+      honorific = honorific + ' ';
+    }
+    let email = decodeEmail(o["email"]);
+    email = isEmailValid(email) ? email : '';
+    _.assign(output, {
+      "dc:identifier": o["dc:identifier"],
+      text_full_name: fullname,
+      full_name_honorific: honorific + fullname,
+      full_name_family_name_first: `${fullname}, ${givenName}`,
+      family_name: familyName,
+      given_name: givenName,
+      email: email
+    });
+    return output;
+  }
+
+  getFeedback(output: Object): Object | undefined {
+    if (!output['family_name']) {
+      this.logger('handler', "Person", output['role'], "missing", "No familyname for " + JSON.stringify(output));
+      return undefined;
+    }
+    this.logger('handler', "Person", output['role'], "succeeded", JSON.stringify(output));
+    if (!output["dc:identifier"]) {
+      this.logger('handler', "Person", output['role'], "warning", "No dc:identifier for " + output['text_full_name']);
+    }
+    return output;
+
+  }
 }

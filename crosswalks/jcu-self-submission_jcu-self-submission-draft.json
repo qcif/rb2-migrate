@@ -1,7 +1,7 @@
 {
   "idfield": "oid",
-  "source_type": "dataset",
-  "workflow_step": "investigation",
+  "source_type": "jcu-self-submission",
+  "workflow_step": "jcu-self-submission-draft",
   "dest_type": "dataRecord",
   "permissions": {
     "user_id": "email",

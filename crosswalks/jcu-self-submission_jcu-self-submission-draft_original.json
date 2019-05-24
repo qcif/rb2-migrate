@@ -1,0 +1,181 @@
+{
+  "idfield": "oid",
+  "source_type": "jcu-self-submission",
+  "workflow_step": "jcu-self-submission-draft",
+  "dest_type": "dataRecord",
+  "workflow": {
+    "stageold1": "stagenew1",
+    "stageold2": "stagenew2"
+  },
+  "permissions": {
+    "user_id": "email",
+    "permissions": {
+      "_owner_": [
+        "view",
+        "edit"
+      ],
+      "contributor_ci": [
+        "view",
+        "edit"
+      ],
+      "contributor_data_manager": [
+        "view",
+        "edit"
+      ],
+      "contributors": [
+        "view"
+      ],
+      "contributor_supervisor": [
+        "view"
+      ]
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "ignore": [
+    "action",
+    "oid",
+    "objMeta"
+  ],
+  "fields": {
+    "dc:title": "title",
+    "dc:description": "description",
+    "dc_description": "description",
+    "description": "description",
+    "dc:subject.vivo:keyword": {
+      "name": "finalKeywords",
+      "type": "record",
+      "handler": "FlatKeywords",
+      "repeatable": 1,
+      "fields": {
+        "rdf:PlainLiteral": ""
+      }
+    },
+    "dc:description.1.text": {
+      "name": "description",
+      "type": "record",
+      "handler": "HTMLLessDescription"
+    },
+    "foaf:fundedBy.vivo:Grant": {
+      "name": "_",
+      "type": "record",
+      "repeatable": 1,
+      "handler": "GrantBody",
+      "fields": {
+        "warning": "mint_lookup",
+        "dc:identifier": "dc:identifier",
+        "skos.prefLabel": "dc:title",
+        "redbox:grantNumber": "grant_number"
+      }
+    },
+    "bibo:DataLocation": {
+      "name": "dataLocations",
+      "handler": "DataLocations",
+      "repeatable": 1,
+      "fields": {
+        "dc:location": "location",
+        "dc:type": "type",
+        "dc:privacy": "privacy",
+        "dc:notes": "notes"
+      }
+    },
+    "keywords": {
+      "name": "finalKeywords",
+      "type": "record",
+      "repeatable": 1
+    },
+    "redbox:retentionPeriod.dc:date": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "1year": "1year",
+        "5years": "5years",
+        "7years": "7years",
+        "25years": "25years",
+        "permanent": "permanent"
+      }
+    },
+    "redbox:retentionPeriod.dc:date.skos:note": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "heritage": "heritage",
+        "controversial": "controversial",
+        "ofinterest": "ofinterest",
+        "costly_impossible": "costly_impossible",
+        "commercial": "commercial"
+      }
+    },
+    "locrel:prc.foaf:Person": {
+      "name": "contributor_data_manager",
+      "type": "record",
+      "handler": "Person",
+      "role": "Data Manager",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "dc:contributor.locrel:clb": {
+      "name": "contributors",
+      "type": "record",
+      "handler": "Person",
+      "role": "Contributor",
+      "fields": {
+        "foaf:Agent.dc:identifier": "dc:identifier",
+        "foaf:Agent.foaf:title": "honorific",
+        "foaf:Agent.foaf:email": "email",
+        "foaf:Agent.foaf:givenName": "givenname",
+        "foaf:Agent.foaf:familyName": "familyname"
+      }
+    },
+    "swrc:supervisor.foaf:Person": {
+      "name": "contributor_supervisor",
+      "type": "record",
+      "handler": "Person",
+      "role": "Supervisor",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "dc:creator.foaf:Person": {
+      "name": "contributor_ci",
+      "type": "record",
+      "handler": "Person",
+      "role": "Chief Investigator",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    }
+  },
+  "dc:accessRights": {
+    "name": "_",
+    "type": "valuemap",
+    "map": {
+      "permission from the data manager": "manager",
+      "open, free access under license": "open",
+      "no access due to sensitivities": "none"
+    }
+  },
+  "dc:rightsHolder.dc:name": {
+    "name": "dc:rightsHolder_dc:name",
+    "type": "valuemap",
+    "map": {
+      "myUni": "myUni",
+      "myUnjount": "myUnjount",
+      "student": "student"
+    }
+  }
+}

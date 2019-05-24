@@ -2,10 +2,6 @@
   "idfield": "oid",
   "source_type": "dmpt",
   "dest_type": "rdmp",
-  "workflow": {
-    "stageold1": "stagenew1",
-    "stageold2": "stagenew2"
-  },
   "permissions": {
     "user_id": "email",
     "permissions": {
@@ -30,10 +26,7 @@
     }
   },
   "required": [
-    "title",
-    "dc:identifier",
-    "contributor_ci",
-    "contributor_data_manager"
+    "title"
   ],
   "ignore": [
     "action",
@@ -43,20 +36,7 @@
   "fields": {
     "dc:title": "title",
     "dc:description": "description",
-    "dc:description.1.text": {
-      "name": "description",
-      "type": "record",
-      "handler": "HTMLLessDescription"
-    },
     "dc:identifier": "dc:identifier",
-    "finalKeywords": {
-      "name": "_",
-      "type": "record",
-      "repeatable": 1
-    },
-    "dc:relation.bibo:Website": "_",
-    "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
-    "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",
     "foaf:fundedBy.foaf:Agent": {
       "name": "_",
       "type": "record",
@@ -74,50 +54,27 @@
       "handler": "GrantBody",
       "fields": {
         "warning": "mint_lookup",
-        "dc:identifier": "dc:identifier",
-        "skos.prefLabel": "dc:title",
+        "dc:identifier": "dc_identifier",
+        "skos.prefLabel": "dc_title",
         "redbox:grantNumber": "grant_number"
       }
     },
-    "dc:subject.anzsrc:toa.rdf:resource": "_",
-    "dc:subject.anzsrc:for": {
-      "name": "dc:subject_anzsrc:for",
-      "type": "record",
-      "handler": "ForSeo",
-      "repeatable": 1,
-      "fields": {
-        "skos:prefLabel": "skos:prefLabel",
-        "rdf:resource": "rdf:resource"
-      }
-    },
-    "dc:subject.anzsrc:seo": {
-      "name": "_",
-      "type": "record",
-      "handler": "ForSeo",
-      "repeatable": 1,
-      "fields": {
-        "skos:prefLabel": "skos:prefLabel",
-        "rdf:resource": "rdf:resource"
-      }
-    },
-    "locrel:rth.foaf:Person": {
-      "name": "contributor_ci",
-      "type": "record",
-      "handler": "Person",
-      "role": "Chief Investigator",
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
-      }
-    },
     "locrel:prc.foaf:Person": {
-      "name": "contributor_data_manager",
+      "destinations": [
+        {
+          "to": "contributor_data_manager",
+          "role": "Data Manager"
+        },
+        {
+          "repeatable": true,
+          "role": "Data Manager"
+        }
+      ],
       "type": "record",
+      "defaultRole": "Contributors",
+      "defaultField": "contributors",
+      "repeatable": 1,
       "handler": "Person",
-      "role": "Data Manager",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -126,25 +83,13 @@
         "foaf:familyName": "familyname"
       }
     },
-    "locrel:clb.foaf:Person": {
+    "dc:contributor.locrel:clb": {
       "name": "contributors",
       "type": "record",
       "handler": "Person",
-      "role": "Contributor",
+      "role": "Contributors",
       "repeatable": 1,
-      "fields": {
-        "person.dc:identifier": "dc:identifier",
-        "person.foaf:title": "honorific",
-        "person.foaf:email": "email",
-        "person.foaf:givenName": "givenname",
-        "person.foaf:familyName": "familyname"
-      }
-    },
-    "swrc:supervisor.foaf:Person": {
-      "name": "contributor_supervisor",
-      "type": "record",
-      "handler": "Person",
-      "role": "Supervisor",
+      "additive": 1,
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -153,6 +98,55 @@
         "foaf:familyName": "familyname"
       }
     },
+    "swrc:supervisor.foaf:Person": {
+      "destinations": [
+        {
+          "to": "contributor_supervisor",
+          "role": "Supervisor"
+        },
+        {
+          "repeatable": true,
+          "role": "Supervisor"
+        }
+      ],
+      "type": "record",
+      "defaultRole": "Contributors",
+      "defaultField": "contributors",
+      "repeatable": 1,
+      "handler": "Person",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "locrel:rth.foaf:Person": {
+      "destinations": [
+        {
+          "to": "contributor_ci",
+          "role": "Chief Investigator"
+        },
+        {
+          "repeatable": true,
+          "role": "Chief Investigator"
+        }
+      ],
+      "type": "record",
+      "defaultRole": "Contributors",
+      "defaultField": "contributors",
+      "repeatable": 1,
+      "handler": "Person",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "dc:relation.bibo:Website": "dc:relation_bibo:Website",
     "vivo:Dataset.redbox:DataCollectionMethodology": "_",
     "vivo:Dataset.dc.format": "vivo:Dataset_dc_format",
     "vivo:Dataset.redbox:DataCollectionResources": "_",
@@ -169,6 +163,59 @@
         "10GB-20GB": "less-than-100GB",
         "100GB+": "100GB-to-2TB",
         "": "less-than-100GB"
+      }
+    },
+    "dc:subject.anzsrc:for": {
+      "name": "dc:subject_anzsrc:for",
+      "type": "record",
+      "handler": "ForSeo",
+      "repeatable": 1,
+      "fields": {
+        "skos:prefLabel": "skos:prefLabel",
+        "rdf:resource": "rdf:resource"
+      }
+    },
+    "dc:subject.anzsrc:seo": {
+      "name": "dc:subject_anzsrc:seo",
+      "type": "record",
+      "handler": "ForSeo",
+      "repeatable": 1,
+      "fields": {
+        "skos:prefLabel": "skos:prefLabel",
+        "rdf:resource": "rdf:resource"
+      }
+    },
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": {
+      "name": "startDate",
+      "type": "record",
+      "handler": "DateTime",
+      "fromFormat": "YYYY-MM-DD",
+      "toFormat": "YYYY/MM/DD"
+    },
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": {
+      "name": "endDate",
+      "type": "record",
+      "handler": "DateTime",
+      "fromFormat": "YYYY-MM-DD",
+      "toFormat": "YYYY/MM/DD"
+    },
+    "redbox:retentionPeriod": {
+      "name": "redbox:retentionPeriod_dc:date",
+      "type": "valuemap",
+      "map": {
+        "1year": "1year",
+        "5years": "5years",
+        "7years": "7years",
+        "15years": "15years",
+        "20years": "20years",
+        "permanent": "permanent",
+        "12 months (minor project)": "1year",
+        "5 years (minimum for projects with publications)": "5years",
+        "7 years": "7years",
+        "10 years": "10years",
+        "15 years (all clinical trials)": "15years",
+        "Indefinitely": "permanent",
+        "indefinitely": "permanent"
       }
     },
     "vivo:Dataset.dc:location.rdf:PlainLiteral": {
@@ -197,28 +244,6 @@
       }
     },
     "vivo:Dataset.dc:source.dc:location.skos:note": "_",
-    "redbox:retentionPeriod.dc:date": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "1year": "1year",
-        "5years": "5years",
-        "7years": "7years",
-        "25years": "25years",
-        "permanent": "permanent"
-      }
-    },
-    "redbox:retentionPeriod.dc:date.skos:note": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "heritage": "heritage",
-        "controversial": "controversial",
-        "ofinterest": "ofinterest",
-        "costly_impossible": "costly_impossible",
-        "commercial": "commercial"
-      }
-    },
     "dataowner_name": "dataRetention_data_owner",
     "dc:rightsHolder.dc:name": {
       "name": "dc:rightsHolder_dc:name",
@@ -245,6 +270,17 @@
         "no access due to sensitivities": "none"
       }
     },
+    "redbox:retentionPeriod.dc:date.skos:note": {
+      "name": "_",
+      "type": "valuemap",
+      "map": {
+        "heritage": "heritage",
+        "controversial": "controversial",
+        "ofinterest": "ofinterest",
+        "costly_impossible": "costly_impossible",
+        "commercial": "commercial"
+      }
+    },
     "agls:policy.dc:identifier": "_",
     "agls:policy.skos:note": "_",
     "agls:protectiveMarking.dc:type": {
@@ -252,6 +288,7 @@
       "repeatable": 1,
       "name": "_"
     },
-    "agls:protectiveMarking.skos:note": "_"
+    "agls:protectiveMarking.skos:note": "_",
+    "redbox:disposalDate": "disposalDate"
   }
 }
