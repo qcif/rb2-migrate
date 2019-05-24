@@ -67,6 +67,7 @@
         },
         {
           "repeatable": true,
+          "additive": 1,
           "role": "Data Manager"
         }
       ],
@@ -83,7 +84,7 @@
         "foaf:familyName": "familyname"
       }
     },
-    "dc:contributor.locrel:clb": {
+    "locrel:clb.foaf:Person": {
       "name": "contributors",
       "type": "record",
       "handler": "Person",
@@ -91,11 +92,11 @@
       "repeatable": 1,
       "additive": 1,
       "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
+        "person.dc:identifier": "dc:identifier",
+        "person.foaf:title": "honorific",
+        "person.foaf:email": "email",
+        "person.foaf:givenName": "givenname",
+        "person.foaf:familyName": "familyname"
       }
     },
     "swrc:supervisor.foaf:Person": {
@@ -106,6 +107,7 @@
         },
         {
           "repeatable": true,
+          "additive": 1,
           "role": "Supervisor"
         }
       ],
@@ -130,6 +132,7 @@
         },
         {
           "repeatable": true,
+          "additive": 1,
           "role": "Chief Investigator"
         }
       ],
@@ -154,17 +157,16 @@
     "vivo:Dataset.redbox:MetadataStandard": "_",
     "vivo:Dataset.redbox:DataStructureStandard": "_",
     "vivo:Dataset.dc:extent": {
-      "name": "_",
+      "name": "vivo:Dataset_dc:extent",
       "type": "valuemap",
       "map": {
-        "Less than 10 GB": "less-than-100GB",
-        "Less than 100GB": "less-than-100GB",
-        "20GB – 100GB": "less-than-100GB",
-        "10GB-20GB": "less-than-100GB",
-        "100GB+": "100GB-to-2TB",
-        "": "less-than-100GB"
+        "Less than 10 GB": "less than 100GB",
+        "10GB-20GB": "less than 100GB",
+        "20GB – 100GB": "less than 100GB",
+        "100GB+": "100GB to 2TB"
       }
     },
+    "dc:subject.anzsrc:toa.rdf:resource": "_",
     "dc:subject.anzsrc:for": {
       "name": "dc:subject_anzsrc:for",
       "type": "record",
@@ -185,20 +187,8 @@
         "rdf:resource": "rdf:resource"
       }
     },
-    "dc:coverage.vivo:DateTimeInterval.vivo:start": {
-      "name": "startDate",
-      "type": "record",
-      "handler": "DateTime",
-      "fromFormat": "YYYY-MM-DD",
-      "toFormat": "YYYY/MM/DD"
-    },
-    "dc:coverage.vivo:DateTimeInterval.vivo:end": {
-      "name": "endDate",
-      "type": "record",
-      "handler": "DateTime",
-      "fromFormat": "YYYY-MM-DD",
-      "toFormat": "YYYY/MM/DD"
-    },
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",
     "redbox:retentionPeriod": {
       "name": "redbox:retentionPeriod_dc:date",
       "type": "valuemap",
@@ -219,27 +209,23 @@
       }
     },
     "vivo:Dataset.dc:location.rdf:PlainLiteral": {
-      "name": "_",
+      "name": "vivo:Dataset_dc:location_rdf:PlainLiteral",
       "type": "valuemap",
       "map": {
-        "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
-        "eResearch storage platforms": "eresearch-platforms",
-        "Shared university network drive": "share-drive",
-        "survey-platform": "survey-platform",
-        "University provided collaboration space": "collab-space",
+        "Personal equipment": "personal equipment (e.g. external drive, own laptop, etc)",
+        "Shared university network drive": "shared university network drive (e.g. G, H, etc)",
+        "University provided collaboration space": "UTS provided collaboration space (e.g. CloudStor, OneDrive etc)",
         "Other": "other"
       }
     },
     "vivo:Dataset.dc:location.skos:note": "_",
     "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": {
-      "name": "_",
+      "name": "vivo:Dataset_dc:source_dc:location_rdf:PlainLiteral",
       "type": "valuemap",
       "map": {
-        "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
-        "eResearch storage platforms": "eresearch-platforms",
-        "Shared university network drive": "share-drive",
-        "survey-platform": "survey-platform",
-        "University provided collaboration space": "collab-space",
+        "Personal equipment": "personal equipment (e.g. external drive, own laptop, etc)",
+        "Shared university network drive": "shared university network drive (e.g. G, H, etc)",
+        "University provided collaboration space": "UTS provided collaboration space (e.g. CloudStor, OneDrive etc)",
         "Other": "other"
       }
     },
