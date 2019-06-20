@@ -64,11 +64,6 @@
         {
           "to": "contributor_data_manager",
           "role": "Data Manager"
-        },
-        {
-          "repeatable": true,
-          "additive": 1,
-          "role": "Data Manager"
         }
       ],
       "type": "record",
@@ -88,7 +83,7 @@
       "name": "contributors",
       "type": "record",
       "handler": "Person",
-      "role": "Contributors",
+      "role": "Collaborators",
       "repeatable": 1,
       "additive": 1,
       "fields": {
@@ -103,12 +98,7 @@
       "destinations": [
         {
           "to": "contributor_supervisor",
-          "role": "Supervisor"
-        },
-        {
-          "repeatable": true,
-          "additive": 1,
-          "role": "Supervisor"
+          "role": "Adviser"
         }
       ],
       "type": "record",
@@ -270,9 +260,10 @@
     "agls:policy.dc:identifier": "_",
     "agls:policy.skos:note": "_",
     "agls:protectiveMarking.dc:type": {
+      "name": "agls:protectiveMarking_dc:type",
+      "handler": "ProtectiveMarking",
       "type": "record",
-      "repeatable": 1,
-      "name": "_"
+      "repeatable": 1
     },
     "agls:protectiveMarking.skos:note": "_",
     "redbox:disposalDate": "disposalDate"

@@ -3,10 +3,6 @@
   "source_type": "dataset",
   "workflow_step": "live",
   "dest_type": "dataPublication",
-  "workflow": {
-    "stageold1": "stagenew1",
-    "stageold2": "stagenew2"
-  },
   "permissions": {
     "user_id": "email",
     "permissions": {
@@ -66,65 +62,47 @@
     }
   ],
   "fields": {
-    "dc:creator.foaf:Person": {
-      "name": "creators",
+    "dc:title": {
+      "destinations": [
+        {
+          "to": "title"
+        },
+        {
+          "to": "citation_title"
+        }
+      ],
       "type": "record",
-      "handler": "Person",
-      "role": "",
-      "repeatable": 1,
-      "destIsArray": true,
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "given_name",
-        "foaf:familyName": "family_name"
-      }
+      "handleAll": true,
+      "handler": "SharedTitle"
     },
-    "dc_title": "title",
-    "dc:title": "title",
-    "description": "description",
-    "dc:description": "description",
+    "jcu:request.doi": {
+      "name": "requestIdentifier",
+      "type": "record",
+      "handleAll": true,
+      "handler": "RequestIdentifier"
+    },
     "dc:subject.vivo:keyword": {
       "name": "finalKeywords",
       "type": "record",
-      "repeatable": 1,
       "handler": "FlatKeywords",
+      "repeatable": 1,
       "fields": {
         "rdf:PlainLiteral": ""
       }
     },
-    "bibo:DataLocation": {
-      "name": "dataLocations",
+    "dc:description": {
+      "destinations": [
+        {
+          "to": "other_descriptions"
+        }
+      ],
       "type": "record",
-      "handler": "DataLocations",
-      "repeatable": 1,
+      "name": "description",
+      "handleAll": true,
+      "handler": "HTMLMultiDescription",
       "fields": {
-        "dc:location": "location",
-        "dc:type": "type",
-        "dc:privacy": "privacy",
-        "dc:notes": "notes"
-      }
-    },
-    "redbox:retentionPeriod": {
-      "name": "redbox:retentionPeriod_dc:date",
-      "type": "valuemap",
-      "map": {
-        "1year": "1year",
-        "5years": "5years",
-        "7years": "7years",
-        "25years": "25years",
-        "permanent": "permanent"
-      }
-    },
-    "foaf:fundedBy.foaf:Agent": {
-      "name": "_",
-      "type": "record",
-      "repeatable": 1,
-      "handler": "FundingBody",
-      "fields": {
-        "dc:identifier": "dc_identifier",
-        "skos:prefLabel": "dc_title"
+        "text": "text",
+        "type": "type"
       }
     },
     "foaf:fundedBy.vivo:Grant": {
@@ -134,11 +112,157 @@
       "handler": "GrantBody",
       "fields": {
         "warning": "mint_lookup",
-        "dc:identifier": "dc:identifier",
-        "skos.prefLabel": "dc:title",
+        "dc:identifier": "dc_identifier",
+        "skos.prefLabel": "dc_title",
         "redbox:grantNumber": "grant_number"
       }
     },
+    "locrel:prc.foaf:Person": {
+      "name": "creators",
+      "additive": 1,
+      "type": "record",
+      "handler": "Person",
+      "repeatable": 1,
+      "role": "Data Manager",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "swrc:supervisor.foaf:Person": {
+      "name": "creators",
+      "additive": 1,
+      "repeatable": 1,
+      "type": "record",
+      "handler": "Person",
+      "role": "Supervisor",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "dc:creator.foaf:Person": {
+      "name": "creators",
+      "additive": 1,
+      "type": "record",
+      "handler": "Person",
+      "repeatable": 1,
+      "role": "Chief Investigator",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "dc:rightsHolder.dc:name": {
+      "name": "dc:rightsHolder_dc:name",
+      "type": "valuemap",
+      "map": {
+        "myUni": "myUni",
+        "myUnjount": "myUnjount",
+        "student": "student"
+      }
+    },
+    "bibo:Website": {
+      "name": "dataLocations",
+      "type": "record",
+      "additive": 1,
+      "repeatable": 1,
+      "handler": "URLDataLocations",
+      "fields": {
+        "dc:identifier": "location",
+        "type": "type"
+      }
+    },
+    "vivo:Location.vivo:GeographicLocation": {
+      "name": "dataLocations",
+      "additive": 1,
+      "type": "record",
+      "repeatable": 1,
+      "handler": "PhysicalDataLocations",
+      "fields": {
+        "gn:name": "location",
+        "type": "type"
+      }
+    },
+    "dc:relation.swrc:Publication": {
+      "name": "related_publications",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes"
+      }
+    },
+    "dc:relation.bibo:Website": {
+      "name": "related_websites",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes"
+      }
+    },
+    "dc:relation.vivo:Service": {
+      "name": "related_services",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes",
+        "vivo:Relationship.rdf:PlainLiteral": "related_relationship"
+      }
+    },
+    "dc:relation.vivo:Dataset": {
+      "name": "related_data",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes",
+        "vivo:Relationship.rdf:PlainLiteral": "related_relationship",
+        "redbox:publish": "redbox_publish",
+        "redbox:origin": "redbox_origin"
+      }
+    },
+    "dc:accessRightsType": {
+      "name": "dc:accessRights",
+      "type": "valuemap",
+      "map": {
+        "conditional": "Restricted",
+        "open": "Open",
+        "restricted": "Restricted"
+      }
+    },
+    "dc:accessRights.dc:identifier": "accessRights_url",
+    "dc:type.rdf:PlainLiteral": {
+      "name": "datatype",
+      "type": "valuemap",
+      "map": {
+        "catalogueOrIndex": "catalogueOrIndex",
+        "collection": "collection",
+        "dataset": "dataset",
+        "registry": "registry",
+        "repository": "repository"
+      }
+    },
+    "dc:license.dc:identifier": "license_identifier",
+    "dc:license.rdf:Alt.skos:prefLabel": "license_notes",
+    "dc:license.rdf:Alt.dc:identifier": "license_other_url",
+    "dc:accessRights.dc:RightsStatement.skos:prefLabel": "license_statement",
+    "dc:accessRights.dc:RightsStatement.dc:identifier": "license_statement_url",
     "dc:subject.anzsrc:for": {
       "name": "dc:subject_anzsrc:for",
       "type": "record",
@@ -149,25 +273,14 @@
         "rdf:resource": "rdf:resource"
       }
     },
-    "dc:accessRights": {
-      "name": "_",
-      "type": "valuemap",
-      "map": {
-        "permission from the data manager": "manager",
-        "open, free access under license": "open",
-        "no access due to sensitivities": "none"
-      }
-    },
-    "dc:type.rdf:PlainLiteral": {
-      "name": "dc:subject_anzsrc:toa_rdf:resource",
-      "type": "valuemap",
-      "map": {
-        "catalogueOrIndex": "catalogueOrIndex",
-        "collection": "collection",
-        "dataset": "dataset",
-        "registry": "registry",
-        "repository": "repository",
-        "software": "software"
+    "dc:subject.anzsrc:seo": {
+      "name": "dc:subject_anzsrc:seo",
+      "type": "record",
+      "handler": "ForSeo",
+      "repeatable": 1,
+      "fields": {
+        "skos:prefLabel": "skos:prefLabel",
+        "rdf:resource": "rdf:resource"
       }
     },
     "dc:coverage.vivo:DateTimeInterval.vivo:start": {
@@ -175,27 +288,55 @@
       "type": "record",
       "handler": "DateTime",
       "fromFormat": "YYYY-MM-DD",
-      "toFormat":"YYYY/MM/DD"
+      "toFormat": "YYYY/MM/DD"
     },
     "dc:coverage.vivo:DateTimeInterval.vivo:end": {
       "name": "endDate",
       "type": "record",
       "handler": "DateTime",
       "fromFormat": "YYYY-MM-DD",
-      "toFormat":"YYYY/MM/DD"
+      "toFormat": "YYYY/MM/DD"
     },
+    "dc:coverage.redbox:timePeriod": "timePeriod",
     "dc:coverage.vivo:GeographicLocation": {
-      "name": "geolocations",
+      "destinations": [
+        {
+          "to": "geospatial",
+          "repeatable": true,
+          "nestedNames": [
+            "features"
+          ],
+          "additionalKeys": {
+            "type": "FeatureCollection"
+          }
+        },
+        {
+          "to": "geolocations",
+          "repeatable": true
+        }
+      ],
       "type": "record",
-      "repeatable": 1,
+      "repeatable": true,
+      "handler": "GeoLocation",
       "fields": {
+        "redbox:wktRaw": "redbox:wktRaw",
+        "redbox:Fid": "redbox:Fid",
         "dc:identifier": "identifier",
         "rdf:PlainLiteral": "basic_name",
         "geo:lat": "lat",
         "geo:long": "long"
       }
     },
-    "redbox:embargo.redbox:isEmbargoed": "embargoByDate",
-    "redbox:embargo.dc:date": "embargoUntil"
+    "redbox:embargo.dc:date": "embargoUntil",
+    "redbox:embargo.skos:note": "embargoNote",
+    "redbox:embargo.redbox:isEmbargoed": {
+      "name": "embargoByDate",
+      "type": "valuemap",
+      "map": {
+        "on": true
+      }
+    },
+    "jcu:data.depositedBy.text": "legal_statement"
   }
 }
+
