@@ -5,7 +5,8 @@
 import {Redbox, Redbox1, Redbox1Files, Redbox2} from './Redbox';
 import {crosswalk, validate} from './crosswalk';
 import {ArgumentParser} from 'argparse';
-import * as moment from 'moment';
+import {postwalk} from './postwalk';
+import * as FormData from "form-data";
 
 const MANDATORY_CW = [
   'idfield',
@@ -23,8 +24,6 @@ const path = require('path');
 const winston = require('winston');
 const stringify = require('csv-stringify/lib/sync');
 const _ = require('lodash');
-import {postwalk} from './postwalk';
-
 
 function getlogger() {
   const logcfs = config.get('logs');
@@ -116,7 +115,7 @@ async function index(options: Object): Promise<Object[][]> {
   const source = options['source'];
   const crosswalk_file = options['crosswalk'];
   const limit = options['number'];
-
+  const recordId = options['record'];
   var rbSource;
 
   try {
@@ -128,47 +127,58 @@ async function index(options: Object): Promise<Object[][]> {
 
   var oids;
 
+  let filter = {};
   if (crosswalk_file) {
     const cw = await loadcrosswalk(`${crosswalk_file}.json`);
     const source_type = cw['source_type'];
-
+    _.merge(filter, {packageType: source_type});
     if (cw['workflow_step']) {
-      oids = await rbSource.list({packageType: source_type, workflow_step: cw['workflow_step']});
-    } else {
-      oids = await rbSource.list({packageType: source_type});
+      _.merge(filter, {workflow_step: cw['workflow_step']});
     }
-  } else {
-    oids = await rbSource.list({});
+    //handle record filtering early rather than later
+    if (recordId) {
+      let recordFilterOr = rbSource.makeSolrQueryOR({
+        id: recordId,
+        storage_id: recordId,
+        objectId: recordId,
+        oid: recordId
+      });
+      let recordFilterJoinOr = rbSource.makeSolrQueryAND(filter);
+      filter = `(${recordFilterOr})%20AND%20${recordFilterJoinOr}`
+    }
   }
+  log.debug(`Sending filter to solr: ${filter}`);
+  const returnedList = await rbSource.listSolr(filter);
+  oids = returnedList.map(function (d) {
+    let returnedId = d['id'] || d['storage_id'] || d['oid'] || d['objectId'];
+    if (_.isArray(returnedId)) {
+      returnedId = _.head(returnedId);
+    }
+    log.verbose(`returning id: ${returnedId}`);
+    return returnedId;
+  });
   log.info(`Loaded index of ${oids.length} records`);
   if (limit && parseInt(limit) > 0) {
     oids.splice(limit);
     log.info(`Limited to first ${oids.length} records`);
   }
-
-  // hack - get all of the index objects out of rbSource so that
-  // the migrate function doesn't need to rely on it
-  let recordsData = [];
+  const allRecordsAttachments = await collectRecordAttachments(rbSource);
   let records = [];
-  try {
-    const promiseRecords = oids.map(oid => {
+  for (let oid of oids) {
+    try {
       log.debug(`oid is ${oid}`);
-      if (rbSource) {
-        let rbSourceRecord = rbSource.getRecord(oid);
-        const rbSourceRecordMetadata = rbSource.getRecordMetadata(oid);
-        if (rbSourceRecord) {
-          return [rbSourceRecord, rbSourceRecordMetadata];
-        }
+      let rbSourceRecord = await rbSource.getRecord(oid);
+      const rbSourceRecordMetadata = await rbSource.getRecordMetadata(oid);
+      console.log('got next record...');
+      if (rbSourceRecord) {
+        let recordAttachments = {};
+        recordAttachments['attachments'] = allRecordsAttachments[rbSourceRecordMetadata['objectId'] || rbSourceRecord[0]['id'] || rbSourceRecord['storage_id'] || rbSourceRecord['oid']] || [];
+        records.push(_.assign({}, rbSourceRecord, rbSourceRecordMetadata, recordAttachments));
       }
-    });
-    recordsData = await Promise.all(promiseRecords);
-    for (let nextRecordData of recordsData) {
-      const recordResult = await Promise.all(nextRecordData);
-      records.push(_.assign({}, recordResult[0], recordResult[1]));
+    } catch (error) {
+      log.error("There was an error in indexing.");
+      log.error(error);
     }
-  } catch (e) {
-    console.log("There was a problem with accruing promised records");
-    throw new Error(e);
   }
   const errors = rbSource.errors;
   log.info('Showing errors...');
@@ -176,11 +186,48 @@ async function index(options: Object): Promise<Object[][]> {
   if (errors) {
     log.info(`Parse errors for ${errors.length} items`);
   }
-
-
   return [records, errors];
 }
 
+
+async function collectRecordAttachments(rbSource: Redbox1): Promise<Object> {
+  const attachments = await rbSource.prepareAndGetSolr({
+    display_type: 'attachment'
+  }, ['id', 'storage_id', 'oid', 'objectId', 'filename', 'attached_to']);
+  log.info(`Number of attachments returned: ${attachments.length}`);
+  const attachmentsBrief = {};
+  _.forEach(attachments, function (attachment) {
+    // log.verbose('Next attachment...');
+    // log.verbose(attachment);
+    let attachId = attachment['id'] || attachment['storage_id'] || attachment['oid'];
+    if (_.isArray(attachId)) {
+      attachId = _.head(attachId);
+    }
+    if (attachId && _.has(attachment, 'filename')) {
+      log.debug("Found attachment match:");
+      log.verbose(JSON.stringify(attachment));
+      let filename = attachment['filename'];
+      if (_.isArray(filename)) {
+        filename = _.head(filename);
+      }
+      log.verbose(`filename to attach is: ${filename}`);
+      let nextAttachment = {
+        attachId: attachId,
+        attachFilename: filename
+      };
+      let attachmentName = attachment.attached_to[0];
+      if (_.isEmpty(attachmentsBrief[attachmentName])) {
+        attachmentsBrief[attachmentName] = [];
+      }
+      attachmentsBrief[attachmentName].push(nextAttachment);
+    } else {
+      // log.verbose(`No filename found for attachment: ${_.toString(attachId)}`);
+    }
+  });
+  log.debug('Completed collecting all attachments for each record');
+  // log.debug(JSON.stringify(attachmentsBrief, null, 4));
+  return attachmentsBrief;
+}
 
 // migrate - takes the list of records from index() plus the args
 // object, and returns a new copy of the index (with extra metadata and
@@ -344,6 +391,30 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       } catch (e) {
         report('permissions', '', '', 'failed', e);
       }
+      // console.dir(md);
+      log.debug('checking for attachments...');
+      console.dir(record['attachments']);
+      if (!_.isEmpty(record['attachments'])) {
+        try {
+          const result = await uploadAttachments(rbSource, rbDest, noid, oid, record, md2, report);
+          if (!result) {
+            console.log('No result!!!');
+            throw('unknown error');
+          }
+          if ('error' in result) {
+            console.log('error in result');
+            console.dir(result);
+            throw(result['error']);
+          }
+        } catch (e) {
+          console.log('There was an error in uploading attachments.');
+          console.log(e);
+          report('attachments', '', '', 'failed', e);
+        }
+      } else {
+        log.info(`No attachments for record: ${oid}`);
+      }
+
 
       if (cw['postTasks']) {
         try {
@@ -477,7 +548,77 @@ async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oi
   } catch (e) {
     throw e;
   }
+}
 
+async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string, oid: string, redbox1Record: Object, redbox2Record: Object, reportFn: any): Promise<Object> {
+  const magicFileBytesMaxSize = 104857600;
+
+  // guessing that it is better to call redbox2 (ie: redbox2 can handle the traffic) for each attachment rather than trying to send all attachments at once (in case any attachment is large)
+  log.info('Fetching and uploading any attachments...');
+  log.verbose(`Have ${redbox1Record['attachments'].length} attachments...`);
+  let dataLocations = redbox2Record['dataLocations'] || [];
+  let errors = [];
+  for (const attachment of redbox1Record['attachments']) {
+    // log.verbose('Next attachment to fetch:', JSON.stringify(attachment));
+    // ensure data returned is a stream - the default, string, will corrupt binary data - so can send straight on to upstream
+    const id = attachment.attachId;
+    const filename = encodeURIComponent(attachment.attachFilename);
+    log.verbose(`next attachment filename is: ${filename}`);
+    const data = await rbSource.readDatastream(id, filename, {responseType: 'stream'});
+    log.verbose('Have Redbox1 attachment data. Sending upstream...');
+    log.verbose(`Received data type is: ${typeof data}`);
+    let form = new FormData();
+    form.append('attachmentFields', data);
+    log.info('Waiting for upload to complete...');
+    const result = await (<Redbox2>rbDest).writeDatastreams(noid, form, {
+      maxContentLength: magicFileBytesMaxSize,
+      headers: {...form.getHeaders(),}
+    });
+    if (!result || !_.has(result, 'message')) {
+      log.warn("No result received. Sending to errors");
+      errors.push({'message': 'No write datastream result', oid: noid});
+    } else {
+      log.debug(JSON.stringify(result));
+      log.debug('Completed next upload. Updating metadata....');
+      const resultMessage = result['message'];
+      if (resultMessage['code'] != '200' || resultMessage['oid'] != noid || resultMessage['fileIds'].length != 1) {
+        // allow other pending attachments to succeed - only throw errors after all attachments attempted to upload
+        log.warn("Result was not successful. Sending to errors.");
+        errors.push(result);
+      } else {
+        const fileId = resultMessage.fileIds[0];
+        const location = `${resultMessage.oid}/attach/${fileId}`;
+        dataLocations.push({
+          type: 'attachment',
+          location: location,
+          name: attachment.attachFilename,
+          fileId: fileId,
+          uploadUrl: `${rbDest.baseURL}/record/${location}`
+        });
+        // report on each successful upload, so upload errors, only, can be thrown afterwards.
+        try {
+          redbox2Record['dataLocations'] = dataLocations;
+          const metadataResult = await rbDest.updateRecordMetadata(noid, redbox2Record);
+          log.verbose('Metadata update result is: ', metadataResult);
+          let metaMetadataObject = await rbDest.getRecordMetadata(noid);
+          metaMetadataObject['attachmentFields'] = ["dataLocations"];
+          log.verbose('Uploading metaMetadata: ');
+          log.verbose(JSON.stringify(metaMetadataObject));
+          const updateMetaMetaDataResult = await (<Redbox2>rbDest).updateRecordObjectMetadata(noid, metaMetadataObject);
+          reportFn('attachments', '', '', 'set', result);
+        } catch (error) {
+          log.error("There was a problem updating record metadata", error)
+          errors.push({noid: error});
+        }
+      }
+    }
+  }
+  if (!_.isEmpty(errors)) {
+    throw new Error(`There was a problem uploading 1 or more attachments for: ${noid}: ${JSON.stringify(errors)}`);
+  } else {
+    log.info(`All upload attachments successfully completed for ${oid}`);
+    return {'success': true};
+  }
 }
 
 
@@ -510,7 +651,6 @@ async function dumpjson(outdir: string, subdir: string, file: string, md: Object
     md,
     {spaces: 4}
   );
-
 }
 
 
@@ -559,18 +699,9 @@ async function main(args) {
   if (!(args['crosswalk'] || args['index'])) {
     info(args['source']);
   } else {
+
     var [records, errors] = await index(args);
     await writeerrors(errors, path.join(outdir, `errors_${timestamp}.csv`));
-
-    if (args['record']) {
-      records = records.filter((r) => {
-        let oid = r['storage_id'] || r['id'] || r['objectId'] || r['oid'];
-        return oid === args['record'];
-      });
-      if (records.length !== 1) {
-        log.error(`Record ${args['record']} not found`);
-      }
-    }
 
     if (args['crosswalk']) {
       const [updated_records, report] = await migrate(args, outdir, records);

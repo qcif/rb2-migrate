@@ -155,7 +155,8 @@ export class Redbox2 extends BaseRedbox implements Redbox {
     }
   }
 
-  /* No such thing in redbox2 - same as getRecord - kept only for backwards compatibility :P
+  /* The record's metadata is metadata about the record, not the
+     metadata stored in the record (that's what getRecord returns)
      */
 
   async getRecordMetadata(oid: string): Promise<Object | undefined> {
@@ -167,7 +168,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
       return undefined;
     }
   }
-
+// method names are confusing but for historical/backwards compatibility reasons
   async updateRecordMetadata(oid: string, md: Object): Promise<Object | undefined> {
     try {
       let response = await this.apiput('api/records/metadata/' + oid, md);
