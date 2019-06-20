@@ -25,4 +25,5 @@ export {AffiliatedPerson} from './AffiliatedPerson';
 export {HTMLLessFirstFullDescription} from './HTMLLessFirstFullDescription';
 export {SharedTitle} from './SharedTitle';
 export {RequestIdentifier} from './RequestIdentifier';
+export {ProtectiveMarking} from './ProtectiveMarking';
 

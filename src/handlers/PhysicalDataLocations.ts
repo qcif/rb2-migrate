@@ -5,7 +5,7 @@ import {DataLocations} from "./DataLocations";
 export class PhysicalDataLocations extends DataLocations implements Handler {
 
   crosswalk(o: Object): Object | undefined {
-    return (_.assign(o, {'type': 'physical'}));
+    return super.crosswalk(_.assign(o, {'type': 'physical'}));
   }
 
 }

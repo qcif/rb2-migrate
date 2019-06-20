@@ -5,7 +5,7 @@ import {DataLocations} from "./DataLocations";
 export class URLDataLocations extends DataLocations implements Handler {
 
   crosswalk(o: Object): Object | undefined {
-    return (_.assign(o, {'type': 'url'}));
+    return super.crosswalk(_.assign(o, {'type': 'url'}));
   }
 
 }
