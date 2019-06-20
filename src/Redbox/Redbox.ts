@@ -4,8 +4,10 @@
 
 import axios from 'axios';
 import {AxiosInstance} from 'axios';
+
 const qs = require('qs');
 const util = require('util');
+const _ = require('lodash');
 
 /**
  Class for working with the ReDBox APIs
@@ -46,6 +48,9 @@ export interface Redbox {
   getConfigValue(key: string): string;
 
   getNumRecords(ptype?: string): Promise<number>;
+
+  readDatastream(oid: string, dsid: string, config: Object): Promise<any>;
+
 }
 
 
@@ -99,7 +104,7 @@ export abstract class BaseRedbox {
 
   /* low-level method which is used by all the GET requests */
 
-  async apiget(path: string, params?: Object): Promise<Object | undefined> {
+  async apiget(path: string, params?: Object, getConfig?: Object): Promise<Object | undefined> {
     let url = path;
     if (url[0] !== '/') {
       url = '/' + url;
@@ -109,10 +114,10 @@ export abstract class BaseRedbox {
       if (params) {
         config["params"] = params;
       }
+      _.merge(config, getConfig);
       console.log("GET " + url);
       console.log("config " + JSON.stringify(config));
       let response = await this.ai.get(url, config);
-
       if (response.status === 200) {
         return response.data;
       }
@@ -125,22 +130,26 @@ export abstract class BaseRedbox {
 
   /* low-level method used by POST requests */
 
-  async apipost(path: string, payload: Object, params?: Object): Promise<Object | undefined> {
+  //TODO: for now leave params and other config separate to keep backwards compatible
+  async apipost(path: string, payload: Object, params?: Object, postConfig?: Object): Promise<Object | undefined> {
     let url = path;
     let config = {};
     if (url[0] !== '/') {
       url = '/' + url;
     }
-    console.log("POST " + url);
-    console.log("config " + JSON.stringify(config));
-    console.log("title " + payload['title']);
-    console.log("CI " + JSON.stringify(payload['contributor_ci']));
+    // console.log("POST " + url);
+    // console.log("title " + payload['title']);
+    // console.log("CI " + JSON.stringify(payload['contributor_ci']));
 
     try {
-      if( params ) {
+      if (params) {
         config["params"] = params;
       }
+      _.merge(config, postConfig);
+      console.log("config: " + JSON.stringify(config));
       let response = await this.ai.post(url, payload, config);
+      // console.log('response');
+      // console.dir(response);
       if (response.status >= 200 && response.status < 300) {
         return response.data;
       } else {
@@ -159,11 +168,15 @@ export abstract class BaseRedbox {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
+        console.error("Request was made, but no response was received...");
+        console.error("Request was:");
         console.error(e.request);
       } else {
         // Something happened in setting up the request that triggered an Error
+        console.error("Unknown error in setting up post request.");
         console.error('Error', e.message);
       }
+      console.error("Config was:")
       console.error(e.config);
       return undefined;
     }

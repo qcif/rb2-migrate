@@ -1,5 +1,4 @@
-
-import { BaseRedbox, Redbox } from "./Redbox";
+import {BaseRedbox, Redbox} from "./Redbox";
 
 
 const util = require('util');
@@ -46,7 +45,7 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   //     }
   //     config['headers'] = {
   //       "Authorization": "Bearer " + this.apiKey,
-	//       "Content-Type": "application/json",
+  //       "Content-Type": "application/json",
   //       "X-CSRF-Token": this.csrfToken
   //     };
   //     let response = await this.ai.post(url, payload, config);
@@ -64,43 +63,43 @@ export class Redbox2 extends BaseRedbox implements Redbox {
 
   async getNumRecords(ptype?: string): Promise<number> {
     try {
-      let params = { recordType: ptype, rows: 1 };
+      let params = {recordType: ptype, rows: 1};
       let resp = await this.apiget('listRecords', params);
       let response = resp["response"];
       let numFound = response["numFound"];
       return numFound;
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
       return -1;
     }
   }
-  
-  async list(ptype: string, start?:number): Promise<string[]> {
+
+  async list(ptype: string, start?: number): Promise<string[]> {
     console.log("About to list");
-    if( start === undefined ) {
+    if (start === undefined) {
       start = 0;
     }
 
     const pagen = 10;
 
     try {
-      if( this.progress ) {
-				this.progress(util.format("Searching for %s: %d", ptype, start));
+      if (this.progress) {
+        this.progress(util.format("Searching for %s: %d", ptype, start));
       }
-      let params = { recordType: ptype, start: start, rows: String(pagen) };
+      let params = {recordType: ptype, start: start, rows: String(pagen)};
       let resp = await this.apiget('listRecords', params);
       let response = resp["response"];
       let numFound = response["numFound"];
       let docs = response["items"];
       let ndocs = docs.length
       let list = docs.map(d => d.id);
-      if( start + ndocs < numFound ) {
-				let rest = await this.list(ptype, start + ndocs);
-				return list.concat(rest);
+      if (start + ndocs < numFound) {
+        let rest = await this.list(ptype, start + ndocs);
+        return list.concat(rest);
       } else {
-				return list;
+        return list;
       }
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
       return [];
     }
@@ -118,11 +117,11 @@ export class Redbox2 extends BaseRedbox implements Redbox {
 
   **/
 
-  async createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string|undefined> {
+  async createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string | undefined> {
     let url = 'api/records/metadata/' + packagetype;
     let params: Object = {};
     let resp = await this.apipost(url, metadata, options);
-    if( resp && 'oid' in resp ) {
+    if (resp && 'oid' in resp) {
       return resp['oid'];
     } else {
       return undefined;
@@ -146,48 +145,54 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   /* Returns the record, or undefined if it's not
      found */
 
-  async getRecord(oid: string): Promise<Object|undefined> {
+  async getRecord(oid: string): Promise<Object | undefined> {
     try {
       let response = await this.apiget('api/records/metadata/' + oid);
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
       return undefined;
     }
   }
 
-  /* The record's metadata is metadata about the record, not the
-     metadata stored in the record (that's what getRecord returns)
+  /* No such thing in redbox2 - same as getRecord - kept only for backwards compatibility :P
      */
 
-  async getRecordMetadata(oid: string): Promise<Object|undefined> {
+  async getRecordMetadata(oid: string): Promise<Object | undefined> {
     try {
-      let response = await this.apiget('api/objectmetadata/' + oid);
+      let response = await this.apiget('api/records/objectmetadata/' + oid);
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
       return undefined;
     }
   }
 
-
-  /* this method looks like it's using the wrong url? */
-
-  async updateRecordMetadata(oid: string, md: Object): Promise<Object|undefined> {
+  async updateRecordMetadata(oid: string, md: Object): Promise<Object | undefined> {
     try {
       let response = await this.apiput('api/records/metadata/' + oid, md);
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
       return undefined;
     }
   }
 
-  async getPermissions(oid): Promise<Object|undefined> {
+  async updateRecordObjectMetadata(oid: string, md: Object): Promise<Object | undefined> {
+    try {
+      let response = await this.apiput('api/records/objectmetadata/' + oid, md);
+      return response;
+    } catch (e) {
+      console.log("Error " + e);
+      return undefined;
+    }
+  }
+
+  async getPermissions(oid): Promise<Object | undefined> {
     try {
       let response = await this.apiget('api/records/permissions/' + oid);
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log("Errror " + e);
       return undefined;
     }
@@ -212,14 +217,14 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   */
 
 
-  async grantPermission(oid: string, permission: string, users: Object): Promise<Object|undefined> {
+  async grantPermission(oid: string, permission: string, users: Object): Promise<Object | undefined> {
     try {
       let response = await this.apipost(
         'api/records/permissions/' + permission + '/' + oid,
         users
-        );
+      );
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
       return undefined
     }
@@ -230,61 +235,82 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   */
 
 
-  async removePermission(oid: string, permission: string, users: Object): Promise<Object|undefined> {
+  async removePermission(oid: string, permission: string, users: Object): Promise<Object | undefined> {
     try {
       let response = await this.apidelete(
         'api/records/permissions/' + permission + '/' + oid,
         users
-        );
+      );
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
       return undefined
     }
   }
 
 
-
   async writeDatastream(oid: string, dsid: string, data: any): Promise<Object> {
     try {
       let response = await this.apipost(
-        'datastream/' + oid,
+        'api/records/datastream/' + oid,
         data,
-        { datastreamId: dsid }
+        {datastreamId: dsid}
       );
+      console.log("response...")
+      console.log("%j", response);
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
     }
   }
 
+  async writeDatastreams(oid: string, data: any, config: Object): Promise<Object> {
+    try {
+      let response = await this.apipost(
+        'api/records/datastreams/' + oid,
+        data,
+        null,
+        config
+      );
+      // console.log("response...")
+      // console.log("%j", response);
+      // console.log(`Write datastreams response status is: ${response['status']}`);
+      return response;
+    } catch (e) {
+      console.log("There was a problem writing datastream in redbox 2.");
+      console.log("Error " + e);
+    }
+  }
 
   async listDatastreams(oid: string): Promise<Object> {
     try {
-      let response = await this.apiget('datastream/' +oid + '/list');
+      let response = await this.apiget('api/records/datastream/' + oid + '/list');
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
       return undefined;
     }
   }
 
-  async readDatastream(oid: string, dsid: string): Promise<any> {
+  async readDatastream(oid: string, dsid: string, config: Object): Promise<any> {
     try {
-      let response = await this.apiget('datastream/' + oid, { datastreamId: dsid });
+      let response = await this.apiget('api/records/datastream/' + oid, {datastreamId: dsid}, config);
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log("Error " + e);
     }
   }
 
   async getCsrfToken() {
     try {
-      const resp = await this.ai.get(`${this.cf.baseURL}csrfToken`);
+      const resp = await this.ai.get(`${this.cf.baseURL}csrfToken`
+      );
       console.log(JSON.stringify(resp));
       this.csrfToken = resp['_csrf'];
     } catch (e) {
-      console.log(`Error getting CSRF Token:`);
+      console.log(
+        `Error getting CSRF Token:`
+      );
       console.log(e);
     }
   }
