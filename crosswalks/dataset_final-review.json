@@ -1,12 +1,8 @@
 {
   "idfield": "oid",
-  "source_type": "self-submission",
-  "workflow_step": "self-submission-submitted",
+  "source_type": "dataset",
+  "workflow_step": "final-review",
   "dest_type": "dataRecord",
-  "workflow": {
-    "stageold1": "stagenew1",
-    "stageold2": "stagenew2"
-  },
   "permissions": {
     "user_id": "email",
     "permissions": {
@@ -36,8 +32,7 @@
     "finalKeywords",
     "datatype",
     "contributor_ci",
-    "contributor_data_manager",
-    "redbox:retentionPeriod.dc:date"
+    "contributor_data_manager"
   ],
   "ignore": [
     "action",
@@ -55,19 +50,13 @@
         "rdf:PlainLiteral": ""
       }
     },
-    "dc:description.1.text": {
+    "dc:description": {
+      "type": "record",
       "name": "description",
-      "type": "record",
-      "handler": "HTMLLessDescription"
-    },
-    "foaf:fundedBy.foaf:Agent": {
-      "name": "_",
-      "type": "record",
-      "repeatable": 1,
-      "handler": "FundingBody",
+      "handler": "HTMLLessFirstFullDescription",
       "fields": {
-        "dc:identifier": "dc_identifier",
-        "skos:prefLabel": "dc_title"
+        "text": "text",
+        "type": "type"
       }
     },
     "foaf:fundedBy.vivo:Grant": {
@@ -83,10 +72,21 @@
       }
     },
     "locrel:prc.foaf:Person": {
-      "name": "contributor_data_manager",
+      "destinations": [
+        {
+          "to": "contributor_data_manager",
+          "role": "Data Manager"
+        },
+        {
+          "repeatable": true,
+          "role": "Data Manager"
+        }
+      ],
       "type": "record",
+      "defaultRole": "Contributors",
+      "defaultField": "contributors",
+      "repeatable": 1,
       "handler": "Person",
-      "role": "Data Manager",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -98,23 +98,30 @@
     "dc:contributor.locrel:clb": {
       "name": "contributors",
       "type": "record",
-      "handler": "Person",
+      "handler": "SingleTextFieldPerson",
       "repeatable": 1,
-      "role": "Contributors",
+      "additive": 1,
+      "role": "Collaborators",
       "fields": {
-        "foaf:Agent.dc:identifier": "dc:identifier",
-        "foaf:Agent.foaf:title": "honorific",
-        "foaf:Agent.foaf:email": "email",
-        "foaf:Agent.foaf:givenName": "givenname",
-        "foaf:Agent.foaf:familyName": "familyname",
-        "foaf:Organization.skos:prefLabel": "affiliations"
+        "foaf:Agent": "fullname"
       }
     },
     "swrc:supervisor.foaf:Person": {
-      "name": "contributor_supervisor",
+      "destinations": [
+        {
+          "to": "contributor_supervisor",
+          "role": "Adviser"
+        },
+        {
+          "repeatable": true,
+          "role": "Adviser"
+        }
+      ],
       "type": "record",
+      "defaultRole": "Contributors",
+      "defaultField": "contributors",
+      "repeatable": 1,
       "handler": "Person",
-      "role": "Supervisor",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -124,20 +131,31 @@
       }
     },
     "dc:creator.foaf:Person": {
-      "name": "contributor_ci",
+      "destinations": [
+        {
+          "to": "contributor_ci",
+          "role": "Chief Investigator"
+        },
+        {
+          "repeatable": true,
+          "role": "Chief Investigator"
+        }
+      ],
       "type": "record",
+      "defaultRole": "Contributors",
+      "defaultField": "contributors",
+      "repeatable": 1,
       "handler": "AffiliatedPerson",
-      "role": "Chief Investigator",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
         "foaf:email": "email",
         "foaf:givenName": "givenname",
         "foaf:familyName": "familyname",
-        "Organization.dc:identifier": "affiliationA",
-        "Organization.B.dc:identifier": "affiliationB",
-        "Organization.C.dc:identifier": "affiliationC",
-        "relationshipType": "relationshipType"
+        "foaf:Organization.dc:identifier": "affiliationA",
+        "foaf:Organization.B.dc:identifier": "affiliationB",
+        "foaf:Organization.C.dc:identifier": "affiliationC",
+        "jcu:relationshipType": "relationshipType"
       }
     },
     "bibo:Website": {
@@ -147,7 +165,8 @@
       "repeatable": 1,
       "handler": "URLDataLocations",
       "fields": {
-        "dc:identifier": "location"
+        "dc:identifier": "location",
+        "type": "type"
       }
     },
     "vivo:Location.vivo:GeographicLocation": {
@@ -159,6 +178,16 @@
       "fields": {
         "gn:name": "location",
         "type": "type"
+      }
+    },
+    "dc:relation.swrc:Publication": {
+      "name": "related_publications",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes"
       }
     },
     "dc:type.rdf:PlainLiteral": {
@@ -192,8 +221,8 @@
         "rdf:resource": "rdf:resource"
       }
     },
-    "redbox:retentionPeriod.dc:date": {
-      "name": "_",
+    "redbox:retentionPeriod": {
+      "name": "redbox:retentionPeriod_dc:date",
       "type": "valuemap",
       "map": {
         "1year": "1year",
@@ -205,9 +234,9 @@
         "12 months (minor project)": "1year",
         "5 years (minimum for projects with publications)": "5years",
         "7 years": "7years",
-        "10 years": "10years",
         "15 years (all clinical trials)": "15years",
-        "Indefinitely": "permanent"
+        "Indefinitely": "permanent",
+        "indefinitely": "permanent"
       }
     },
     "redbox:retentionPeriod.dc:date.skos:note": {

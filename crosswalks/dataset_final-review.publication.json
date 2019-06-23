@@ -1,7 +1,7 @@
 {
   "idfield": "oid",
   "source_type": "dataset",
-  "workflow_step": "investigation",
+  "workflow_step": "final-review",
   "dest_type": "dataPublication",
   "permissions": {
     "user_id": "email",

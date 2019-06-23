@@ -3,6 +3,7 @@
   "source_type": "dataset",
   "workflow_step": "live",
   "dest_type": "dataPublication",
+  "publish": true,
   "permissions": {
     "user_id": "email",
     "permissions": {
@@ -34,32 +35,6 @@
     "action",
     "oid",
     "objMeta"
-  ],
-  "postTasks": [
-    {
-      "name": "complement",
-      "fields": [
-        {
-          "name": "contributor_data_manager",
-          "updateTo": "contributor_ci"
-        }
-      ]
-    },
-    {
-      "name": "removeIfRepeated",
-      "fields": [
-        {
-          "name": "contributor_ci",
-          "removeFrom": "contributors",
-          "compare": "dc:identifier"
-        },
-        {
-          "name": "contributor_data_manager",
-          "removeFrom": "contributors",
-          "compare": "dc:identifier"
-        }
-      ]
-    }
   ],
   "fields": {
     "dc:title": {
@@ -115,36 +90,6 @@
         "dc:identifier": "dc_identifier",
         "skos.prefLabel": "dc_title",
         "redbox:grantNumber": "grant_number"
-      }
-    },
-    "locrel:prc.foaf:Person": {
-      "name": "creators",
-      "additive": 1,
-      "type": "record",
-      "handler": "Person",
-      "repeatable": 1,
-      "role": "Data Manager",
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
-      }
-    },
-    "swrc:supervisor.foaf:Person": {
-      "name": "creators",
-      "additive": 1,
-      "repeatable": 1,
-      "type": "record",
-      "handler": "Person",
-      "role": "Supervisor",
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
       }
     },
     "dc:creator.foaf:Person": {

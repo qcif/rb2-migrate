@@ -1,12 +1,8 @@
 {
   "idfield": "oid",
-  "source_type": "self-submission",
-  "workflow_step": "self-submission-draft",
+  "source_type": "dataset",
+  "workflow_step": "metadata-review",
   "dest_type": "dataPublication",
-  "workflow": {
-    "stageold1": "stagenew1",
-    "stageold2": "stagenew2"
-  },
   "permissions": {
     "user_id": "email",
     "permissions": {
@@ -31,7 +27,8 @@
     }
   },
   "required": [
-    "title"
+    "title",
+    "description"
   ],
   "ignore": [
     "action",
@@ -39,7 +36,25 @@
     "objMeta"
   ],
   "fields": {
-    "dc:title": "title",
+    "dc:title": {
+      "destinations": [
+        {
+          "to": "title"
+        },
+        {
+          "to": "citation_title"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "SharedTitle"
+    },
+    "jcu:request.doi": {
+      "name": "requestIdentifier",
+      "type": "record",
+      "handleAll": true,
+      "handler": "RequestIdentifier"
+    },
     "dc:subject.vivo:keyword": {
       "name": "finalKeywords",
       "type": "record",
@@ -49,19 +64,19 @@
         "rdf:PlainLiteral": ""
       }
     },
-    "dc:description.1.text": {
+    "dc:description": {
+      "destinations": [
+        {
+          "to": "other_descriptions"
+        }
+      ],
+      "type": "record",
       "name": "description",
-      "type": "record",
-      "handler": "HTMLLessDescription"
-    },
-    "foaf:fundedBy.foaf:Agent": {
-      "name": "_",
-      "type": "record",
-      "repeatable": 1,
-      "handler": "FundingBody",
+      "handleAll": true,
+      "handler": "HTMLMultiDescription",
       "fields": {
-        "dc:identifier": "dc_identifier",
-        "skos:prefLabel": "dc_title"
+        "text": "text",
+        "type": "type"
       }
     },
     "foaf:fundedBy.vivo:Grant": {
@@ -74,56 +89,6 @@
         "dc:identifier": "dc_identifier",
         "skos.prefLabel": "dc_title",
         "redbox:grantNumber": "grant_number"
-      }
-    },
-    "keywords": {
-      "name": "finalKeywords",
-      "type": "record",
-      "repeatable": 1
-    },
-    "locrel:prc.foaf:Person": {
-      "name": "creators",
-      "additive": 1,
-      "type": "record",
-      "handler": "Person",
-      "repeatable": 1,
-      "role": "Data Manager",
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
-      }
-    },
-    "dc:contributor.locrel:clb": {
-      "name": "creators",
-      "type": "record",
-      "additive": 1,
-      "handler": "Person",
-      "repeatable": 1,
-      "role": "Contributors",
-      "fields": {
-        "foaf:Agent.dc:identifier": "dc:identifier",
-        "foaf:Agent.foaf:title": "honorific",
-        "foaf:Agent.foaf:email": "email",
-        "foaf:Agent.foaf:givenName": "givenname",
-        "foaf:Agent.foaf:familyName": "familyname"
-      }
-    },
-    "swrc:supervisor.foaf:Person": {
-      "name": "creators",
-      "additive": 1,
-      "repeatable": 1,
-      "type": "record",
-      "handler": "Person",
-      "role": "Supervisor",
-      "fields": {
-        "dc:identifier": "dc:identifier",
-        "foaf:title": "honorific",
-        "foaf:email": "email",
-        "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname"
       }
     },
     "dc:creator.foaf:Person": {
@@ -157,7 +122,8 @@
       "repeatable": 1,
       "handler": "URLDataLocations",
       "fields": {
-        "dc:identifier": "location"
+        "dc:identifier": "location",
+        "type": "type"
       }
     },
     "vivo:Location.vivo:GeographicLocation": {
@@ -169,6 +135,50 @@
       "fields": {
         "gn:name": "location",
         "type": "type"
+      }
+    },
+    "dc:relation.swrc:Publication": {
+      "name": "related_publications",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes"
+      }
+    },
+    "dc:relation.bibo:Website": {
+      "name": "related_websites",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes"
+      }
+    },
+    "dc:relation.vivo:Service": {
+      "name": "related_services",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes",
+        "vivo:Relationship.rdf:PlainLiteral": "related_relationship"
+      }
+    },
+    "dc:relation.vivo:Dataset": {
+      "name": "related_data",
+      "type": "record",
+      "repeatable": 1,
+      "fields": {
+        "dc:identifier": "related_url",
+        "dc:title": "related_title",
+        "skos:note": "related_notes",
+        "vivo:Relationship.rdf:PlainLiteral": "related_relationship",
+        "redbox:publish": "redbox_publish",
+        "redbox:origin": "redbox_origin"
       }
     },
     "dc:accessRightsType": {
@@ -233,24 +243,44 @@
     },
     "dc:coverage.redbox:timePeriod": "timePeriod",
     "dc:coverage.vivo:GeographicLocation": {
-      "name": "geospatial",
-      "type": "record",
-      "nestedNames": [
-        "features"
+      "destinations": [
+        {
+          "to": "geospatial",
+          "repeatable": true,
+          "nestedNames": [
+            "features"
+          ],
+          "additionalKeys": {
+            "type": "FeatureCollection"
+          }
+        },
+        {
+          "to": "geolocations",
+          "repeatable": true
+        }
       ],
-      "additionalKeys": {
-        "type": "FeatureCollection"
-      },
+      "type": "record",
+      "repeatable": true,
       "handler": "GeoLocation",
-      "repeatable": 1,
       "fields": {
         "redbox:wktRaw": "redbox:wktRaw",
+        "redbox:Fid": "redbox:Fid",
         "dc:identifier": "identifier",
         "rdf:PlainLiteral": "basic_name",
         "geo:lat": "lat",
         "geo:long": "long"
       }
-    }
+    },
+    "redbox:embargo.dc:date": "embargoUntil",
+    "redbox:embargo.skos:note": "embargoNote",
+    "redbox:embargo.redbox:isEmbargoed": {
+      "name": "embargoByDate",
+      "type": "valuemap",
+      "map": {
+        "on": true
+      }
+    },
+    "jcu:data.depositedBy.text": "legal_statement"
   }
 }
 

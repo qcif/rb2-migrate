@@ -314,7 +314,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       _.assign(updated[oid], record);
       log.info(`Processing oid ${oid}`);
 
-      let md = await rbSource.getRecord(oid);
+        let md = await rbSource.getRecord(oid);
       if (!md) {
         log.error(`Couldn't get record for ${oid}`);
         updated[oid]['status'] = 'load failed';
@@ -471,7 +471,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         dumpjson(outdir, 'new', oid + '_publication', md2Pub);
         dumpjson(outdir, 'originals', oid + '_pub_unflat', mduPub);
         n_pub += 1;
-        log.debug('about to create record...');
+        log.debug('about to create publication...');
         const pubOid = await rbDest.createRecord(md2Pub, cwPub['dest_type']);
         log.debug('completed, create ok.');
         report('published', '', '', 'publication created', '');
@@ -565,6 +565,11 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
     const filename = encodeURIComponent(attachment.attachFilename);
     log.verbose(`next attachment filename is: ${filename}`);
     const data = await rbSource.readDatastream(id, filename, {responseType: 'stream'});
+    if (_.get(data, 'statusCode') != '200') {
+      log.warn(`Attachment read datastream failed for ${JSON.stringify(attachment)}. Skipping this iteration...`);
+      errors.push({'message': 'No get nor write datastream result', oid: noid, attachment: JSON.stringify(attachment)});
+      continue;
+    }
     log.verbose('Have Redbox1 attachment data. Sending upstream...');
     log.verbose(`Received data type is: ${typeof data}`);
     let form = new FormData();
@@ -576,7 +581,7 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
     });
     if (!result || !_.has(result, 'message')) {
       log.warn("No result received. Sending to errors");
-      errors.push({'message': 'No write datastream result', oid: noid});
+      errors.push({'message': 'No write datastream result', oid: noid, attachment: JSON.stringify(attachment)});
     } else {
       log.debug(JSON.stringify(result));
       log.debug('Completed next upload. Updating metadata....');
