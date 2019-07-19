@@ -101,7 +101,7 @@
       "handler": "SingleTextFieldPerson",
       "repeatable": 1,
       "additive": 1,
-      "role": "Collaborators",
+      "role": "Collaborator",
       "fields": {
         "foaf:Agent": "fullname"
       }
@@ -110,11 +110,11 @@
       "destinations": [
         {
           "to": "contributor_supervisor",
-          "role": "Adviser"
+          "role": "Advisor"
         },
         {
           "repeatable": true,
-          "role": "Adviser"
+          "role": "Advisor"
         }
       ],
       "type": "record",

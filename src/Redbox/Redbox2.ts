@@ -189,6 +189,16 @@ export class Redbox2 extends BaseRedbox implements Redbox {
     }
   }
 
+  async updateRecordWorkflow(oid: string, md: Object): Promise<Object | undefined> {
+    try {
+      let response = await this.apiput('api/records/workflow/step/:targetStep/' + oid, md);
+      return response;
+    } catch (e) {
+      console.log("Error " + e);
+      return undefined;
+    }
+  }
+
   async getPermissions(oid): Promise<Object | undefined> {
     try {
       let response = await this.apiget('api/records/permissions/' + oid);

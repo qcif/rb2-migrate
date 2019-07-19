@@ -68,7 +68,8 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
     var destfield = trfield(cwspec[srcfield], srcfield);
     if (srcfield in src) {
       if (typeof (cwspec[srcfield]) === 'string') {
-        dest[destfield] = src[srcfield];
+        // do not allow blanks into destination
+        dest[destfield] = !_.isEmpty(src[srcfield]) || src[srcfield] !== 'null' ? src[srcfield] : null;
         if (dest[destfield]) {
           logger('crosswalk', srcfield, destfield, "copied", dest[destfield]);
         } else {
@@ -384,7 +385,7 @@ function trfield(cf: string, old: string): string {
 // check for a dc:identifier, ci and data manager (?)
 // and for truthy values for everything in required
 // this now returns an array of errors: if it's valid, returns an
-// empty array - because I want all of the invalid errors to 
+// empty array - because I want all of the invalid errors to
 // appear in the index report
 
 export function validate(owner: string, required: string[], js: Object, logger: LogCallback): string[] {
@@ -453,10 +454,9 @@ function valuemap(spec: Object, srcfield: string, destfield: string, srcval: str
       return spec["map"][srcval];
     } else {
       logger("crosswalk", srcfield, destfield, "unmapped", srcval);
-      return "";
     }
-  }
+  } else {
   logger("crosswalk", srcfield, destfield, "no map!", srcval);
-  return "";
+  }
 }
 

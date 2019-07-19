@@ -7,33 +7,36 @@
       "solrURL": "http://localhost:9000/solr/fascinator",
       "packageTypes": [
         "dmpt",
-        "jcu_dmpt",
         "dataset",
         "self-submission",
         "jcu-self-submission"
       ],
       "crosswalks": {
-        "jcu_dmpt": "rdmp",
+        "dmpt": "rdmp",
         "jcu-self-submission": {
           "jcu-self-submission-draft": [
-            "dataRecord"
+            "dataRecord",
+            "dataPublication"
           ]
         },
         "self-submission": {
           "self-submission-draft": [
-            "dataRecord"
+            "dataRecord",
+            "dataPublication"
           ]
         },
         "dataset": {
           "investigation": [
-            "dataRecord"
+            "dataRecord",
+            "dataPublication"
           ],
           "live": [
             "dataRecord",
             "dataPublication"
           ],
           "metadata-review": [
-            "dataRecord"
+            "dataRecord",
+            "dataPublication"
           ]
         }
       }

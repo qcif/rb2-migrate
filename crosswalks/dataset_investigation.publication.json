@@ -185,7 +185,7 @@
       "name": "dc:accessRights",
       "type": "valuemap",
       "map": {
-        "conditional": "Restricted",
+        "conditional": "Conditional",
         "open": "Open",
         "restricted": "Restricted"
       }

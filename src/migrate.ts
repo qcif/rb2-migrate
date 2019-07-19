@@ -162,14 +162,18 @@ async function index(options: Object): Promise<Object[][]> {
     oids.splice(limit);
     log.info(`Limited to first ${oids.length} records`);
   }
-  const allRecordsAttachments = await collectRecordAttachments(rbSource);
+  let allRecordsAttachments;
+  if (oids.length > 0) {
+    allRecordsAttachments = await collectRecordAttachments(rbSource);
+  }
+  log.debug(`all records attachments are:`);
+  console.dir(allRecordsAttachments);
   let records = [];
   for (let oid of oids) {
     try {
       log.debug(`oid is ${oid}`);
       let rbSourceRecord = await rbSource.getRecord(oid);
       const rbSourceRecordMetadata = await rbSource.getRecordMetadata(oid);
-      console.log('got next record...');
       if (rbSourceRecord) {
         let recordAttachments = {};
         recordAttachments['attachments'] = allRecordsAttachments[rbSourceRecordMetadata['objectId'] || rbSourceRecord[0]['id'] || rbSourceRecord['storage_id'] || rbSourceRecord['oid']] || [];
@@ -204,13 +208,13 @@ async function collectRecordAttachments(rbSource: Redbox1): Promise<Object> {
       attachId = _.head(attachId);
     }
     if (attachId && _.has(attachment, 'filename')) {
-      log.debug("Found attachment match:");
-      log.verbose(JSON.stringify(attachment));
+      // log.debug("Found attachment match:");
+      // log.verbose(JSON.stringify(attachment));
       let filename = attachment['filename'];
       if (_.isArray(filename)) {
         filename = _.head(filename);
       }
-      log.verbose(`filename to attach is: ${filename}`);
+      // log.verbose(`filename to attach is: ${filename}`);
       let nextAttachment = {
         attachId: attachId,
         attachFilename: filename
@@ -337,6 +341,8 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
 
       const [mdu, md2] = crosswalk(cw, md, report);
+      // console.log('have md2');
+      // console.dir(md2);
       updated[oid]['status'] = 'crosswalked';
       n_crosswalked += 1;
       var noid = 'new_' + oid;
@@ -363,7 +369,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       }
 
       try {
-        log.debug('about to create record...');
+        log.debug('Creating data record...');
         noid = await rbDest.createRecord(md2, dest_type);
         if (noid) {
           n_created += 1;
@@ -391,30 +397,22 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       } catch (e) {
         report('permissions', '', '', 'failed', e);
       }
-      // console.dir(md);
-      log.debug('checking for attachments...');
-      console.dir(record['attachments']);
-      if (!_.isEmpty(record['attachments'])) {
         try {
-          const result = await uploadAttachments(rbSource, rbDest, noid, oid, record, md2, report);
-          if (!result) {
-            console.log('No result!!!');
-            throw('unknown error');
+        log.info("Updating Redbox2 data record metaMetadata...");
+        let metaMetadataObject = await rbDest.getRecordMetadata(noid);
+        metaMetadataObject['legacyId'] = oid;
+        log.verbose(JSON.stringify(metaMetadataObject));
+        const metaMetadataResult = await (<Redbox2>rbDest).updateRecordObjectMetadata(noid, metaMetadataObject);
+        if (!metaMetadataResult) {
+          throw('Unknown error in setting metaMetadata.');
           }
-          if ('error' in result) {
-            console.log('error in result');
-            console.dir(result);
-            throw(result['error']);
+        if ('error' in metaMetadataResult) {
+          throw(metaMetadataResult['error']);
           }
+        report('metaMetaData', 'oid', 'legacyId', 'set', metaMetadataResult);
         } catch (e) {
-          console.log('There was an error in uploading attachments.');
-          console.log(e);
-          report('attachments', '', '', 'failed', e);
+        report('metaMetaData', 'oid', 'legacyId', 'failed', e);
         }
-      } else {
-        log.info(`No attachments for record: ${oid}`);
-      }
-
 
       if (cw['postTasks']) {
         try {
@@ -442,6 +440,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         // FIXME status should get updated too
       };
 
+      let pubOid;
       try {
         let mdPub = await rbSource.getRecord(oid);
         log.info(`Got record ${oid} for publication crosswalk`);
@@ -468,17 +467,43 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
             report_pub("publication", f, f, "copied", JSON.stringify(md2Pub[f]));
           }
         });
+       // In only Redbox1, embargoed is part of metadata and not a workflow stage
+        md2Pub["workflowStage"] = cwPub["to_workflow"];
+        if (_.get(md2Pub, 'embargoByDate', false)) {
+          md2Pub["workflowStage"] = 'embargoed';
+        }
         dumpjson(outdir, 'new', oid + '_publication', md2Pub);
         dumpjson(outdir, 'originals', oid + '_pub_unflat', mduPub);
         n_pub += 1;
         log.debug('about to create publication...');
-        const pubOid = await rbDest.createRecord(md2Pub, cwPub['dest_type']);
+        // console.log(`md2Pub now:`)
+        // console.log(md2Pub)
+        pubOid = await rbDest.createRecord(md2Pub, cwPub['dest_type']);
         log.debug('completed, create ok.');
         report('published', '', '', 'publication created', '');
       } catch (e) {
         log.error("Publish error: " + e);
-        console.trace("Publish error: " + e);
         report('published', '', '', 'publish failed', e.message);
+      }
+      if (!_.isEmpty(record['attachments'])) {
+        try {
+          const result = await uploadAttachments(rbSource, rbDest, noid, oid, record, md2, pubOid, md2Pub, report);
+          if (!result) {
+            console.log('No result!!!');
+            throw('unknown error');
+          }
+          if ('error' in result) {
+            console.log('error in result');
+            console.dir(result);
+            throw(result['error']);
+          }
+        } catch (e) {
+          console.log('There was an error in uploading attachments.');
+          console.log(e);
+          report('attachments', '', '', 'failed', e);
+        }
+      } else {
+        log.info(`No attachments for record: ${oid}`);
       }
     }
 
@@ -550,7 +575,7 @@ async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oi
   }
 }
 
-async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string, oid: string, redbox1Record: Object, redbox2Record: Object, reportFn: any): Promise<Object> {
+async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string, oid: string, redbox1Record: Object, redbox2Record: Object, pubOid: string, redbox2PubRecord: Object, reportFn: any): Promise<Object> {
   const magicFileBytesMaxSize = 104857600;
 
   // guessing that it is better to call redbox2 (ie: redbox2 can handle the traffic) for each attachment rather than trying to send all attachments at once (in case any attachment is large)
@@ -589,7 +614,7 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
       if (resultMessage['code'] != '200' || resultMessage['oid'] != noid || resultMessage['fileIds'].length != 1) {
         // allow other pending attachments to succeed - only throw errors after all attachments attempted to upload
         log.warn("Result was not successful. Sending to errors.");
-        errors.push(result);
+        errors.push(JSON.stringify(result));
       } else {
         const fileId = resultMessage.fileIds[0];
         const location = `${resultMessage.oid}/attach/${fileId}`;
@@ -602,9 +627,14 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
         });
         // report on each successful upload, so upload errors, only, can be thrown afterwards.
         try {
+          // update data location for Redbox2 dataRecord metadata: dataLocations
           redbox2Record['dataLocations'] = dataLocations;
           const metadataResult = await rbDest.updateRecordMetadata(noid, redbox2Record);
           log.verbose('Metadata update result is: ', metadataResult);
+          // update data location for Redbox2 dataPublication metadata: dataLocations
+          redbox2PubRecord['dataLocations'] = dataLocations;
+          const metadataPubResult = await rbDest.updateRecordMetadata(pubOid, redbox2PubRecord);
+          log.verbose('Metadata publication update result is: ', metadataPubResult);
           let metaMetadataObject = await rbDest.getRecordMetadata(noid);
           metaMetadataObject['attachmentFields'] = ["dataLocations"];
           log.verbose('Uploading metaMetadata: ');

@@ -102,7 +102,7 @@
       "handler": "SingleTextFieldPerson",
       "repeatable": 1,
       "additive": 1,
-      "role": "Collaborators",
+      "role": "Collaborator",
       "fields": {
         "foaf:Agent": "fullname"
       }
@@ -111,11 +111,11 @@
       "destinations": [
         {
           "to": "contributor_supervisor",
-          "role": "Adviser"
+          "role": "Advisor"
         },
         {
           "repeatable": true,
-          "role": "Adviser"
+          "role": "Advisor"
         }
       ],
       "type": "record",
@@ -170,6 +170,7 @@
         "type": "type"
       }
     },
+    "dc:extent": "dc_extent",
     "vivo:Location.vivo:GeographicLocation": {
       "name": "dataLocations",
       "additive": 1,
@@ -251,7 +252,16 @@
         "commercial": "commercial"
       }
     },
-    "redbox:disposalDate": "disposalDate"
+    "redbox:disposalDate": "disposalDate",
+    "locrel:own.foaf:Agent": {
+      "name": "data_owners",
+      "type": "record",
+      "handler": "FlatKeywords",
+      "repeatable": 1,
+      "fields": {
+        "foaf:name": ""
+      }
+    }
   }
 }
 

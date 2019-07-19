@@ -84,10 +84,10 @@ export class Redbox1 extends BaseRedbox implements Redbox {
     if (start === undefined) {
       start = 0;
     }
-    console.log("Solr parameters are prepared:");
-    console.log(query);
-    console.log(returnedFields);
-    console.log(start);
+    // console.log("Solr parameters are prepared:");
+    // console.log(query);
+    // console.log(returnedFields);
+    // console.log(start);
     const result = await this.getSolr(query, returnedFields, start);
     return result;
   }

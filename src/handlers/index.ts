@@ -26,4 +26,6 @@ export {HTMLLessFirstFullDescription} from './HTMLLessFirstFullDescription';
 export {SharedTitle} from './SharedTitle';
 export {RequestIdentifier} from './RequestIdentifier';
 export {ProtectiveMarking} from './ProtectiveMarking';
+export {CitationSimpleDate} from './CitationSimpleDate';
+export {CitationSimplePublicationDate} from './CitationSimplePublicationDate';
 

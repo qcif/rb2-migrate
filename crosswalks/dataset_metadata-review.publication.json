@@ -3,6 +3,7 @@
   "source_type": "dataset",
   "workflow_step": "metadata-review",
   "dest_type": "dataPublication",
+  "to_workflow": "reviewing",
   "permissions": {
     "user_id": "email",
     "permissions": {
@@ -185,7 +186,7 @@
       "name": "dc:accessRights",
       "type": "valuemap",
       "map": {
-        "conditional": "Restricted",
+        "conditional": "Conditional",
         "open": "Open",
         "restricted": "Restricted"
       }
