@@ -318,7 +318,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       _.assign(updated[oid], record);
       log.info(`Processing oid ${oid}`);
 
-        let md = await rbSource.getRecord(oid);
+      let md = await rbSource.getRecord(oid);
       if (!md) {
         log.error(`Couldn't get record for ${oid}`);
         updated[oid]['status'] = 'load failed';
@@ -397,7 +397,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       } catch (e) {
         report('permissions', '', '', 'failed', e);
       }
-        try {
+      try {
         log.info("Updating Redbox2 data record metaMetadata...");
         let metaMetadataObject = await rbDest.getRecordMetadata(noid);
         metaMetadataObject['legacyId'] = oid;
@@ -405,14 +405,14 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         const metaMetadataResult = await (<Redbox2>rbDest).updateRecordObjectMetadata(noid, metaMetadataObject);
         if (!metaMetadataResult) {
           throw('Unknown error in setting metaMetadata.');
-          }
+        }
         if ('error' in metaMetadataResult) {
           throw(metaMetadataResult['error']);
-          }
-        report('metaMetaData', 'oid', 'legacyId', 'set', metaMetadataResult);
-        } catch (e) {
-        report('metaMetaData', 'oid', 'legacyId', 'failed', e);
         }
+        report('metaMetaData', 'oid', 'legacyId', 'set', metaMetadataResult);
+      } catch (e) {
+        report('metaMetaData', 'oid', 'legacyId', 'failed', e);
+      }
 
       if (cw['postTasks']) {
         try {
@@ -537,7 +537,6 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
   }
 
 }
-
 
 // Set the permissions on a newly created record. Works like this:
 //

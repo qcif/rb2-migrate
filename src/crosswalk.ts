@@ -456,7 +456,7 @@ function valuemap(spec: Object, srcfield: string, destfield: string, srcval: str
       logger("crosswalk", srcfield, destfield, "unmapped", srcval);
     }
   } else {
-  logger("crosswalk", srcfield, destfield, "no map!", srcval);
+    logger("crosswalk", srcfield, destfield, "no map!", srcval);
   }
 }
 

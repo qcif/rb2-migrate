@@ -126,7 +126,7 @@
       "name": "contributors",
       "type": "record",
       "handler": "Person",
-      "role": "Contributor",
+      "role": "Collaborator",
       "repeatable": 1,
       "fields": {
         "person.dc:identifier": "dc:identifier",
@@ -140,7 +140,7 @@
       "name": "contributor_supervisor",
       "type": "record",
       "handler": "Person",
-      "role": "Adviser",
+      "role": "Advisor",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -222,7 +222,7 @@
         "commercial": "commercial"
       }
     },
-    "dataowner_name": "dataRetention_data_owner",
+    "dataLicensingAccess.manager": "dataowner_name",
     "dc:rightsHolder.dc:name": {
       "name": "dc:rightsHolder_dc:name",
       "type": "valuemap",
