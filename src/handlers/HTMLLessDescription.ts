@@ -7,7 +7,7 @@ export class HTMLLessDescription extends HandlerBase implements Handler {
 
 	crosswalk(o: any): string | undefined {
 
-		const stripped = striptags(o);
+		const stripped = striptags(o, ['a'], '\n');
 
 		return stripped;
 

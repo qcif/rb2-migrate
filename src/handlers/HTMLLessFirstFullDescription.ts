@@ -15,7 +15,7 @@ export class HTMLLessFirstFullDescription extends HandlerBase implements Handler
       });
     }
     if (firstFull) {
-      return striptags(firstFull.text);
+      return striptags(firstFull.text, ['a'], '\n');
     } else {
       return undefined;
     }

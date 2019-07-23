@@ -166,8 +166,8 @@ async function index(options: Object): Promise<Object[][]> {
   if (oids.length > 0) {
     allRecordsAttachments = await collectRecordAttachments(rbSource);
   }
-  log.debug(`all records attachments are:`);
-  console.dir(allRecordsAttachments);
+  // log.debug(`all records attachments are:`);
+  // console.dir(allRecordsAttachments);
   let records = [];
   for (let oid of oids) {
     try {
@@ -596,6 +596,9 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
     }
     log.verbose('Have Redbox1 attachment data. Sending upstream...');
     log.verbose(`Received data type is: ${typeof data}`);
+    log.info('Fetching attachment workflow metadata...');
+    const workflowMetadata = await rbSource.readDatastream(id, "workflow.metadata", {});
+    log.verbose(JSON.stringify(workflowMetadata));
     let form = new FormData();
     form.append('attachmentFields', data);
     log.info('Waiting for upload to complete...');
@@ -617,13 +620,19 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
       } else {
         const fileId = resultMessage.fileIds[0];
         const location = `${resultMessage.oid}/attach/${fileId}`;
-        dataLocations.push({
+        let nextLocation = _.omitBy({
           type: 'attachment',
           location: location,
           name: attachment.attachFilename,
           fileId: fileId,
-          uploadUrl: `${rbDest.baseURL}/record/${location}`
-        });
+          uploadUrl: `${rbDest.baseURL}/record/${location}`,
+          notes: _.get(workflowMetadata, 'formData.fileDescription'),
+          accessRights: _.get(workflowMetadata, 'formData.access_rights'),
+          attachmentType: _.get(workflowMetadata, 'formData.attachment_type')
+        }, _.isEmpty);
+        console.log('built next data location:');
+        console.dir(nextLocation);
+        dataLocations.push(nextLocation);
         // report on each successful upload, so upload errors, only, can be thrown afterwards.
         try {
           // update data location for Redbox2 dataRecord metadata: dataLocations
