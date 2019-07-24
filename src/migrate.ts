@@ -229,7 +229,7 @@ async function collectRecordAttachments(rbSource: Redbox1): Promise<Object> {
     }
   });
   log.debug('Completed collecting all attachments for each record');
-  // log.debug(JSON.stringify(attachmentsBrief, null, 4));
+  log.debug(JSON.stringify(attachmentsBrief, null, 4));
   return attachmentsBrief;
 }
 
@@ -467,7 +467,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
             report_pub("publication", f, f, "copied", JSON.stringify(md2Pub[f]));
           }
         });
-       // In only Redbox1, embargoed is part of metadata and not a workflow stage
+        // In only Redbox1, embargoed is part of metadata and not a workflow stage
         md2Pub["workflowStage"] = cwPub["to_workflow"];
         if (_.get(md2Pub, 'embargoByDate', false)) {
           md2Pub["workflowStage"] = 'embargoed';
@@ -597,7 +597,11 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
     log.verbose('Have Redbox1 attachment data. Sending upstream...');
     log.verbose(`Received data type is: ${typeof data}`);
     log.info('Fetching attachment workflow metadata...');
-    const workflowMetadata = await rbSource.readDatastream(id, "workflow.metadata", {});
+    let workflowMetadata = await rbSource.readDatastream(id, "workflow.metadata", {});
+    if (_.isEmpty(workflowMetadata)) {
+      log.info("Problem finding 'workflow.metadata'. Trying 'attachments.metadata' instead...");
+      workflowMetadata = await rbSource.readDatastream(id, "attachments.metadata", {});
+    }
     log.verbose(JSON.stringify(workflowMetadata));
     let form = new FormData();
     form.append('attachmentFields', data);
