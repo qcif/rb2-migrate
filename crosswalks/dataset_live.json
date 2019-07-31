@@ -81,6 +81,7 @@
       ],
       "type": "record",
       "handler": "Person",
+      "repeatable": 1,
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",

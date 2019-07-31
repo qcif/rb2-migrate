@@ -229,7 +229,7 @@ async function collectRecordAttachments(rbSource: Redbox1): Promise<Object> {
     }
   });
   log.debug('Completed collecting all attachments for each record');
-  log.debug(JSON.stringify(attachmentsBrief, null, 4));
+  // log.verbose(JSON.stringify(attachmentsBrief, null, 4));
   return attachmentsBrief;
 }
 
