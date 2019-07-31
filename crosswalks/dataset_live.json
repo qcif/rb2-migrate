@@ -135,15 +135,14 @@
       "destinations": [
         {
           "to": "contributor_ci",
-          "role": "Chief Investigator"
+          "singleUse": true
         },
         {
-          "repeatable": true,
-          "role": "Chief Investigator"
+          "repeatable": true
         }
       ],
       "type": "record",
-      "defaultRole": "Contributors",
+      "defaultRole": "Chief Investigator",
       "defaultField": "contributors",
       "repeatable": 1,
       "handler": "AffiliatedPerson",
