@@ -77,16 +77,9 @@
         {
           "to": "contributor_data_manager",
           "role": "Data Manager"
-        },
-        {
-          "repeatable": true,
-          "role": "Data Manager"
         }
       ],
       "type": "record",
-      "defaultRole": "Contributors",
-      "defaultField": "contributors",
-      "repeatable": 1,
       "handler": "Person",
       "fields": {
         "dc:identifier": "dc:identifier",
@@ -112,15 +105,9 @@
         {
           "to": "contributor_supervisor",
           "role": "Advisor"
-        },
-        {
-          "repeatable": true,
-          "role": "Advisor"
         }
       ],
       "type": "record",
-      "defaultRole": "Contributors",
-      "defaultField": "contributors",
       "repeatable": 1,
       "handler": "Person",
       "fields": {
@@ -143,7 +130,7 @@
       ],
       "type": "record",
       "defaultRole": "Chief Investigator",
-      "defaultField": "contributors",
+      "defaultField": "contributor_oi",
       "repeatable": 1,
       "handler": "AffiliatedPerson",
       "fields": {

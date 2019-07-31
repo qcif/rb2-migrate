@@ -115,7 +115,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                         // if there are multiple sources do not overwrite
                         if (!dest[destfield]) {
                           dest[destfield] = nextDest;
-                          if (nextDest['useOnce']) {
+                          if (nextDest['singleUse']) {
                             delete src[srcfield];
                           }
                         } else {
