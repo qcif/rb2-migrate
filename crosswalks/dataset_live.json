@@ -105,11 +105,12 @@
       "destinations": [
         {
           "to": "contributor_supervisor",
-          "role": "Advisor"
+          "role": "Advisor",
+          "repeatable": true
         }
       ],
       "type": "record",
-      "repeatable": 1,
+      "repeatable": true,
       "handler": "Person",
       "fields": {
         "dc:identifier": "dc:identifier",

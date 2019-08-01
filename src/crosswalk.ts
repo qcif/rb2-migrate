@@ -107,6 +107,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                   repeats.forEach(rH => {
                     //if change destinations, there will be potentially multiple destinations
                     for (const nextDest of _.castArray(rH)) {
+                      let isSingleUse = false;
                       destfield = nextDest["destination"];
                       if (nextDest["repeatable"]) {
                         dest[destfield] = _.castArray(dest[destfield] || []);
@@ -115,9 +116,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                         // if there are multiple sources do not overwrite
                         if (!dest[destfield]) {
                           dest[destfield] = nextDest;
-                          if (nextDest['singleUse']) {
-                            delete src[srcfield];
-                          }
+                          isSingleUse = nextDest['singleUse']
                         } else {
                           // console.log(`WARNING: destination: ${destfield} exists. Ignoring values:`);
                           // console.log(nextDest);
@@ -129,6 +128,9 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                       }
                       delete nextDest["destination"];
                       delete nextDest["repeatable"];
+                      if (isSingleUse) {
+                        break;
+                      }
                     }
                   });
                   _.forEach(allNestedNames, function (nextNestedNames, destfield) {

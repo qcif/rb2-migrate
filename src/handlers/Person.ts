@@ -38,6 +38,7 @@ export class Person extends HandlerBase implements Handler {
         if (outputPostFeedback) {
           const changeOutput = _.cloneDeep(outputPostFeedback);
           changeOutput['repeatable'] = dest['repeatable'];
+          changeOutput['singleUse'] = dest['singleUse'];
           if (o[dest['from']] && dest['value'] && o[dest['from']] !== dest['value']) {
             changeOutput['destination'] = defaultField;
             changeOutput['role'] = defaultRole;
