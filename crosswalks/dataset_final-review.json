@@ -76,17 +76,11 @@
         {
           "to": "contributor_data_manager",
           "role": "Data Manager"
-        },
-        {
-          "repeatable": true,
-          "role": "Data Manager"
         }
       ],
       "type": "record",
-      "defaultRole": "Contributors",
-      "defaultField": "contributors",
-      "repeatable": 1,
       "handler": "Person",
+      "repeatable": 1,
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -110,17 +104,12 @@
       "destinations": [
         {
           "to": "contributor_supervisor",
-          "role": "Advisor"
-        },
-        {
-          "repeatable": true,
-          "role": "Advisor"
+          "role": "Advisor",
+          "repeatable": true
         }
       ],
       "type": "record",
-      "defaultRole": "Contributors",
-      "defaultField": "contributors",
-      "repeatable": 1,
+          "repeatable": true,
       "handler": "Person",
       "fields": {
         "dc:identifier": "dc:identifier",
@@ -134,16 +123,15 @@
       "destinations": [
         {
           "to": "contributor_ci",
-          "role": "Chief Investigator"
+          "singleUse": true
         },
         {
-          "repeatable": true,
-          "role": "Chief Investigator"
+          "repeatable": true
         }
       ],
       "type": "record",
-      "defaultRole": "Contributors",
-      "defaultField": "contributors",
+      "defaultRole": "Chief Investigator",
+      "defaultField": "contributor_oi",
       "repeatable": 1,
       "handler": "AffiliatedPerson",
       "fields": {
@@ -169,6 +157,7 @@
         "type": "type"
       }
     },
+    "dc:extent": "dc_extent",
     "vivo:Location.vivo:GeographicLocation": {
       "name": "dataLocations",
       "additive": 1,
@@ -250,7 +239,16 @@
         "commercial": "commercial"
       }
     },
-    "redbox:disposalDate": "disposalDate"
+    "redbox:disposalDate": "disposalDate",
+    "locrel:own.foaf:Agent": {
+      "name": "data_owners",
+      "type": "record",
+      "handler": "FlatKeywords",
+      "repeatable": 1,
+      "fields": {
+        "foaf:name": ""
+      }
+    }
   }
 }
 

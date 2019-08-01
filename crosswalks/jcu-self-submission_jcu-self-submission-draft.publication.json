@@ -280,7 +280,30 @@
         "on": true
       }
     },
-    "jcu:data.depositedBy.text": "legal_statement"
+    "jcu:data.depositedBy.text": "legal_statement",
+    "dc:biblioGraphicCitation": {
+      "name": "citation_other",
+      "type": "record",
+      "fields": {
+        "resourceType": "resource_type",
+        "redbox:sendCitation": "send_citation",
+        "dc:hasPart.dc:identifier.skos:note": "identifier_note",
+        "jcu:dataType": "data_type"
+      }
+    },
+    "dc:biblioGraphicCitation.dc:hasPart.dc:publisher.rdf:PlainLiteral": "citation_publisher",
+    "dc:biblioGraphicCitation.dc:hasPart.bibo:Website.dc:identifier": "citation_url",
+    "dc:biblioGraphicCitation.skos:prefLabel": "citation_generated",
+    "dc:biblioGraphicCitation.dc:hasPart.dc:date": {
+      "name": "citation_dates",
+      "type": "record",
+      "handler": "CitationSimplePublicationDate",
+      "handleAll": true,
+      "fields": {
+        "rdf:PlainLiteral": "date",
+        "dc:type.rdf:PlainLiteral": "type"
+      }
+    }
   }
 }
 
