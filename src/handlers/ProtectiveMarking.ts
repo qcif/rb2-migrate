@@ -1,14 +1,13 @@
 // GrantBody handler
 
 import {Handler, HandlerBase} from './handlers';
+import * as _ from 'lodash';
 
 
 export class ProtectiveMarking extends HandlerBase implements Handler {
 
 	crosswalk(o: Object): Object | undefined {
-
-		var value = o[Object.keys(o)[0]];
-
+    let value = _.replace(o, 'protectiveMarking.dc', 'protectiveMarking_dc');
 		return value;
 
 	}

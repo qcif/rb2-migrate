@@ -2,71 +2,53 @@
   "servers": {
     "Test1_9": {
       "version": "Redbox1",
-      "baseURL": "http://redboxhost:9090/redbox/api/v1.1/",
-      "apiKey": "",
-      "solrURL": "http://redboxhost:9020/solr/fascinator",
-      "packageTypes": [
-        "dmpt"
-      ],
-      "crosswalks": {
-        "dmpt": "rdmp",
-        "self-submission": {
-          "draft": [
-            "dataRecord"
-          ]
-        },
-        "dataset": {
-          "investigation": [
-            "dataRecord"
-          ],
-          "live": [
-            "dataRecord",
-            "dataPublication"
-          ],
-          "metadata-review": [
-            "dataRecord"
-          ]
-        }
-      }
-    },
-    "Test1_9_files": {
-      "version": "Redbox1Files",
-      "baseURL": "",
-      "apiKey": "",
-      "solrURL": "http://redboxhost:9090/solr/fascinator",
-      "files": "",
+      "baseURL": "http://localhost:9010/redbox/api/v1.1/",
+      "apiKey": "c65777f2-5d15-4949-94e0-8670e64068a5",
+      "solrURL": "http://localhost:9010/solr/fascinator",
       "packageTypes": [
         "dmpt",
+        "dataset",
+        "self-submission",
         "jcu-self-submission"
       ],
       "crosswalks": {
         "dmpt": "rdmp",
         "jcu-self-submission": {
           "jcu-self-submission-draft": [
-            "dataRecord"
+            "dataRecord",
+            "dataPublication"
+          ]
+        },
+        "self-submission": {
+          "self-submission-draft": [
+            "dataRecord",
+            "dataPublication"
           ]
         },
         "dataset": {
           "investigation": [
-            "dataRecord"
+            "dataRecord",
+            "dataPublication"
           ],
           "live": [
             "dataRecord",
             "dataPublication"
           ],
           "metadata-review": [
-            "dataRecord"
+            "dataRecord",
+            "dataPublication"
           ]
         }
       }
     },
     "Test2_0": {
       "version": "Redbox2",
-      "baseURL": "",
-      "apiKey": "",
+      "baseURL": "http://localhost:1500",
+      "apiKey": "de3b0bc7-4f52-4868-9f45-63f0646055c7",
       "packageTypes": [
         "rdmp",
         "dataRecord",
+        "dataPublication",
         "workspace"
       ],
       "branding": "default",

@@ -38,7 +38,13 @@
   ],
   "fields": {
     "dc:title": "title",
-    "dc:description": "description",
+    "dc:description": {
+      "name": "description",
+      "type": "record",
+      "handler": "HTMLLessDescription",
+      "overwrite": true,
+      "fields": {}
+    },
     "dc:description.1.text": {
       "name": "description",
       "type": "record",
@@ -110,9 +116,17 @@
       }
     },
     "locrel:prc.foaf:Person": {
-      "name": "contributor_data_manager",
+      "destinations": [
+        {
+          "to": "contributor_data_manager"
+        },
+        {
+          "to": "dataLicensingAccess_manager"
+        }
+      ],
       "type": "record",
       "handler": "Person",
+      "repeatable": 1,
       "role": "Data Manager",
       "fields": {
         "dc:identifier": "dc:identifier",
@@ -156,19 +170,17 @@
     "vivo:Dataset.redbox:MetadataStandard": "_",
     "vivo:Dataset.redbox:DataStructureStandard": "_",
     "vivo:Dataset.dc:extent": {
-      "name": "_",
+      "name": "vivo:Dataset_dc:extent",
       "type": "valuemap",
       "map": {
-        "Less than 10 GB": "less-than-100GB",
-        "Less than 100GB": "less-than-100GB",
-        "20GB – 100GB": "less-than-100GB",
-        "10GB-20GB": "less-than-100GB",
-        "100GB+": "100GB-to-2TB",
-        "": "less-than-100GB"
+        "Less than 10 GB": "Less than 10 GB",
+        "10GB-20GB": "10GB - 20GB",
+        "20GB – 100GB": "20GB – 100GB",
+        "100GB+": "100GB - 1TB"
       }
     },
     "vivo:Dataset.dc:location.rdf:PlainLiteral": {
-      "name": "_",
+      "name": "vivo:Dataset_dc:location_rdf:PlainLiteral",
       "type": "valuemap",
       "map": {
         "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
@@ -193,7 +205,7 @@
       }
     },
     "vivo:Dataset.dc:source.dc:location.skos:note": "_",
-    "redbox:retentionPeriod.dc:date ": {
+    "redbox:retentionPeriod.dc:date": {
       "name": "redbox:retentionPeriod_dc:date",
       "type": "valuemap",
       "map": {
@@ -252,6 +264,7 @@
     "agls:policy.skos:note": "_",
     "agls:protectiveMarking.dc:type": {
       "type": "record",
+      "handler": "ProtectiveMarking",
       "repeatable": 1,
       "name": "_"
     },

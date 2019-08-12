@@ -363,7 +363,6 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         // it overwrites any warnings from validate() above
         report('validate', '', '', 'valid', '');
       }
-      log.debug('should it continue for dest or args?');
       if (!rbDest || args['index']) {
         continue;
       }

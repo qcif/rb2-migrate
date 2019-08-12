@@ -146,7 +146,9 @@ export abstract class BaseRedbox {
         config["params"] = params;
       }
       _.merge(config, postConfig);
-      console.log("config: " + JSON.stringify(config));
+      // console.log("config: " + JSON.stringify(config));
+      // console.log('payload is:');
+      // console.dir(payload);
       let response = await this.ai.post(url, payload, config);
       // console.log('response');
       // console.dir(response);

@@ -158,7 +158,6 @@
         "type": "type"
       }
     },
-    "dc:extent": "dc_extent",
     "vivo:Location.vivo:GeographicLocation": {
       "name": "dataLocations",
       "additive": 1,

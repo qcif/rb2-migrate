@@ -84,6 +84,8 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
         const spec = cwspec[srcfield];
         if (spec["type"] === "valuemap") {
           dest[destfield] = valuemap(spec, srcfield, destfield, src[srcfield], logger);
+          // console.dir(`value map for ${destfield}`);
+          // console.dir(dest);
           delete src[srcfield];
         } else if (spec["type"] === "record") {
           if ("handler" in spec) {
@@ -113,8 +115,8 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                         dest[destfield] = _.castArray(dest[destfield] || []);
                         dest[destfield] = _.concat(dest[destfield], nextDest);
                       } else {
-                        // if there are multiple sources do not overwrite
-                        if (!dest[destfield]) {
+                        // if there are multiple sources do not overwrite unless explicit config
+                        if (!dest[destfield] || nextDest["overwrite"]) {
                           dest[destfield] = nextDest;
                           isSingleUse = nextDest['singleUse']
                         } else {
@@ -171,7 +173,12 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                   logger('crosswalk', srcfield, destfield, "selected first of multiple records", JSON.stringify(first));
                   dest[destfield] = apply_handler(h, first);
                 } else {
-                  dest[destfield] = apply_handler(h, src[srcfield]);
+                  // do not overwrite unless explicit config
+                  // console.log('spec is');
+                  // console.dir(spec);
+                  if (!dest[destfield] || spec["overwrite"]) {
+                    dest[destfield] = apply_handler(h, src[srcfield]);
+                  }
                 }
               }
             } else {
@@ -456,6 +463,7 @@ function valuemap(spec: Object, srcfield: string, destfield: string, srcval: str
   if ("map" in spec) {
     if (srcval in spec["map"]) {
       logger("crosswalk", srcfield, destfield, "mapped", spec["map"][srcval]);
+
       return spec["map"][srcval];
     } else {
       logger("crosswalk", srcfield, destfield, "unmapped", srcval);

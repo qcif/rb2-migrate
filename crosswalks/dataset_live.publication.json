@@ -305,7 +305,8 @@
         "rdf:PlainLiteral": "date",
         "dc:type.rdf:PlainLiteral": "type"
       }
-    }
+    },
+    "dc:extent": "dc_extent"
   }
 }
 
