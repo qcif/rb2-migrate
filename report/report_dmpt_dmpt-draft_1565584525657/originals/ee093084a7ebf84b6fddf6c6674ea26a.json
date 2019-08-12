@@ -1,0 +1,13 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "related.datasets": [
+        {
+            "oid": "bdba88941f6a602b9833cd72887fff80"
+        }
+    ]
+}

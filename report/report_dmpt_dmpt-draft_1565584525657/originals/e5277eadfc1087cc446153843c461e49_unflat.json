@@ -1,0 +1,149 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "vivo:Dataset.redbox:DataCollectionMethodology": "",
+    "extra.meta.link": "",
+    "vivo:Dataset.dc:extent": "Less than 10 GB",
+    "dc:subject.anzsrc:for.1..top.dropdown": "http://purl.org/asc/1297.0/2008/for/07",
+    "vivo:Dataset.redbox:DataCollectionResources": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "2012-01-15",
+    "Extra.DataSet.URL": "",
+    "dc:rights.skos:note": "",
+    "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral.prefLabel": "Personal equipment",
+    "vivo:Dataset.dc.format.other": "",
+    "finalCollection.tiemPeriod": "",
+    "dc:rightsHolder.dc:name.prefLabel": "My University",
+    "dc:license.dc:identifier": "",
+    "dc:subject.anzsrc:toa.skos:prefLabel": "Applied research",
+    "oid": "e5277eadfc1087cc446153843c461e49",
+    "redbox:disposalDate": "",
+    "dc:license.skos:prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "2013-08-14",
+    "vivo:Dataset.dc.format.prefLabel": "",
+    "dataLicensingAccess.manager": "MISS Tubake Thobejane",
+    "dc:identifier": "A1632",
+    "Extra.Website.URL": "",
+    "vivo:Dataset.dc:source.dc:location.skos:note": "",
+    "vivo:Dataset.dc:extent.prefLabel": "Less than 10 GB",
+    "dc:relation.bibo:Website": "http://www.queenslandredclaw.org/associations/",
+    "Extra.Collection.Methodology": "",
+    "agls:policy.skos:note": "",
+    "dc:rightsHolder.dc:description": "",
+    "finalCollection.Date.To": "",
+    "action": "save",
+    "func": "action",
+    "dc:title": "IMPROVEMENT OF FORMULATED FEEDS AND FEEDING MANAGEMENT FOR REDCLAW AQUACULTURE IN AUSTRALIA",
+    "Extra.Links": "",
+    "vivo:Dataset.dc.format": "",
+    "finalCollection.Date.From": "",
+    "agls:policy.dc:identifier": "A1632",
+    "agls:protectiveMarking.skos:note": "",
+    "redbox:retentionPeriod.dc:date.skos:note.prefLabel": "",
+    "vivo:Dataset.dc:location.skos:note": "",
+    "dc:license.dc:identifier.other": "",
+    "redbox:retentionPeriod.dc:date.skos:note": "",
+    "dc:subject.anzsrc:seo.1..top.dropdown": "http://purl.org/asc/1297.0/2008/seo/83",
+    "dc:rightsHolder.dc:name": "myUni",
+    "redbox:ContractualObligations": "",
+    "Extra.Software.Equipment": "",
+    "redbox:retentionPeriod.dc:date": "",
+    "redbox:retentionPeriod.dc:date.prefLabel": "",
+    "vivo:Dataset.redbox:DataStructureStandard": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": "Personal equipment",
+    "Extra.Data.Access": "",
+    "dc:subject.anzsrc:toa.rdf:resource": "applied",
+    "dc:license.dc:identifier.url": "",
+    "finalLanguage": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral.prefLabel": "University provided collaboration space",
+    "keyword.1.": "",
+    "Extra.Collection.Supervisor": "",
+    "Extra.Collection.OtherDescription": "",
+    "vivo:Dataset.redbox:MetadataStandard": "",
+    "dc:RightsStatement": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": "University provided collaboration space",
+    "vivo:Dataset.redbox:DataAnalysisResources": "",
+    "dc:subject.anzsrc:for.2..bottom.dropdown": "",
+    "dc:subject.anzsrc:for.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/for/0704",
+    "dc:subject.anzsrc:for.2..middle.dropdown": "",
+    "dc:subject.anzsrc:seo.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/seo/8301",
+    "dc:subject.anzsrc:seo.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/seo/830101",
+    "dc:subject.anzsrc:for.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/for/070401",
+    "dc:subject.anzsrc:for.2..top.dropdown": "",
+    "objMeta": "generatePDF;true:",
+    "dc:description.1.text": "<p>The overall aim of the current study was to improve feeds and feeding management for redclaw aquaculture industry in Australia</p>",
+    "dc:description.1.shadow": "&lt;p&gt;The overall aim of the current study was to improve feeds and feeding management for redclaw aquaculture industry in Australia&lt;/p&gt;",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/e5277eadfc1087cc446153843c461e49",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": "",
+    "finalKeywords": [],
+    "foaf:fundedBy.foaf:Agent": [
+        {
+            "dc_title": "Rural Industries Research and Development Corporation",
+            "dc_identifier": ""
+        }
+    ],
+    "foaf:fundedBy.vivo:Grant": [
+        {
+            "grant_number": "PRJ-004960",
+            "dc_identifier": ""
+        }
+    ],
+    "dc:subject.anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/070401",
+            "skos:prefLabel": "070401 - Aquaculture"
+        },
+        {
+            "skos:prefLabel": "",
+            "rdf:resource": ""
+        }
+    ],
+    "dc:subject.anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/830101",
+            "skos:prefLabel": "830101 - Aquaculture Crustaceans (excl. Rock Lobster and Prawns)"
+        }
+    ],
+    "locrel:rth.foaf:Person": {
+        "dc:identifier": "jcu.edu.au/parties/people/16511928C2E961FCAFFFDFEC58A3919E",
+        "givenname": "Chaoshu",
+        "familyname": "Zeng",
+        "honorific": "A/Prof",
+        "email": "chaoshu.zeng@jcu.edu.au"
+    },
+    "locrel:prc.foaf:Person": {
+        "givenname": "Tubake",
+        "familyname": "Thobejane",
+        "email": "tubake.thobejane@my.jcu.edu.au",
+        "dc:identifier": "jcu.edu.au/parties/people/75E164E3BBC901AF7EDB149490D818E2",
+        "honorific": "MISS"
+    },
+    "locrel:clb.foaf:Person": [
+        {
+            "givenname": "",
+            "email": "",
+            "familyname": "",
+            "dc:identifier": "",
+            "honorific": ""
+        }
+    ],
+    "swrc:supervisor.foaf:Person": {
+        "familyname": "Jerry",
+        "dc:identifier": "jcu.edu.au/parties/people/068542974B13D82D77F8B4933503FA74",
+        "email": "dean.jerry@jcu.edu.au",
+        "givenname": "Dean",
+        "honorific": "Prof"
+    },
+    "dc:coverage.dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at"
+    ],
+    "agls:protectiveMarking.dc:type": []
+}

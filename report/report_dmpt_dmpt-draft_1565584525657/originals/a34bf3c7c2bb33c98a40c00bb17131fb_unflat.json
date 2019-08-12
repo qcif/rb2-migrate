@@ -1,0 +1,168 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "vivo:Dataset.redbox:DataCollectionMethodology": "This study aimed to generate a theory about the process of how people with diabetes learn about their disease in the Indonesian context. Data collection involved twenty-eight semi-structured interviews with twenty-six participants. The participants included people with diabetes, healthcare professionals, healthcare providers and families. The data was collected during three phases of the study between April 2016 and July 2017. All interviews were conducted in the Indonesian language and thus the process of data analysis involved both English and Indonesian languages.",
+    "dc:relation.bibo:Website": "",
+    "dc:subject.anzsrc:for.1..top.dropdown": "http://purl.org/asc/1297.0/2008/for/11",
+    "finalCollection.tiemPeriod": "",
+    "vivo:Dataset.dc.format.other": "",
+    "dc:title": "Self-Management of Diabetes by People in Indonesia: A Grounded Theory Study",
+    "action": "save",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": "Personal equipment",
+    "agls:protectiveMarking.skos:note": "Dataset contains confidential or sensitive information. No access to data is permitted. Contact data manager for more information",
+    "dataLicensingAccess.manager": "Mrs   Titan Ligita",
+    "dc:rights.skos:note": "",
+    "dc:rightsHolder.dc:description": "",
+    "dc:license.dc:identifier": "",
+    "keyword.1.": "",
+    "vivo:Dataset.dc:source.dc:location.skos:note": "",
+    "redbox:retentionPeriod.dc:date.skos:note": "",
+    "Extra.Collection.Supervisor": "",
+    "dc:rightsHolder.dc:name.prefLabel": "",
+    "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": "",
+    "agls:policy.dc:identifier": "H6445",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral.prefLabel": "Personal equipment",
+    "finalLanguage": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": "University provided collaboration space",
+    "redbox:ContractualObligations": "",
+    "dc:license.dc:identifier.url": "",
+    "dc:subject.anzsrc:toa.rdf:resource": "applied",
+    "finalCollection.Date.To": "",
+    "Extra.Collection.OtherDescription": "",
+    "Extra.Software.Equipment": "",
+    "Extra.Links": "",
+    "redbox:retentionPeriod.dc:date": "5years",
+    "vivo:Dataset.redbox:DataCollectionResources": "- Audio Recorder",
+    "vivo:Dataset.dc.format.prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "2019-02-28",
+    "dc:rightsHolder.dc:name": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral.prefLabel": "University provided collaboration space",
+    "vivo:Dataset.dc:extent": "10GB-20GB",
+    "extra.meta.link": "",
+    "Extra.Data.Access": "",
+    "vivo:Dataset.dc:location.skos:note": "",
+    "dc:RightsStatement": "",
+    "dc:license.skos:prefLabel": "",
+    "dc:subject.anzsrc:toa.skos:prefLabel": "Applied research",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "2015-12-22",
+    "Extra.Website.URL": "",
+    "dc:subject.anzsrc:seo.1..top.dropdown": "http://purl.org/asc/1297.0/2008/seo/92",
+    "dc:identifier": "a34bf3c7c2bb33c98a40c00bb17131fb",
+    "dc:license.dc:identifier.other": "",
+    "redbox:retentionPeriod.dc:date.prefLabel": "5 years after publication (general research)",
+    "vivo:Dataset.dc:extent.prefLabel": "10GB-20GB",
+    "oid": "a34bf3c7c2bb33c98a40c00bb17131fb",
+    "vivo:Dataset.redbox:DataStructureStandard": "All data is stored in the secure data section of the Tropical Data Hub (TDH) archive. However, the interview guide is downloadable.",
+    "redbox:retentionPeriod.dc:date.skos:note.prefLabel": "",
+    "Extra.DataSet.URL": "",
+    "Extra.Collection.Methodology": "",
+    "agls:policy.skos:note": "This study has two ethics application approved by two institutions. One approval was from the Human Research Ethics Committee at James Cook University and another approval was from the Faculty of Nursing, University of Indonesia. The letter of approval from James Cook University was received in December 2015 with the application ID number H6445. Subsequently, the approval from University of Indonesia was obtained in February 2016 with the letter of ethical clearance number: 0367/UN2.F12.D/HKP.02.04/2016. ",
+    "redbox:disposalDate": "2024-02-28",
+    "vivo:Dataset.redbox:DataAnalysisResources": "- NVivo\n- Bubbl.us\n- MS Office (Words, Power Point)",
+    "func": "action",
+    "vivo:Dataset.dc.format": "",
+    "vivo:Dataset.redbox:MetadataStandard": "The data includes:\nInterview transcripts\nInterview recordings\nNvivo analysis\nConcept maps\nMemos\nInterview guide",
+    "finalCollection.Date.From": "",
+    "dc:subject.anzsrc:seo.1..middle.dropdown": "",
+    "dc:subject.anzsrc:seo.1..bottom.dropdown": "",
+    "dc:subject.anzsrc:for.1..middle.dropdown": "",
+    "dc:subject.anzsrc:for.1..bottom.dropdown": "",
+    "objMeta": "generatePDF;true:dataAccessComplete;true:",
+    "dc:accessRights": "permission from the data manager",
+    "null.middle.dropdown": "",
+    "null.top.dropdown": "",
+    "dc:subject.anzsrc:seo.2..bottom.dropdown": "",
+    "nullskos:prefLabel": "",
+    "dc:subject.anzsrc:for.2..bottom.dropdown": "",
+    "null.bottom.dropdown": "",
+    "nullrdf:resource": "",
+    "dc:subject.anzsrc:seo.2..top.dropdown": "",
+    "dc:subject.anzsrc:for.2..top.dropdown": "",
+    "related.datasets": [
+        {
+            "oid": "01faaf16b25701ac07ccb0a6fb54e6bc"
+        }
+    ],
+    "dc:description.1.text": "<p>This study aimed to generate a theory about the process of how Indonesian people with diabetes mellitus learn about their disease.</p>",
+    "dc:description.1.shadow": "&lt;p&gt;This study aimed to generate a theory about the process of how Indonesian people with diabetes mellitus learn about their disease.&lt;/p&gt;",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/a34bf3c7c2bb33c98a40c00bb17131fb",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": "",
+    "finalKeywords": [],
+    "foaf:fundedBy.foaf:Agent": [
+        {
+            "dc_title": "Department of Foreign Affairs and Trade, Australian Government ",
+            "dc_identifier": ""
+        }
+    ],
+    "foaf:fundedBy.vivo:Grant": [
+        {
+            "dc_identifier": "",
+            "grant_number": "13/3377"
+        }
+    ],
+    "dc:subject.anzsrc:for": [
+        {
+            "skos:prefLabel": "11 - Medical And Health Sciences",
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/11"
+        },
+        {
+            "rdf:resource": "",
+            "skos:prefLabel": ""
+        }
+    ],
+    "dc:subject.anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/92",
+            "skos:prefLabel": "92 - Health"
+        },
+        {
+            "rdf:resource": "",
+            "skos:prefLabel": ""
+        }
+    ],
+    "locrel:rth.foaf:Person": {
+        "email": "titan.ligita@my.jcu.edu.au",
+        "honorific": "Mrs  ",
+        "givenname": "Titan",
+        "familyname": "Ligita",
+        "dc:identifier": "jcu.edu.au/parties/people/7EF48DDFFCDA84E940463C1C8B48E8CE"
+    },
+    "locrel:prc.foaf:Person": {
+        "email": "titan.ligita@my.jcu.edu.au",
+        "honorific": "Mrs  ",
+        "dc:identifier": "jcu.edu.au/parties/people/7EF48DDFFCDA84E940463C1C8B48E8CE",
+        "familyname": "Ligita",
+        "givenname": "Titan"
+    },
+    "locrel:clb.foaf:Person": [
+        {
+            "honorific": "",
+            "givenname": "",
+            "dc:identifier": "",
+            "familyname": "",
+            "email": ""
+        }
+    ],
+    "swrc:supervisor.foaf:Person": {
+        "honorific": "Dr",
+        "dc:identifier": "jcu.edu.au/parties/people/3C8CCF5B766D2ACB6D10B2893A1BBBEF",
+        "givenname": "Kristin",
+        "email": "kristin.wicking@jcu.edu.au",
+        "familyname": "Wicking"
+    },
+    "dc:coverage.dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/io"
+    ],
+    "agls:protectiveMarking.dc:type": [
+        "agls:protectiveMarking.dc:type.redbox:CulturallySensitive",
+        "agls:protectiveMarking.dc:type.redbox:NonPublic"
+    ]
+}

@@ -1,0 +1,63 @@
+{
+    "title": "fdg",
+    "description": "",
+    "dc:identifier": "dfg",
+    "finalKeywords": [],
+    "dc:relation_bibo:Website": "",
+    "dc:coverage_vivo:DateTimeInterval_vivo:start": "",
+    "dc:coverage_vivo:DateTimeInterval_vivo:end": "",
+    "foaf:fundedBy_foaf:Agent": [
+        {
+            "dc_title": "",
+            "dc_identifier": [
+                ""
+            ],
+            "ID": "",
+            "repository_name": [
+                "Funding Bodies"
+            ]
+        }
+    ],
+    "foaf:fundedBy_vivo:Grant": [
+        {
+            "dc_identifier": [
+                ""
+            ],
+            "grant_number": "",
+            "repository_name": [
+                "Research Activities"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:toa_rdf:resource": "",
+    "dc:subject_anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/14",
+            "type": "for",
+            "name": "14 - Economics",
+            "label": "Economics",
+            "notation": "14",
+            "genealogy": []
+        }
+    ],
+    "dc:subject_anzsrc:seo": [],
+    "contributor_ci": {},
+    "contributors": [],
+    "contributor_supervisor": {},
+    "vivo:Dataset_redbox:DataCollectionMethodology": "",
+    "vivo:Dataset_dc_format": "",
+    "vivo:Dataset_redbox:DataCollectionResources": "",
+    "vivo:Dataset_redbox:DataAnalysisResources": "",
+    "vivo:Dataset_redbox:MetadataStandard": "",
+    "vivo:Dataset_redbox:DataStructureStandard": "",
+    "vivo:Dataset_dc:location_skos:note": "",
+    "vivo:Dataset_dc:source_dc:location_skos:note": "",
+    "dataowner_name": "  ",
+    "dc:rightsHolder_dc:description": "",
+    "redbox:ContractualObligations": "",
+    "dc:coverage_dc:identifier": [],
+    "agls:policy_dc:identifier": "",
+    "agls:policy_skos:note": "",
+    "agls:protectiveMarking_dc:type": [],
+    "agls:protectiveMarking_skos:note": ""
+}

@@ -1,0 +1,99 @@
+{
+    "title": "Cacao ecology",
+    "description": "\nEvaluation of biological control and pollination services in cacao farms\n",
+    "dc:identifier": "CACAO_ecology",
+    "finalKeywords": [],
+    "dc:relation_bibo:Website": "",
+    "dc:coverage_vivo:DateTimeInterval_vivo:start": "",
+    "dc:coverage_vivo:DateTimeInterval_vivo:end": "",
+    "foaf:fundedBy_foaf:Agent": [
+        {
+            "dc_title": "",
+            "dc_identifier": [
+                ""
+            ],
+            "ID": "",
+            "repository_name": [
+                "Funding Bodies"
+            ]
+        }
+    ],
+    "foaf:fundedBy_vivo:Grant": [
+        {
+            "dc_identifier": [
+                ""
+            ],
+            "grant_number": "",
+            "repository_name": [
+                "Research Activities"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:toa_rdf:resource": "",
+    "dc:subject_anzsrc:for": [],
+    "dc:subject_anzsrc:seo": [],
+    "contributor_ci": {
+        "role": "Chief Investigator",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/54219DB60DB28B78C27E033DFF45B662",
+        "text_full_name": "Tobin Northfield",
+        "full_name_honorific": "Dr Tobin Northfield",
+        "full_name_family_name_first": "Tobin Northfield, Tobin",
+        "family_name": "Northfield",
+        "given_name": "Tobin",
+        "email": "tobin.northfield@jcu.edu.au"
+    },
+    "contributor_data_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/54219DB60DB28B78C27E033DFF45B662",
+        "text_full_name": "Tobin Northfield",
+        "full_name_honorific": "Dr Tobin Northfield",
+        "full_name_family_name_first": "Tobin Northfield, Tobin",
+        "family_name": "Northfield",
+        "given_name": "Tobin",
+        "email": "tobin.northfield@jcu.edu.au"
+    },
+    "dataLicensingAccess_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/54219DB60DB28B78C27E033DFF45B662",
+        "text_full_name": "Tobin Northfield",
+        "full_name_honorific": "Dr Tobin Northfield",
+        "full_name_family_name_first": "Tobin Northfield, Tobin",
+        "family_name": "Northfield",
+        "given_name": "Tobin",
+        "email": "tobin.northfield@jcu.edu.au"
+    },
+    "contributors": [
+        {
+            "role": "Collaborator",
+            "repeatable": false,
+            "dc:identifier": "jcu.edu.au/parties/people/AF4A11595D31372855A5685DB429B9C9",
+            "text_full_name": "Samantha Forbes",
+            "full_name_honorific": "Miss Samantha Forbes",
+            "full_name_family_name_first": "Samantha Forbes, Samantha",
+            "family_name": "Forbes",
+            "given_name": "Samantha",
+            "email": "samantha.forbes@my.jcu.edu.au"
+        }
+    ],
+    "contributor_supervisor": {},
+    "vivo:Dataset_redbox:DataCollectionMethodology": "",
+    "vivo:Dataset_dc_format": "",
+    "vivo:Dataset_redbox:DataCollectionResources": "",
+    "vivo:Dataset_redbox:DataAnalysisResources": "",
+    "vivo:Dataset_redbox:MetadataStandard": "",
+    "vivo:Dataset_redbox:DataStructureStandard": "",
+    "vivo:Dataset_dc:extent": "Less than 10 GB",
+    "vivo:Dataset_dc:location_rdf:PlainLiteral": "collab-space",
+    "vivo:Dataset_dc:location_skos:note": "",
+    "vivo:Dataset_dc:source_dc:location_skos:note": "",
+    "dataowner_name": "Dr Tobin Northfield",
+    "dc:rightsHolder_dc:name": "myUni",
+    "dc:rightsHolder_dc:description": "",
+    "redbox:ContractualObligations": "",
+    "dc:coverage_dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at"
+    ],
+    "agls:policy_dc:identifier": "",
+    "agls:policy_skos:note": "",
+    "agls:protectiveMarking_dc:type": [],
+    "agls:protectiveMarking_skos:note": ""
+}

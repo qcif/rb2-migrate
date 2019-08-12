@@ -1,0 +1,176 @@
+{
+    "title": "The anti-colitic properties of Na-AIP-1",
+    "description": "\nAn examination of the the anti-colitic properties and mechanisms of hookworm protein Na-AIP-1\n",
+    "dc:identifier": "GBNAIPPHD",
+    "finalKeywords": [],
+    "dc:relation_bibo:Website": "",
+    "dc:coverage_vivo:DateTimeInterval_vivo:start": "2016-02-01",
+    "dc:coverage_vivo:DateTimeInterval_vivo:end": "",
+    "foaf:fundedBy_foaf:Agent": [
+        {
+            "dc_title": "NHMRC",
+            "dc_identifier": [
+                ""
+            ],
+            "ID": "NHMRC",
+            "repository_name": [
+                "Funding Bodies"
+            ]
+        }
+    ],
+    "foaf:fundedBy_vivo:Grant": [
+        {
+            "dc_identifier": [
+                ""
+            ],
+            "grant_number": "",
+            "repository_name": [
+                "Research Activities"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:toa_rdf:resource": "applied",
+    "dc:subject_anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/1107",
+            "type": "for",
+            "name": "1107 - Immunology",
+            "label": "Immunology",
+            "notation": "1107",
+            "genealogy": [
+                "11"
+            ]
+        },
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/1108",
+            "type": "for",
+            "name": "1108 - Medical Microbiology",
+            "label": "Medical Microbiology",
+            "notation": "1108",
+            "genealogy": [
+                "11"
+            ]
+        },
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/1115",
+            "type": "for",
+            "name": "1115 - Pharmacology and Pharmaceutical Sciences",
+            "label": "Pharmacology and Pharmaceutical Sciences",
+            "notation": "1115",
+            "genealogy": [
+                "11"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/8608",
+            "type": "seo",
+            "name": "8608 - Human Pharmaceutical Products",
+            "label": "Human Pharmaceutical Products",
+            "notation": "8608",
+            "genealogy": [
+                "86"
+            ]
+        }
+    ],
+    "contributor_ci": {
+        "role": "Chief Investigator",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/063D43811D7EB373A6E789A4FAD1229E",
+        "text_full_name": "Alexander Loukas",
+        "full_name_honorific": "Prof Alexander Loukas",
+        "full_name_family_name_first": "Alexander Loukas, Alexander",
+        "family_name": "Loukas",
+        "given_name": "Alexander",
+        "email": "alex.loukas@jcu.edu.au"
+    },
+    "contributor_data_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/063D43811D7EB373A6E789A4FAD1229E",
+        "text_full_name": "Alexander Loukas",
+        "full_name_honorific": "Prof Alexander Loukas",
+        "full_name_family_name_first": "Alexander Loukas, Alexander",
+        "family_name": "Loukas",
+        "given_name": "Alexander",
+        "email": "alex.loukas@jcu.edu.au"
+    },
+    "dataLicensingAccess_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/063D43811D7EB373A6E789A4FAD1229E",
+        "text_full_name": "Alexander Loukas",
+        "full_name_honorific": "Prof Alexander Loukas",
+        "full_name_family_name_first": "Alexander Loukas, Alexander",
+        "family_name": "Loukas",
+        "given_name": "Alexander",
+        "email": "alex.loukas@jcu.edu.au"
+    },
+    "contributors": [
+        {
+            "role": "Collaborator",
+            "repeatable": false,
+            "dc:identifier": "jcu.edu.au/parties/people/0D1A06D5398EBD37734A8095EF9C0AF0",
+            "text_full_name": "Paul Giacomin",
+            "full_name_honorific": "Dr Paul Giacomin",
+            "full_name_family_name_first": "Paul Giacomin, Paul",
+            "family_name": "Giacomin",
+            "given_name": "Paul",
+            "email": "paul.giacomin@jcu.edu.au"
+        },
+        {
+            "role": "Collaborator",
+            "repeatable": false,
+            "dc:identifier": "jcu.edu.au/parties/people/BE5E7B983186D3846DD4631BC015992B",
+            "text_full_name": "Severine Navarro",
+            "full_name_honorific": "Dr Severine Navarro",
+            "full_name_family_name_first": "Severine Navarro, Severine",
+            "family_name": "Navarro",
+            "given_name": "Severine",
+            "email": "severine.navarro@jcu.edu.au"
+        },
+        {
+            "role": "Collaborator",
+            "repeatable": false,
+            "dc:identifier": "jcu.edu.au/parties/people/1BA42455CEAC99B7494919EF620E84EC",
+            "text_full_name": "Darren Pickering",
+            "full_name_honorific": "Mr Darren Pickering",
+            "full_name_family_name_first": "Darren Pickering, Darren",
+            "family_name": "Pickering",
+            "given_name": "Darren",
+            "email": "darren.pickering@jcu.edu.au"
+        }
+    ],
+    "contributor_supervisor": {
+        "role": "Advisor",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/063D43811D7EB373A6E789A4FAD1229E",
+        "text_full_name": "Alexander Loukas",
+        "full_name_honorific": "Prof Alexander Loukas",
+        "full_name_family_name_first": "Alexander Loukas, Alexander",
+        "family_name": "Loukas",
+        "given_name": "Alexander",
+        "email": "alex.loukas@jcu.edu.au"
+    },
+    "vivo:Dataset_redbox:DataCollectionMethodology": "",
+    "vivo:Dataset_dc_format": "",
+    "vivo:Dataset_redbox:DataCollectionResources": "",
+    "vivo:Dataset_redbox:DataAnalysisResources": "",
+    "vivo:Dataset_redbox:MetadataStandard": "",
+    "vivo:Dataset_redbox:DataStructureStandard": "",
+    "vivo:Dataset_dc:extent": "100GB - 1TB",
+    "vivo:Dataset_dc:location_rdf:PlainLiteral": "share-drive",
+    "vivo:Dataset_dc:location_skos:note": "",
+    "vivo:Dataset_dc:source_dc:location_rdf:PlainLiteral": "collab-space",
+    "vivo:Dataset_dc:source_dc:location_skos:note": "",
+    "dataowner_name": "Prof Alexander Loukas",
+    "dc:rightsHolder_dc:name": "student",
+    "dc:rightsHolder_dc:description": "",
+    "redbox:ContractualObligations": "",
+    "dc:coverage_dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at"
+    ],
+    "agls:policy_dc:identifier": "A2379",
+    "agls:policy_skos:note": "",
+    "agls:protectiveMarking_dc:type": [
+        "agls:protectiveMarking_dc:type.redbox:CommerciallySensitive"
+    ],
+    "agls:protectiveMarking_skos:note": ""
+}

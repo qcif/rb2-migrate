@@ -1,0 +1,135 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "vivo:Dataset.redbox:DataCollectionMethodology": "",
+    "dc:relation.bibo:Website": "",
+    "dc:subject.anzsrc:for.1..top.dropdown": "",
+    "finalCollection.tiemPeriod": "",
+    "vivo:Dataset.dc.format.other": "",
+    "dc:title": "",
+    "action": "save",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": "",
+    "agls:protectiveMarking.skos:note": "",
+    "dataLicensingAccess.manager": "  ",
+    "dc:rights.skos:note": "",
+    "dc:rightsHolder.dc:description": "",
+    "dc:license.dc:identifier": "",
+    "keyword.1.": "",
+    "vivo:Dataset.dc:source.dc:location.skos:note": "",
+    "redbox:retentionPeriod.dc:date.skos:note": "",
+    "Extra.Collection.Supervisor": "",
+    "dc:rightsHolder.dc:name.prefLabel": "",
+    "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": "",
+    "agls:policy.dc:identifier": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral.prefLabel": "",
+    "finalLanguage": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": "",
+    "redbox:ContractualObligations": "",
+    "dc:license.dc:identifier.url": "",
+    "dc:subject.anzsrc:toa.rdf:resource": "",
+    "finalCollection.Date.To": "",
+    "Extra.Collection.OtherDescription": "",
+    "Extra.Software.Equipment": "",
+    "Extra.Links": "",
+    "redbox:retentionPeriod.dc:date": "",
+    "vivo:Dataset.redbox:DataCollectionResources": "",
+    "vivo:Dataset.dc.format.prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "",
+    "dc:rightsHolder.dc:name": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral.prefLabel": "",
+    "vivo:Dataset.dc:extent": "",
+    "extra.meta.link": "",
+    "Extra.Data.Access": "",
+    "vivo:Dataset.dc:location.skos:note": "",
+    "dc:RightsStatement": "",
+    "dc:license.skos:prefLabel": "",
+    "dc:subject.anzsrc:toa.skos:prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "",
+    "Extra.Website.URL": "",
+    "dc:subject.anzsrc:seo.1..top.dropdown": "",
+    "dc:identifier": "",
+    "dc:license.dc:identifier.other": "",
+    "redbox:retentionPeriod.dc:date.prefLabel": "",
+    "vivo:Dataset.dc:extent.prefLabel": "",
+    "oid": "86605afa8d8e250f0b1407c19944bf85",
+    "vivo:Dataset.redbox:DataStructureStandard": "",
+    "redbox:retentionPeriod.dc:date.skos:note.prefLabel": "",
+    "Extra.DataSet.URL": "",
+    "Extra.Collection.Methodology": "",
+    "agls:policy.skos:note": "",
+    "redbox:disposalDate": "",
+    "vivo:Dataset.redbox:DataAnalysisResources": "",
+    "func": "action",
+    "vivo:Dataset.dc.format": "",
+    "vivo:Dataset.redbox:MetadataStandard": "",
+    "finalCollection.Date.From": "",
+    "dc:description.1.text": "",
+    "dc:description.1.shadow": "",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/86605afa8d8e250f0b1407c19944bf85",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": "",
+    "finalKeywords": [],
+    "foaf:fundedBy.foaf:Agent": [
+        {
+            "dc_title": "",
+            "dc_identifier": ""
+        }
+    ],
+    "foaf:fundedBy.vivo:Grant": [
+        {
+            "dc_identifier": "",
+            "grant_number": ""
+        }
+    ],
+    "dc:subject.anzsrc:for": [
+        {
+            "skos:prefLabel": "",
+            "rdf:resource": ""
+        }
+    ],
+    "dc:subject.anzsrc:seo": [
+        {
+            "rdf:resource": "",
+            "skos:prefLabel": ""
+        }
+    ],
+    "locrel:rth.foaf:Person": {
+        "email": "",
+        "honorific": "",
+        "givenname": "",
+        "familyname": "",
+        "dc:identifier": ""
+    },
+    "locrel:prc.foaf:Person": {
+        "email": "",
+        "honorific": "",
+        "dc:identifier": "",
+        "familyname": "",
+        "givenname": ""
+    },
+    "locrel:clb.foaf:Person": [
+        {
+            "honorific": "",
+            "givenname": "",
+            "dc:identifier": "",
+            "familyname": "",
+            "email": ""
+        }
+    ],
+    "swrc:supervisor.foaf:Person": {
+        "honorific": "",
+        "dc:identifier": "",
+        "givenname": "",
+        "email": "",
+        "familyname": ""
+    },
+    "dc:coverage.dc:identifier": [],
+    "agls:protectiveMarking.dc:type": []
+}

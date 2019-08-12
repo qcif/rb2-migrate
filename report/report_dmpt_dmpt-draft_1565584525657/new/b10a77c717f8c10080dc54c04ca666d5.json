@@ -1,0 +1,122 @@
+{
+    "title": "CFI-ERF data",
+    "description": "",
+    "dc:identifier": "20062017",
+    "finalKeywords": [],
+    "dc:relation_bibo:Website": "",
+    "dc:coverage_vivo:DateTimeInterval_vivo:start": "2012-09-21",
+    "dc:coverage_vivo:DateTimeInterval_vivo:end": "2017-06-20",
+    "foaf:fundedBy_foaf:Agent": [
+        {
+            "dc_title": "SENESCYT-Ecuador",
+            "dc_identifier": [
+                ""
+            ],
+            "ID": "SENESCYT-Ecuador",
+            "repository_name": [
+                "Funding Bodies"
+            ]
+        }
+    ],
+    "foaf:fundedBy_vivo:Grant": [
+        {
+            "dc_identifier": [
+                ""
+            ],
+            "grant_number": "",
+            "repository_name": [
+                "Research Activities"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:toa_rdf:resource": "applied",
+    "dc:subject_anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/050299",
+            "type": "for",
+            "name": "050299 - Environmental Science and Management not elsewhere classified",
+            "label": "Environmental Science and Management not elsewhere classified",
+            "notation": "050299",
+            "genealogy": [
+                "05",
+                "0502"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/960799",
+            "type": "seo",
+            "name": "960799 - Environmental Policy, Legislation and Standards not elsewhere classified",
+            "label": "Environmental Policy, Legislation and Standards not elsewhere classified",
+            "notation": "960799",
+            "genealogy": [
+                "96",
+                "9607"
+            ]
+        }
+    ],
+    "contributor_ci": {
+        "role": "Chief Investigator",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/306DF8879EFF42F7555CAB3C9FABD133",
+        "text_full_name": "Edison Salas Castelo",
+        "full_name_honorific": "Mr Edison Salas Castelo",
+        "full_name_family_name_first": "Edison Salas Castelo, Edison",
+        "family_name": "Salas Castelo",
+        "given_name": "Edison",
+        "email": "edison.salascastelo@my.jcu.edu.au"
+    },
+    "contributor_data_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/306DF8879EFF42F7555CAB3C9FABD133",
+        "text_full_name": "Edison Salas Castelo",
+        "full_name_honorific": "Mr Edison Salas Castelo",
+        "full_name_family_name_first": "Edison Salas Castelo, Edison",
+        "family_name": "Salas Castelo",
+        "given_name": "Edison",
+        "email": "edison.salascastelo@my.jcu.edu.au"
+    },
+    "dataLicensingAccess_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/306DF8879EFF42F7555CAB3C9FABD133",
+        "text_full_name": "Edison Salas Castelo",
+        "full_name_honorific": "Mr Edison Salas Castelo",
+        "full_name_family_name_first": "Edison Salas Castelo, Edison",
+        "family_name": "Salas Castelo",
+        "given_name": "Edison",
+        "email": "edison.salascastelo@my.jcu.edu.au"
+    },
+    "contributors": [],
+    "contributor_supervisor": {
+        "role": "Advisor",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/E448E850FE4957DAD7F034FF095A9631",
+        "text_full_name": "Lisa Law",
+        "full_name_honorific": "A/Prof Lisa Law",
+        "full_name_family_name_first": "Lisa Law, Lisa",
+        "family_name": "Law",
+        "given_name": "Lisa",
+        "email": "lisa.law@jcu.edu.au"
+    },
+    "vivo:Dataset_redbox:DataCollectionMethodology": "",
+    "vivo:Dataset_dc_format": "",
+    "vivo:Dataset_redbox:DataCollectionResources": "",
+    "vivo:Dataset_redbox:DataAnalysisResources": "",
+    "vivo:Dataset_redbox:MetadataStandard": "",
+    "vivo:Dataset_redbox:DataStructureStandard": "",
+    "vivo:Dataset_dc:extent": "Less than 10 GB",
+    "vivo:Dataset_dc:location_rdf:PlainLiteral": "collab-space",
+    "vivo:Dataset_dc:location_skos:note": "",
+    "vivo:Dataset_dc:source_dc:location_rdf:PlainLiteral": "collab-space",
+    "vivo:Dataset_dc:source_dc:location_skos:note": "",
+    "dataowner_name": "Mr    Edison Salas Castelo",
+    "dc:rightsHolder_dc:name": "myUni",
+    "dc:rightsHolder_dc:description": "",
+    "redbox:ContractualObligations": "",
+    "dc:coverage_dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at"
+    ],
+    "agls:policy_dc:identifier": "H5336",
+    "agls:policy_skos:note": "",
+    "agls:protectiveMarking_dc:type": [],
+    "agls:protectiveMarking_skos:note": ""
+}

@@ -1,0 +1,16 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "dc:description.1.text": "",
+    "dc:description.1.shadow": "",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/14a35038debed74bb209c4e3e1f17e95",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": ""
+}

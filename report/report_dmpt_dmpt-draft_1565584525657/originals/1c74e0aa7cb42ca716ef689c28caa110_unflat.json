@@ -1,0 +1,178 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "vivo:Dataset.redbox:DataCollectionMethodology": "",
+    "extra.meta.link": "",
+    "vivo:Dataset.dc:extent": "Less than 10 GB",
+    "dc:subject.anzsrc:for.1..top.dropdown": "http://purl.org/asc/1297.0/2008/for/05",
+    "vivo:Dataset.redbox:DataCollectionResources": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "2017-07-10",
+    "Extra.DataSet.URL": "",
+    "dc:rights.skos:note": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral.prefLabel": "Personal equipment",
+    "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": "",
+    "vivo:Dataset.dc.format.other": "",
+    "finalCollection.tiemPeriod": "",
+    "dc:rightsHolder.dc:name.prefLabel": "My University (joint ownership)",
+    "dc:license.dc:identifier": "",
+    "dc:subject.anzsrc:toa.skos:prefLabel": "Strategic basic research",
+    "oid": "1c74e0aa7cb42ca716ef689c28caa110",
+    "redbox:disposalDate": "",
+    "dc:license.skos:prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "2024-07-31",
+    "vivo:Dataset.dc.format.prefLabel": "",
+    "dataLicensingAccess.manager": "Mr    Ciemon Caballes",
+    "dc:identifier": "PratchettCOTS2017",
+    "Extra.Website.URL": "",
+    "vivo:Dataset.dc:source.dc:location.skos:note": "",
+    "vivo:Dataset.dc:extent.prefLabel": "Less than 10 GB",
+    "dc:relation.bibo:Website": "",
+    "Extra.Collection.Methodology": "",
+    "agls:policy.skos:note": "This study was carried out in strict accordance with the guidelines set out by James Cook University and the Lizard Island Research Station, though no explicit ethics approval is required for work on crown-of-thorns starfish. Collection of crown-of-thorns starfish was conducted under Great Barrier Reef Marine Park Authority (GBRMPA) Permit No.G15/37363.1",
+    "dc:rightsHolder.dc:description": "All chief investigators, research students and collaborators will have rights to the data.",
+    "finalCollection.Date.To": "",
+    "action": "save",
+    "func": "action",
+    "dc:title": "Biology of Acanthaster solaris on GBR",
+    "Extra.Links": "",
+    "vivo:Dataset.dc.format": "",
+    "finalCollection.Date.From": "",
+    "agls:policy.dc:identifier": "",
+    "agls:protectiveMarking.skos:note": "Information arising from this project is intended for improved conservation and management of the Great Barrier Reef and will be made publicly available as soon as relevant research projects are finalised or upon publication of journal articles arising from this research.",
+    "redbox:retentionPeriod.dc:date.skos:note.prefLabel": "",
+    "vivo:Dataset.dc:location.skos:note": "",
+    "dc:license.dc:identifier.other": "",
+    "redbox:retentionPeriod.dc:date.skos:note": "",
+    "dc:subject.anzsrc:seo.1..top.dropdown": "http://purl.org/asc/1297.0/2008/seo/96",
+    "dc:rightsHolder.dc:name": "myUnjount",
+    "redbox:ContractualObligations": "",
+    "Extra.Software.Equipment": "",
+    "redbox:retentionPeriod.dc:date": "",
+    "redbox:retentionPeriod.dc:date.prefLabel": "",
+    "vivo:Dataset.redbox:DataStructureStandard": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": "Personal equipment",
+    "Extra.Data.Access": "",
+    "dc:subject.anzsrc:toa.rdf:resource": "strategic",
+    "dc:license.dc:identifier.url": "",
+    "finalLanguage": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral.prefLabel": "University provided collaboration space",
+    "keyword.1.": "",
+    "Extra.Collection.Supervisor": "",
+    "Extra.Collection.OtherDescription": "",
+    "vivo:Dataset.redbox:MetadataStandard": "",
+    "dc:RightsStatement": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": "University provided collaboration space",
+    "vivo:Dataset.redbox:DataAnalysisResources": "",
+    "dc:subject.anzsrc:for.2..bottom.dropdown": "http://purl.org/asc/1297.0/2008/for/060205",
+    "dc:subject.anzsrc:for.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/for/0502",
+    "dc:subject.anzsrc:for.2..middle.dropdown": "http://purl.org/asc/1297.0/2008/for/0602",
+    "dc:subject.anzsrc:seo.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/seo/9604",
+    "dc:subject.anzsrc:seo.2..bottom.dropdown": "http://purl.org/asc/1297.0/2008/seo/970105",
+    "dc:subject.anzsrc:seo.2..middle.dropdown": "http://purl.org/asc/1297.0/2008/seo/9701",
+    "dc:subject.anzsrc:seo.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/seo/960407",
+    "dc:subject.anzsrc:for.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/for/050211",
+    "dc:subject.anzsrc:seo.2..top.dropdown": "http://purl.org/asc/1297.0/2008/seo/97",
+    "dc:subject.anzsrc:for.2..top.dropdown": "http://purl.org/asc/1297.0/2008/for/06",
+    "objMeta": "generatePDF;true:",
+    "dc:description.1.text": "<p>All data arising from ongoing research into the biology and behaviour of crown-of-thorns starfish (Acanthaster solaris) on the Great Barrier Reef.</p>",
+    "dc:description.1.shadow": "&lt;p&gt;All data arising from ongoing research into the biology and behaviour of crown-of-thorns starfish (Acanthaster solaris) on the Great Barrier Reef.&lt;/p&gt;",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/1c74e0aa7cb42ca716ef689c28caa110",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": "",
+    "finalKeywords": [],
+    "foaf:fundedBy.foaf:Agent": [
+        {
+            "dc_title": "Lizard Island CoTS Grants (via Ian Potter)",
+            "dc_identifier": ""
+        },
+        {
+            "dc_title": "NESP Tropical Water Quality Hub",
+            "dc_identifier": ""
+        },
+        {
+            "dc_title": "Morris Foundation",
+            "dc_identifier": ""
+        }
+    ],
+    "foaf:fundedBy.vivo:Grant": [
+        {
+            "grant_number": "",
+            "dc_identifier": ""
+        }
+    ],
+    "dc:subject.anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/050211",
+            "skos:prefLabel": "050211 - Wildlife and Habitat Management"
+        },
+        {
+            "skos:prefLabel": "060205 - Marine and Estuarine Ecology (incl. Marine Ichthyology)",
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/060205"
+        }
+    ],
+    "dc:subject.anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/960407",
+            "skos:prefLabel": "960407 - Control of Pests, Diseases and Exotic Species in Marine Environments"
+        },
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/970105",
+            "skos:prefLabel": "970105 - Expanding Knowledge in the Environmental Sciences"
+        }
+    ],
+    "locrel:rth.foaf:Person": {
+        "dc:identifier": "jcu.edu.au/parties/people/4B5BCF59DE28A276159A4E1D458199E7",
+        "givenname": "Morgan",
+        "familyname": "Pratchett",
+        "honorific": "Prof",
+        "email": "morgan.pratchett@jcu.edu.au"
+    },
+    "locrel:prc.foaf:Person": {
+        "givenname": "Ciemon",
+        "familyname": "Caballes",
+        "email": "ciemon.caballes@jcu.edu.au",
+        "dc:identifier": "jcu.edu.au/parties/people/18FD64E6DF0ADD6B7FEC1ECC678D55A4",
+        "honorific": "Mr   "
+    },
+    "locrel:clb.foaf:Person": [
+        {
+            "givenname": "Vanessa",
+            "email": "vanessa.messmer@jcu.edu.au",
+            "familyname": "Messmer",
+            "dc:identifier": "jcu.edu.au/parties/people/12644DD5C62CE12A1564C75CFA1BD0AE",
+            "honorific": "Dr"
+        },
+        {
+            "honorific": "Miss ",
+            "familyname": "Cowan",
+            "dc:identifier": "jcu.edu.au/parties/people/4AD2F692DE21543C69CC910BE1766BD7",
+            "givenname": "Zara-Louise",
+            "email": "zaralouise.cowan@jcu.edu.au"
+        },
+        {
+            "givenname": "Ciemon",
+            "familyname": "Caballes",
+            "dc:identifier": "jcu.edu.au/parties/people/18FD64E6DF0ADD6B7FEC1ECC678D55A4",
+            "email": "ciemon.caballes@jcu.edu.au",
+            "honorific": "Mr   "
+        }
+    ],
+    "swrc:supervisor.foaf:Person": {
+        "familyname": "Pratchett",
+        "dc:identifier": "jcu.edu.au/parties/people/4B5BCF59DE28A276159A4E1D458199E7",
+        "email": "morgan.pratchett@jcu.edu.au",
+        "givenname": "Morgan",
+        "honorific": "Prof"
+    },
+    "dc:coverage.dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at"
+    ],
+    "agls:protectiveMarking.dc:type": []
+}

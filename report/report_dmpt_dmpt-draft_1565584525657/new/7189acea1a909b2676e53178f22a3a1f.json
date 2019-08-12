@@ -1,0 +1,147 @@
+{
+    "title": "indopacific seascape context project",
+    "description": "\nFish may use several habitats in the course of their daily activities. I propose that the context in which a fish is found can change the habitats they use and how they use them. Through surveys and acoustic tracking, I seek to determine the key differences and similarities in habitat use across a range of coastal contexts, such as rivers, estuaries, islands, beaches and bays – all of which contain a mix of similar habitats (logs, rocks, flats, submerged vegetation and riparian vegetation). This will allow me to create and compare models of how fish use their aquatic landscapes. \n",
+    "dc:identifier": "ISCP",
+    "finalKeywords": [],
+    "dc:relation_bibo:Website": "https://research.jcu.edu.au/tropwater/research-programs/estuary-and-coastal-wetland-ecosystems/michael-bradley",
+    "dc:coverage_vivo:DateTimeInterval_vivo:start": "2014-06-20",
+    "dc:coverage_vivo:DateTimeInterval_vivo:end": "2018-06-20",
+    "foaf:fundedBy_foaf:Agent": [
+        {
+            "dc_title": "FRDC",
+            "dc_identifier": [
+                ""
+            ],
+            "ID": "FRDC",
+            "repository_name": [
+                "Funding Bodies"
+            ]
+        },
+        {
+            "dc_title": "ACIAR",
+            "dc_identifier": [
+                ""
+            ],
+            "ID": "ACIAR",
+            "repository_name": [
+                "Funding Bodies"
+            ]
+        }
+    ],
+    "foaf:fundedBy_vivo:Grant": [
+        {
+            "dc_identifier": [
+                ""
+            ],
+            "grant_number": "",
+            "repository_name": [
+                "Research Activities"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:toa_rdf:resource": "pure",
+    "dc:subject_anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/060205",
+            "type": "for",
+            "name": "060205 - Marine and Estuarine Ecology (incl. Marine Ichthyology)",
+            "label": "Marine and Estuarine Ecology (incl. Marine Ichthyology)",
+            "notation": "060205",
+            "genealogy": [
+                "06",
+                "0602"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/960503",
+            "type": "seo",
+            "name": "960503 - Ecosystem Assessment and Management of Coastal and Estuarine Environments",
+            "label": "Ecosystem Assessment and Management of Coastal and Estuarine Environments",
+            "notation": "960503",
+            "genealogy": [
+                "96",
+                "9605"
+            ]
+        }
+    ],
+    "contributor_ci": {
+        "role": "Chief Investigator",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/D19CCD0C05AD2D0337B73C2E2DDEE827",
+        "text_full_name": "Michael Bradley",
+        "full_name_honorific": "Mr Michael Bradley",
+        "full_name_family_name_first": "Michael Bradley, Michael",
+        "family_name": "Bradley",
+        "given_name": "Michael",
+        "email": "michael.bradley@my.jcu.edu.au"
+    },
+    "contributor_data_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/D19CCD0C05AD2D0337B73C2E2DDEE827",
+        "text_full_name": "Michael Bradley",
+        "full_name_honorific": "Mr Michael Bradley",
+        "full_name_family_name_first": "Michael Bradley, Michael",
+        "family_name": "Bradley",
+        "given_name": "Michael",
+        "email": "michael.bradley@my.jcu.edu.au"
+    },
+    "dataLicensingAccess_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/D19CCD0C05AD2D0337B73C2E2DDEE827",
+        "text_full_name": "Michael Bradley",
+        "full_name_honorific": "Mr Michael Bradley",
+        "full_name_family_name_first": "Michael Bradley, Michael",
+        "family_name": "Bradley",
+        "given_name": "Michael",
+        "email": "michael.bradley@my.jcu.edu.au"
+    },
+    "contributors": [
+        {
+            "role": "Collaborator",
+            "repeatable": false,
+            "dc:identifier": "jcu.edu.au/parties/people/21F80CF7B02E0DA78A14C2BFDFC82E1A",
+            "text_full_name": "Ronald Baker",
+            "full_name_honorific": "Dr Ronald Baker",
+            "full_name_family_name_first": "Ronald Baker, Ronald",
+            "family_name": "Baker",
+            "given_name": "Ronald",
+            "email": "ronald.baker@jcu.edu.au"
+        }
+    ],
+    "contributor_supervisor": {
+        "role": "Advisor",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/3315EC145A3FD2B79DDA769FDEAEA3C8",
+        "text_full_name": "Marcus Sheaves",
+        "full_name_honorific": "Prof Marcus Sheaves",
+        "full_name_family_name_first": "Marcus Sheaves, Marcus",
+        "family_name": "Sheaves",
+        "given_name": "Marcus",
+        "email": "marcus.sheaves@jcu.edu.au"
+    },
+    "vivo:Dataset_redbox:DataCollectionMethodology": "",
+    "vivo:Dataset_dc_format": "csv",
+    "vivo:Dataset_redbox:DataCollectionResources": "",
+    "vivo:Dataset_redbox:DataAnalysisResources": "",
+    "vivo:Dataset_redbox:MetadataStandard": "",
+    "vivo:Dataset_redbox:DataStructureStandard": "",
+    "vivo:Dataset_dc:extent": "100GB - 1TB",
+    "vivo:Dataset_dc:location_rdf:PlainLiteral": "collab-space",
+    "vivo:Dataset_dc:location_skos:note": "",
+    "vivo:Dataset_dc:source_dc:location_skos:note": "",
+    "redbox:retentionPeriod_dc:date": "5years",
+    "redbox:retentionPeriod_dc:date_skos:note": "costly_impossible",
+    "dataowner_name": "Mr Michael Bradley",
+    "dc:rightsHolder_dc:name": "student",
+    "dc:rightsHolder_dc:description": "",
+    "redbox:ContractualObligations": "",
+    "dc:coverage_dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at",
+        "http://id.loc.gov/vocabulary/countries/pp"
+    ],
+    "dc:accessRights": "manager",
+    "agls:policy_dc:identifier": "",
+    "agls:policy_skos:note": "",
+    "agls:protectiveMarking_dc:type": [],
+    "agls:protectiveMarking_skos:note": ""
+}

@@ -1,0 +1,203 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "vivo:Dataset.redbox:DataCollectionMethodology": "",
+    "extra.meta.link": "",
+    "vivo:Dataset.dc:extent": "10GB-20GB",
+    "dc:subject.anzsrc:for.1..top.dropdown": "http://purl.org/asc/1297.0/2008/for/07",
+    "vivo:Dataset.redbox:DataCollectionResources": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "2012-03-04",
+    "Extra.DataSet.URL": "",
+    "dc:rights.skos:note": "",
+    "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral.prefLabel": "Personal equipment",
+    "vivo:Dataset.dc.format.other": "",
+    "finalCollection.tiemPeriod": "",
+    "dc:rightsHolder.dc:name.prefLabel": "My University (joint ownership)",
+    "dc:license.dc:identifier": "",
+    "dc:subject.anzsrc:toa.skos:prefLabel": "Applied research",
+    "oid": "ba3114822261fae20e326d7b9104de09",
+    "redbox:disposalDate": "",
+    "dc:license.skos:prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "2015-07-04",
+    "vivo:Dataset.dc.format.prefLabel": "",
+    "dataLicensingAccess.manager": "MISS Lorenna Machado",
+    "dc:identifier": "Macroalgae methane ruminant",
+    "Extra.Website.URL": "",
+    "vivo:Dataset.dc:source.dc:location.skos:note": "",
+    "vivo:Dataset.dc:extent.prefLabel": "10GB-20GB",
+    "dc:relation.bibo:Website": "",
+    "Extra.Collection.Methodology": "",
+    "agls:policy.skos:note": "Ethical approval was supplied from CSIRO",
+    "dc:rightsHolder.dc:description": "CSIRO\nMLA, \nMBD energy",
+    "finalCollection.Date.To": "",
+    "action": "save",
+    "func": "action",
+    "dc:title": "Tropical macroalgae as a natural alternative for the mitigation of methane emissions in ruminant livestock systems",
+    "Extra.Links": "",
+    "vivo:Dataset.dc.format": "",
+    "finalCollection.Date.From": "",
+    "agls:policy.dc:identifier": "",
+    "agls:protectiveMarking.skos:note": "",
+    "redbox:retentionPeriod.dc:date.skos:note.prefLabel": "",
+    "vivo:Dataset.dc:location.skos:note": "",
+    "dc:license.dc:identifier.other": "",
+    "redbox:retentionPeriod.dc:date.skos:note": "",
+    "dc:subject.anzsrc:seo.1..top.dropdown": "http://purl.org/asc/1297.0/2008/seo/83",
+    "dc:rightsHolder.dc:name": "myUnjount",
+    "redbox:ContractualObligations": "",
+    "Extra.Software.Equipment": "",
+    "redbox:retentionPeriod.dc:date": "",
+    "redbox:retentionPeriod.dc:date.prefLabel": "",
+    "vivo:Dataset.redbox:DataStructureStandard": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": "Personal equipment",
+    "Extra.Data.Access": "",
+    "dc:subject.anzsrc:toa.rdf:resource": "applied",
+    "dc:license.dc:identifier.url": "",
+    "finalLanguage": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral.prefLabel": "Shared university network drive",
+    "keyword.1.": "",
+    "Extra.Collection.Supervisor": "",
+    "Extra.Collection.OtherDescription": "",
+    "vivo:Dataset.redbox:MetadataStandard": "",
+    "dc:RightsStatement": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": "Shared university network drive",
+    "vivo:Dataset.redbox:DataAnalysisResources": "",
+    "dc:subject.anzsrc:for.2..bottom.dropdown": "",
+    "dc:subject.anzsrc:for.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/for/0702",
+    "dc:subject.anzsrc:seo.3..top.dropdown": "",
+    "dc:subject.anzsrc:for.2..middle.dropdown": "",
+    "dc:subject.anzsrc:seo.3..middle.dropdown": "",
+    "dc:subject.anzsrc:seo.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/seo/8398",
+    "dc:subject.anzsrc:seo.2..bottom.dropdown": "http://purl.org/asc/1297.0/2008/seo/830301",
+    "dc:subject.anzsrc:seo.3..bottom.dropdown": "",
+    "dc:subject.anzsrc:seo.2..middle.dropdown": "http://purl.org/asc/1297.0/2008/seo/8303",
+    "dc:subject.anzsrc:seo.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/seo/839802",
+    "dc:subject.anzsrc:for.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/for/070204",
+    "dc:subject.anzsrc:seo.2..top.dropdown": "http://purl.org/asc/1297.0/2008/seo/83",
+    "dc:subject.anzsrc:for.2..top.dropdown": "",
+    "objMeta": "generatePDF;true:",
+    "related.datasets": [
+        {
+            "oid": "28bff2bc11cf39a6a0575ada123fc54f"
+        }
+    ],
+    "dc:description.1.text": "<p>This project is related to my Phd (2012-2015)</p>",
+    "dc:description.1.shadow": "&lt;p&gt;This project is related to my Phd (2012-2015)&lt;/p&gt;",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/ba3114822261fae20e326d7b9104de09",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": "",
+    "finalKeywords": [],
+    "foaf:fundedBy.foaf:Agent": [
+        {
+            "dc_title": "AMCRC",
+            "dc_identifier": ""
+        },
+        {
+            "dc_title": "CSIRO",
+            "dc_identifier": ""
+        },
+        {
+            "dc_title": "MLA - NLMP",
+            "dc_identifier": ""
+        },
+        {
+            "dc_title": "MBD energy",
+            "dc_identifier": ""
+        }
+    ],
+    "foaf:fundedBy.vivo:Grant": [
+        {
+            "grant_number": "",
+            "dc_identifier": ""
+        }
+    ],
+    "dc:subject.anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/070204",
+            "skos:prefLabel": "070204 - Animal Nutrition"
+        },
+        {
+            "skos:prefLabel": "",
+            "rdf:resource": ""
+        }
+    ],
+    "dc:subject.anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/839802",
+            "skos:prefLabel": "839802 - Management of Greenhouse Gas Emissions from Animal Production"
+        },
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/830301",
+            "skos:prefLabel": "830301 - Beef Cattle"
+        },
+        {
+            "rdf:resource": "",
+            "skos:prefLabel": ""
+        }
+    ],
+    "locrel:rth.foaf:Person": {
+        "dc:identifier": "jcu.edu.au/parties/people/C738AEA6E8E0CAC33467E739AC383A90",
+        "givenname": "Lorenna",
+        "familyname": "Machado",
+        "honorific": "MISS",
+        "email": "lorenna.machado@my.jcu.edu.au"
+    },
+    "locrel:prc.foaf:Person": {
+        "givenname": "Lorenna",
+        "familyname": "Machado",
+        "email": "lorenna.machado@my.jcu.edu.au",
+        "dc:identifier": "jcu.edu.au/parties/people/C738AEA6E8E0CAC33467E739AC383A90",
+        "honorific": "MISS"
+    },
+    "locrel:clb.foaf:Person": [
+        {
+            "givenname": "Nigel",
+            "email": "Nigel.Tomkins@csiro.au",
+            "familyname": "Tomkins",
+            "dc:identifier": "",
+            "honorific": "Dr"
+        },
+        {
+            "honorific": "Dr",
+            "familyname": "Rosewarne",
+            "dc:identifier": "",
+            "givenname": "Carly",
+            "email": "Carly.Rosewarne@csiro.au"
+        },
+        {
+            "givenname": "Nicholas",
+            "familyname": "Paul",
+            "dc:identifier": "jcu.edu.au/parties/people/FFDC39DA4E9627EAEAA662F830E03776",
+            "email": "nicholas.paul@jcu.edu.au",
+            "honorific": "Dr"
+        },
+        {
+            "honorific": "Dr",
+            "familyname": "Magnusson",
+            "givenname": "Marie",
+            "email": "marie.magnusson@jcu.edu.au",
+            "dc:identifier": "jcu.edu.au/parties/people/6C770D76F3DE4C31AB63E8657AD4F440"
+        }
+    ],
+    "swrc:supervisor.foaf:Person": {
+        "familyname": "de Nys",
+        "dc:identifier": "jcu.edu.au/parties/people/EE05982E8443085EFE1D29FC254B2D45",
+        "email": "rocky.denys@jcu.edu.au",
+        "givenname": "Rocky",
+        "honorific": "Prof"
+    },
+    "dc:coverage.dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at"
+    ],
+    "agls:protectiveMarking.dc:type": [
+        "agls:protectiveMarking.dc:type.redbox:CommerciallySensitive"
+    ]
+}

@@ -1,0 +1,144 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "vivo:Dataset.redbox:DataCollectionMethodology": "",
+    "extra.meta.link": "",
+    "vivo:Dataset.dc:extent": "Less than 10 GB",
+    "dc:subject.anzsrc:for.1..top.dropdown": "http://purl.org/asc/1297.0/2008/for/17",
+    "vivo:Dataset.redbox:DataCollectionResources": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "",
+    "Extra.DataSet.URL": "",
+    "dc:rights.skos:note": "",
+    "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral.prefLabel": "Personal equipment",
+    "vivo:Dataset.dc.format.other": "",
+    "finalCollection.tiemPeriod": "",
+    "dc:rightsHolder.dc:name.prefLabel": "My University",
+    "dc:license.dc:identifier": "",
+    "dc:subject.anzsrc:toa.skos:prefLabel": "Pure basic research",
+    "oid": "ac8c1767fe009617b93a9610a582cf13",
+    "redbox:disposalDate": "",
+    "dc:license.skos:prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "",
+    "vivo:Dataset.dc.format.prefLabel": "",
+    "dataLicensingAccess.manager": "Dr Wendy Li",
+    "dc:identifier": "12718978",
+    "Extra.Website.URL": "",
+    "vivo:Dataset.dc:source.dc:location.skos:note": "",
+    "vivo:Dataset.dc:extent.prefLabel": "Less than 10 GB",
+    "dc:relation.bibo:Website": "",
+    "Extra.Collection.Methodology": "",
+    "agls:policy.skos:note": "",
+    "dc:rightsHolder.dc:description": "",
+    "finalCollection.Date.To": "",
+    "action": "save",
+    "func": "action",
+    "dc:title": "Dpsych thesis",
+    "Extra.Links": "",
+    "vivo:Dataset.dc.format": "",
+    "finalCollection.Date.From": "",
+    "agls:policy.dc:identifier": "H5890",
+    "agls:protectiveMarking.skos:note": "",
+    "redbox:retentionPeriod.dc:date.skos:note.prefLabel": "",
+    "vivo:Dataset.dc:location.skos:note": "",
+    "dc:license.dc:identifier.other": "",
+    "redbox:retentionPeriod.dc:date.skos:note": "",
+    "dc:subject.anzsrc:seo.1..top.dropdown": "http://purl.org/asc/1297.0/2008/seo/92",
+    "dc:rightsHolder.dc:name": "myUni",
+    "redbox:ContractualObligations": "",
+    "Extra.Software.Equipment": "",
+    "redbox:retentionPeriod.dc:date": "",
+    "redbox:retentionPeriod.dc:date.prefLabel": "",
+    "vivo:Dataset.redbox:DataStructureStandard": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": "Personal equipment",
+    "Extra.Data.Access": "",
+    "dc:subject.anzsrc:toa.rdf:resource": "pure",
+    "dc:license.dc:identifier.url": "",
+    "finalLanguage": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral.prefLabel": "Shared university network drive",
+    "keyword.1.": "",
+    "Extra.Collection.Supervisor": "",
+    "Extra.Collection.OtherDescription": "",
+    "vivo:Dataset.redbox:MetadataStandard": "",
+    "dc:RightsStatement": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": "Shared university network drive",
+    "vivo:Dataset.redbox:DataAnalysisResources": "",
+    "dc:subject.anzsrc:for.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/for/1701",
+    "dc:subject.anzsrc:seo.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/seo/9201",
+    "dc:subject.anzsrc:seo.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/seo/920112",
+    "dc:subject.anzsrc:for.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/for/170102",
+    "objMeta": "generatePDF;true:",
+    "dc:description.1.text": "<p>Role of Sleep and Nap in Cognition Among Older Adults</p>",
+    "dc:description.1.shadow": "&lt;p&gt;Role of Sleep and Nap in Cognition Among Older Adults&lt;/p&gt;",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/ac8c1767fe009617b93a9610a582cf13",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": "",
+    "finalKeywords": [],
+    "foaf:fundedBy.foaf:Agent": [
+        {
+            "dc_title": "",
+            "dc_identifier": ""
+        }
+    ],
+    "foaf:fundedBy.vivo:Grant": [
+        {
+            "grant_number": "",
+            "dc_identifier": ""
+        }
+    ],
+    "dc:subject.anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/170102",
+            "skos:prefLabel": "170102 - Developmental Psychology and Ageing"
+        }
+    ],
+    "dc:subject.anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/920112",
+            "skos:prefLabel": "920112 - Neurodegenerative Disorders Related to Ageing"
+        }
+    ],
+    "locrel:rth.foaf:Person": {
+        "dc:identifier": "jcu.edu.au/parties/people/39E0B1CC099EF418F518815FA300903C",
+        "givenname": "Wei Qiang, Kenny",
+        "familyname": "Cheong",
+        "honorific": "Mr",
+        "email": "weiqiangkenny.cheong@my.jcu.edu.au"
+    },
+    "locrel:prc.foaf:Person": {
+        "givenname": "Wendy",
+        "familyname": "Li",
+        "email": "wendy.li@jcu.edu.au",
+        "dc:identifier": "jcu.edu.au/parties/people/A0D55430D31573367DB2A99DD85423F9",
+        "honorific": "Dr"
+    },
+    "locrel:clb.foaf:Person": [
+        {
+            "givenname": "",
+            "email": "",
+            "familyname": "",
+            "dc:identifier": "",
+            "honorific": ""
+        }
+    ],
+    "swrc:supervisor.foaf:Person": {
+        "familyname": "Li",
+        "dc:identifier": "jcu.edu.au/parties/people/A0D55430D31573367DB2A99DD85423F9",
+        "email": "wendy.li@jcu.edu.au",
+        "givenname": "Wendy",
+        "honorific": "Dr"
+    },
+    "dc:coverage.dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at"
+    ],
+    "agls:protectiveMarking.dc:type": [
+        "agls:protectiveMarking.dc:type.redbox:NonPublic"
+    ]
+}

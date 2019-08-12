@@ -1,0 +1,177 @@
+{
+    "title": "Geophysical Explorations of Archaeological Shell Matrix Sites: Evaluating Geophysical Techniques in Determining the Boundaries, Structure and Volume of Buried Shell Deposits",
+    "description": "\nShell middens comprise a significant part of the Indigenous archaeological record of Australia; however, shell matrix sites are notoriously difficult to research, owing to their often large size, structural heterogeneity and complex formation histories. In order to create accurate accounts of the archaeological record and chronological frameworks for coastal Australia it is vital that improved methods for characterising the variability of shell matrix sites are explored.  This research addresses this problem by analysing the exploratory abilities of geophysical survey methods in investigating shell matrix sites. The study compares two methods, ground-penetrating radar (GPR) and electrical resistivity, in both controlled experimental and field settings in tropical Australian contexts.  \n\n \n\n \n",
+    "dc:identifier": "SLK1",
+    "finalKeywords": [],
+    "dc:relation_bibo:Website": "",
+    "dc:coverage_vivo:DateTimeInterval_vivo:start": "2013-06-17",
+    "dc:coverage_vivo:DateTimeInterval_vivo:end": "2016-12-17",
+    "foaf:fundedBy_foaf:Agent": [
+        {
+            "dc_title": "ARC Discovery Grant",
+            "dc_identifier": [
+                ""
+            ],
+            "ID": "ARC Discovery Grant",
+            "repository_name": [
+                "Funding Bodies"
+            ]
+        }
+    ],
+    "foaf:fundedBy_vivo:Grant": [
+        {
+            "dc_identifier": [
+                ""
+            ],
+            "grant_number": "DP120103179",
+            "repository_name": [
+                "Research Activities"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:toa_rdf:resource": "strategic",
+    "dc:subject_anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/210102",
+            "type": "for",
+            "name": "210102 - Archaeological Science",
+            "label": "Archaeological Science",
+            "notation": "210102",
+            "genealogy": [
+                "21",
+                "2101"
+            ]
+        },
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/040401",
+            "type": "for",
+            "name": "040401 - Electrical and Electromagnetic Methods in Geophysics",
+            "label": "Electrical and Electromagnetic Methods in Geophysics",
+            "notation": "040401",
+            "genealogy": [
+                "04",
+                "0404"
+            ]
+        },
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/210101",
+            "type": "for",
+            "name": "210101 - Aboriginal and Torres Strait Islander Archaeology",
+            "label": "Aboriginal and Torres Strait Islander Archaeology",
+            "notation": "210101",
+            "genealogy": [
+                "21",
+                "2101"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/950503",
+            "type": "seo",
+            "name": "950503 - Understanding Australia's Past",
+            "label": "Understanding Australia's Past",
+            "notation": "950503",
+            "genealogy": [
+                "95",
+                "9505"
+            ]
+        },
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/970121",
+            "type": "seo",
+            "name": "970121 - Expanding Knowledge in History and Archaeology",
+            "label": "Expanding Knowledge in History and Archaeology",
+            "notation": "970121",
+            "genealogy": [
+                "97",
+                "9701"
+            ]
+        },
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/970104",
+            "type": "seo",
+            "name": "970104 - Expanding Knowledge in the Earth Sciences",
+            "label": "Expanding Knowledge in the Earth Sciences",
+            "notation": "970104",
+            "genealogy": [
+                "97",
+                "9701"
+            ]
+        }
+    ],
+    "contributor_ci": {
+        "role": "Chief Investigator",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/98AE5C67BB64BA4692DFA2EEDD9640C6",
+        "text_full_name": "Sean Ulm",
+        "full_name_honorific": "A/Prof Sean Ulm",
+        "full_name_family_name_first": "Sean Ulm, Sean",
+        "family_name": "Ulm",
+        "given_name": "Sean",
+        "email": "sean.ulm@jcu.edu.au"
+    },
+    "contributor_data_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/98AE5C67BB64BA4692DFA2EEDD9640C6",
+        "text_full_name": "Sean Ulm",
+        "full_name_honorific": "A/Prof Sean Ulm",
+        "full_name_family_name_first": "Sean Ulm, Sean",
+        "family_name": "Ulm",
+        "given_name": "Sean",
+        "email": "sean.ulm@jcu.edu.au"
+    },
+    "dataLicensingAccess_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/98AE5C67BB64BA4692DFA2EEDD9640C6",
+        "text_full_name": "Sean Ulm",
+        "full_name_honorific": "A/Prof Sean Ulm",
+        "full_name_family_name_first": "Sean Ulm, Sean",
+        "family_name": "Ulm",
+        "given_name": "Sean",
+        "email": "sean.ulm@jcu.edu.au"
+    },
+    "contributors": [
+        {
+            "role": "Collaborator",
+            "repeatable": false,
+            "dc:identifier": "",
+            "text_full_name": "Selene Kenady",
+            "full_name_honorific": "Mrs Selene Kenady",
+            "full_name_family_name_first": "Selene Kenady, Selene",
+            "family_name": "Kenady",
+            "given_name": "Selene",
+            "email": "selene.kenady@my.jcu.edu.au"
+        }
+    ],
+    "contributor_supervisor": {
+        "role": "Advisor",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/98AE5C67BB64BA4692DFA2EEDD9640C6",
+        "text_full_name": "Sean Ulm",
+        "full_name_honorific": "A/Prof Sean Ulm",
+        "full_name_family_name_first": "Sean Ulm, Sean",
+        "family_name": "Ulm",
+        "given_name": "Sean",
+        "email": "sean.ulm@jcu.edu.au"
+    },
+    "vivo:Dataset_redbox:DataCollectionMethodology": "",
+    "vivo:Dataset_dc_format": "",
+    "vivo:Dataset_redbox:DataCollectionResources": "",
+    "vivo:Dataset_redbox:DataAnalysisResources": "",
+    "vivo:Dataset_redbox:MetadataStandard": "",
+    "vivo:Dataset_redbox:DataStructureStandard": "",
+    "vivo:Dataset_dc:extent": "Less than 10 GB",
+    "vivo:Dataset_dc:location_rdf:PlainLiteral": "other",
+    "vivo:Dataset_dc:location_skos:note": "Tropical Data Hub",
+    "vivo:Dataset_dc:source_dc:location_skos:note": "",
+    "dataowner_name": "A/Prof Sean Ulm",
+    "dc:rightsHolder_dc:name": "myUnjount",
+    "dc:rightsHolder_dc:description": "",
+    "redbox:ContractualObligations": "",
+    "dc:coverage_dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at"
+    ],
+    "agls:policy_dc:identifier": "",
+    "agls:policy_skos:note": "",
+    "agls:protectiveMarking_dc:type": [],
+    "agls:protectiveMarking_skos:note": ""
+}

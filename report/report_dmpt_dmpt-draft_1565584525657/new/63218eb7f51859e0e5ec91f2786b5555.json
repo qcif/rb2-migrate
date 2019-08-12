@@ -1,0 +1,86 @@
+{
+    "title": "a",
+    "description": "\na\n",
+    "dc:identifier": "a",
+    "finalKeywords": [],
+    "dc:relation_bibo:Website": "a",
+    "dc:coverage_vivo:DateTimeInterval_vivo:start": "2010",
+    "dc:coverage_vivo:DateTimeInterval_vivo:end": "2016",
+    "foaf:fundedBy_foaf:Agent": [
+        {
+            "dc_title": "",
+            "dc_identifier": [
+                ""
+            ],
+            "ID": "",
+            "repository_name": [
+                "Funding Bodies"
+            ]
+        }
+    ],
+    "foaf:fundedBy_vivo:Grant": [
+        {
+            "dc_identifier": [
+                ""
+            ],
+            "grant_number": "",
+            "repository_name": [
+                "Research Activities"
+            ]
+        }
+    ],
+    "dc:subject_anzsrc:toa_rdf:resource": "",
+    "dc:subject_anzsrc:for": [],
+    "dc:subject_anzsrc:seo": [],
+    "contributor_ci": {
+        "role": "Chief Investigator",
+        "repeatable": false,
+        "dc:identifier": "jcu.edu.au/parties/people/2ADB5FB86C3C647E2397478A2D63F2D5",
+        "text_full_name": "Erik Aalgaard",
+        "full_name_honorific": "Mr Erik Aalgaard",
+        "full_name_family_name_first": "Erik Aalgaard, Erik",
+        "family_name": "Aalgaard",
+        "given_name": "Erik",
+        "email": "erik.algard@jcu.edu.au"
+    },
+    "contributor_data_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/6D4DF5BB70AF1FB849D7E574B98AACE2",
+        "text_full_name": "Bard Aaberge",
+        "full_name_honorific": "MR Bard Aaberge",
+        "full_name_family_name_first": "Bard Aaberge, Bard",
+        "family_name": "Aaberge",
+        "given_name": "Bard",
+        "email": "bard.aaberge1@my.jcu.edu.au"
+    },
+    "dataLicensingAccess_manager": {
+        "dc:identifier": "jcu.edu.au/parties/people/6D4DF5BB70AF1FB849D7E574B98AACE2",
+        "text_full_name": "Bard Aaberge",
+        "full_name_honorific": "MR Bard Aaberge",
+        "full_name_family_name_first": "Bard Aaberge, Bard",
+        "family_name": "Aaberge",
+        "given_name": "Bard",
+        "email": "bard.aaberge1@my.jcu.edu.au"
+    },
+    "contributors": [],
+    "contributor_supervisor": {},
+    "vivo:Dataset_redbox:DataCollectionMethodology": "",
+    "vivo:Dataset_dc_format": "",
+    "vivo:Dataset_redbox:DataCollectionResources": "",
+    "vivo:Dataset_redbox:DataAnalysisResources": "",
+    "vivo:Dataset_redbox:MetadataStandard": "",
+    "vivo:Dataset_redbox:DataStructureStandard": "",
+    "vivo:Dataset_dc:extent": "100GB - 1TB",
+    "vivo:Dataset_dc:location_rdf:PlainLiteral": "share-drive",
+    "vivo:Dataset_dc:location_skos:note": "a",
+    "vivo:Dataset_dc:source_dc:location_skos:note": "a",
+    "dataowner_name": "MR Bard Aaberge",
+    "dc:rightsHolder_dc:description": "",
+    "redbox:ContractualObligations": "",
+    "dc:coverage_dc:identifier": [],
+    "agls:policy_dc:identifier": "",
+    "agls:policy_skos:note": "",
+    "agls:protectiveMarking_dc:type": [
+        "agls:protectiveMarking_dc:type.redbox:CulturallySensitive"
+    ],
+    "agls:protectiveMarking_skos:note": ""
+}

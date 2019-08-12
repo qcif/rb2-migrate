@@ -1,0 +1,145 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "vivo:Dataset.redbox:DataCollectionMethodology": "",
+    "dc:relation.bibo:Website": "",
+    "dc:subject.anzsrc:for.1..top.dropdown": "",
+    "finalCollection.tiemPeriod": "",
+    "vivo:Dataset.dc.format.other": "",
+    "dc:title": "Predatory strategies and behaviours in cephalopods are altered by elevated CO2",
+    "action": "save",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": "Personal equipment",
+    "agls:protectiveMarking.skos:note": "",
+    "dataLicensingAccess.manager": "Mr    Blake Spady",
+    "dc:rights.skos:note": "",
+    "dc:rightsHolder.dc:description": "",
+    "dc:license.dc:identifier": "",
+    "keyword.1.": "",
+    "vivo:Dataset.dc:source.dc:location.skos:note": "",
+    "redbox:retentionPeriod.dc:date.skos:note": "",
+    "Extra.Collection.Supervisor": "",
+    "dc:rightsHolder.dc:name.prefLabel": "Higher Degree Research Student",
+    "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": "",
+    "agls:policy.dc:identifier": " A2189",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral.prefLabel": "Personal equipment",
+    "finalLanguage": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": "Personal equipment",
+    "redbox:ContractualObligations": "",
+    "dc:license.dc:identifier.url": "",
+    "dc:subject.anzsrc:toa.rdf:resource": "",
+    "finalCollection.Date.To": "",
+    "Extra.Collection.OtherDescription": "",
+    "Extra.Software.Equipment": "",
+    "Extra.Links": "",
+    "redbox:retentionPeriod.dc:date": "",
+    "vivo:Dataset.redbox:DataCollectionResources": "",
+    "vivo:Dataset.dc.format.prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "",
+    "dc:rightsHolder.dc:name": "student",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral.prefLabel": "Personal equipment",
+    "vivo:Dataset.dc:extent": "Less than 10 GB",
+    "extra.meta.link": "",
+    "Extra.Data.Access": "",
+    "vivo:Dataset.dc:location.skos:note": "",
+    "dc:RightsStatement": "",
+    "dc:license.skos:prefLabel": "",
+    "dc:subject.anzsrc:toa.skos:prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "",
+    "Extra.Website.URL": "",
+    "dc:subject.anzsrc:seo.1..top.dropdown": "",
+    "dc:identifier": "Predatory strategies and behaviours in cephalopods are altered by elevated CO2",
+    "dc:license.dc:identifier.other": "",
+    "redbox:retentionPeriod.dc:date.prefLabel": "",
+    "vivo:Dataset.dc:extent.prefLabel": "Less than 10 GB",
+    "oid": "0052f06cd6449bdda00dbec774f860dd",
+    "vivo:Dataset.redbox:DataStructureStandard": "",
+    "redbox:retentionPeriod.dc:date.skos:note.prefLabel": "",
+    "Extra.DataSet.URL": "",
+    "Extra.Collection.Methodology": "",
+    "agls:policy.skos:note": "",
+    "redbox:disposalDate": "",
+    "vivo:Dataset.redbox:DataAnalysisResources": "",
+    "func": "action",
+    "vivo:Dataset.dc.format": "",
+    "vivo:Dataset.redbox:MetadataStandard": "",
+    "finalCollection.Date.From": "",
+    "objMeta": "generatePDF;true:",
+    "dc:description.1.text": "<p>ABSTRACT: There is increasing evidence that projected near-future carbon dioxide (CO2) levels can alter predator avoidance behaviour in marine invertebrates, yet little is known about the possible effects on predatory behaviours. Here we tested the effects of elevated CO2 on the predatory behaviours of two ecologically distinct cephalopod species, the pygmy squid, Idiosepius pygmaeus, and the bigfin reef squid, Sepioteuthis lessoniana. Both species exhibited an increased latency to attack and altered body pattern choice during the attack sequence at elevated CO2. I. pygmaeus also exhib- ited a 20% decrease in predation rate, an increased striking distance, and reduced preference for attacking the posterior end of prey at elevated CO2. Elevated CO2 increased activity levels of S. lessoniana comparable to those previously shown in I. pygmaeus, which could adversely affect their energy budget and increase their potential to be preyed upon. The effects of elevated CO2 on predatory behaviours, predation strategies and activity levels of cephalopods reported here could have far- reaching consequences in marine ecosystems due to the ecological importance of cephalopods in the marine food web.</p>",
+    "dc:description.1.shadow": "&lt;p&gt;ABSTRACT: There is increasing evidence that projected near-future carbon dioxide (CO2) levels can alter predator avoidance behaviour in marine invertebrates, yet little is known about the possible effects on predatory behaviours. Here we tested the effects of elevated CO2 on the predatory behaviours of two ecologically distinct cephalopod species, the pygmy squid, Idiosepius pygmaeus, and the bigfin reef squid, Sepioteuthis lessoniana. Both species exhibited an increased latency to attack and altered body pattern choice during the attack sequence at elevated CO2. I. pygmaeus also exhib- ited a 20% decrease in predation rate, an increased striking distance, and reduced preference for attacking the posterior end of prey at elevated CO2. Elevated CO2 increased activity levels of S. lessoniana comparable to those previously shown in I. pygmaeus, which could adversely affect their energy budget and increase their potential to be preyed upon. The effects of elevated CO2 on predatory behaviours, predation strategies and activity levels of cephalopods reported here could have far- reaching consequences in marine ecosystems due to the ecological importance of cephalopods in the marine food web.&lt;/p&gt;",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/0052f06cd6449bdda00dbec774f860dd",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": "",
+    "finalKeywords": [],
+    "foaf:fundedBy.foaf:Agent": [
+        {
+            "dc_title": "",
+            "dc_identifier": ""
+        }
+    ],
+    "foaf:fundedBy.vivo:Grant": [
+        {
+            "dc_identifier": "",
+            "grant_number": ""
+        }
+    ],
+    "dc:subject.anzsrc:for": [
+        {
+            "skos:prefLabel": "",
+            "rdf:resource": ""
+        }
+    ],
+    "dc:subject.anzsrc:seo": [
+        {
+            "rdf:resource": "",
+            "skos:prefLabel": ""
+        }
+    ],
+    "locrel:rth.foaf:Person": {
+        "email": "blake.spady@my.jcu.edu.au",
+        "honorific": "Mr   ",
+        "givenname": "Blake",
+        "familyname": "Spady",
+        "dc:identifier": "jcu.edu.au/parties/people/B5727507402509CA317915A5AEEABF3C"
+    },
+    "locrel:prc.foaf:Person": {
+        "email": "blake.spady@my.jcu.edu.au",
+        "honorific": "Mr   ",
+        "dc:identifier": "jcu.edu.au/parties/people/B5727507402509CA317915A5AEEABF3C",
+        "familyname": "Spady",
+        "givenname": "Blake"
+    },
+    "locrel:clb.foaf:Person": [
+        {
+            "honorific": "Prof",
+            "givenname": "Philip",
+            "dc:identifier": "jcu.edu.au/parties/people/B75BF971396A6653D2DCC47B11EB5981",
+            "familyname": "Munday",
+            "email": "philip.munday@jcu.edu.au"
+        },
+        {
+            "givenname": "Sue-Ann",
+            "email": "sueann.watson@jcu.edu.au",
+            "dc:identifier": "jcu.edu.au/parties/people/38793B40E427DBD6D94299651E1D931B",
+            "familyname": "Watson",
+            "honorific": "Dr"
+        }
+    ],
+    "swrc:supervisor.foaf:Person": {
+        "honorific": "",
+        "dc:identifier": "",
+        "givenname": "",
+        "email": "",
+        "familyname": ""
+    },
+    "dc:coverage.dc:identifier": [
+        "http://id.loc.gov/vocabulary/countries/at"
+    ],
+    "agls:protectiveMarking.dc:type": []
+}

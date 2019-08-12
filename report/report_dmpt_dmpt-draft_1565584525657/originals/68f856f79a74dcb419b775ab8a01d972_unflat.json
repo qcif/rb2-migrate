@@ -1,0 +1,143 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "vivo:Dataset.redbox:DataCollectionMethodology": "",
+    "extra.meta.link": "",
+    "vivo:Dataset.dc:extent": "100GB+",
+    "dc:subject.anzsrc:for.1..top.dropdown": "http://purl.org/asc/1297.0/2008/for/08",
+    "vivo:Dataset.redbox:DataCollectionResources": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "2016-09-09",
+    "Extra.DataSet.URL": "",
+    "dc:rights.skos:note": "",
+    "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral.prefLabel": "Shared university network drive",
+    "vivo:Dataset.dc.format.other": "",
+    "finalCollection.tiemPeriod": "",
+    "dc:rightsHolder.dc:name.prefLabel": "Higher Degree Research Student",
+    "dc:license.dc:identifier": "",
+    "dc:subject.anzsrc:toa.skos:prefLabel": "Applied research",
+    "oid": "68f856f79a74dcb419b775ab8a01d972",
+    "redbox:disposalDate": "",
+    "dc:license.skos:prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "2016-09-11",
+    "vivo:Dataset.dc.format.prefLabel": "",
+    "dataLicensingAccess.manager": "Ms Arni Abdul Gani",
+    "dc:identifier": "a",
+    "Extra.Website.URL": "",
+    "vivo:Dataset.dc:source.dc:location.skos:note": "",
+    "vivo:Dataset.dc:extent.prefLabel": "100GB+",
+    "dc:relation.bibo:Website": "a",
+    "Extra.Collection.Methodology": "",
+    "agls:policy.skos:note": "",
+    "dc:rightsHolder.dc:description": "",
+    "finalCollection.Date.To": "",
+    "action": "save",
+    "func": "action",
+    "dc:title": "a",
+    "Extra.Links": "",
+    "vivo:Dataset.dc.format": "",
+    "finalCollection.Date.From": "",
+    "agls:policy.dc:identifier": "",
+    "agls:protectiveMarking.skos:note": "",
+    "redbox:retentionPeriod.dc:date.skos:note.prefLabel": "",
+    "vivo:Dataset.dc:location.skos:note": "",
+    "dc:license.dc:identifier.other": "",
+    "redbox:retentionPeriod.dc:date.skos:note": "",
+    "dc:subject.anzsrc:seo.1..top.dropdown": "",
+    "dc:rightsHolder.dc:name": "student",
+    "redbox:ContractualObligations": "",
+    "Extra.Software.Equipment": "",
+    "redbox:retentionPeriod.dc:date": "",
+    "redbox:retentionPeriod.dc:date.prefLabel": "",
+    "vivo:Dataset.redbox:DataStructureStandard": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": "Shared university network drive",
+    "Extra.Data.Access": "",
+    "dc:subject.anzsrc:toa.rdf:resource": "applied",
+    "dc:license.dc:identifier.url": "",
+    "finalLanguage": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral.prefLabel": "Shared university network drive",
+    "keyword.1.": "",
+    "Extra.Collection.Supervisor": "",
+    "Extra.Collection.OtherDescription": "",
+    "vivo:Dataset.redbox:MetadataStandard": "",
+    "dc:RightsStatement": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": "Shared university network drive",
+    "vivo:Dataset.redbox:DataAnalysisResources": "",
+    "dc:subject.anzsrc:for.1..middle.dropdown": "",
+    "dc:subject.anzsrc:for.1..bottom.dropdown": "",
+    "dc:subject.anzsrc:for.2..top.dropdown": "",
+    "objMeta": "generatePDF;true:",
+    "dc:description.1.text": "<p>a</p>",
+    "dc:description.1.shadow": "&lt;p&gt;a&lt;/p&gt;",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/68f856f79a74dcb419b775ab8a01d972",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": "",
+    "finalKeywords": [],
+    "foaf:fundedBy.foaf:Agent": [
+        {
+            "dc_title": "",
+            "dc_identifier": ""
+        }
+    ],
+    "foaf:fundedBy.vivo:Grant": [
+        {
+            "grant_number": "",
+            "dc_identifier": ""
+        }
+    ],
+    "dc:subject.anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/08",
+            "skos:prefLabel": "08 - Information And Computing Sciences"
+        },
+        {
+            "skos:prefLabel": "",
+            "rdf:resource": ""
+        }
+    ],
+    "dc:subject.anzsrc:seo": [
+        {
+            "rdf:resource": "",
+            "skos:prefLabel": ""
+        }
+    ],
+    "locrel:rth.foaf:Person": {
+        "dc:identifier": "jcu.edu.au/parties/people/C775101100184EBE7208359EFC2CD595",
+        "givenname": "Kirsten",
+        "familyname": "Abbott",
+        "honorific": "Miss",
+        "email": "kirsten.abbott@jcu.edu.au"
+    },
+    "locrel:prc.foaf:Person": {
+        "givenname": "Arni",
+        "familyname": "Abdul Gani",
+        "email": "arni.abdulgani@jcu.edu.au",
+        "dc:identifier": "jcu.edu.au/parties/people/59EBE462CA3E576BEE1629D327092613",
+        "honorific": "Ms"
+    },
+    "locrel:clb.foaf:Person": [
+        {
+            "givenname": "",
+            "email": "",
+            "familyname": "",
+            "dc:identifier": "",
+            "honorific": ""
+        }
+    ],
+    "swrc:supervisor.foaf:Person": {
+        "familyname": "",
+        "dc:identifier": "",
+        "email": "",
+        "givenname": "",
+        "honorific": ""
+    },
+    "dc:coverage.dc:identifier": [],
+    "agls:protectiveMarking.dc:type": []
+}

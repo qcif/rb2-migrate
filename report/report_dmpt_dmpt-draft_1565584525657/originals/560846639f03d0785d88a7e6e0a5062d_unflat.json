@@ -1,0 +1,159 @@
+{
+    "title": "[Untitled]",
+    "viewId": "dashboard",
+    "packageType": "dmpt",
+    "redbox:newForm": "true",
+    "redbox:formVersion": "1.9",
+    "project.name": "New Project",
+    "vivo:Dataset.redbox:DataCollectionMethodology": "",
+    "extra.meta.link": "",
+    "vivo:Dataset.dc:extent": "",
+    "dc:subject.anzsrc:for.1..top.dropdown": "http://purl.org/asc/1297.0/2008/for/07",
+    "vivo:Dataset.redbox:DataCollectionResources": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:start": "2014-05-26",
+    "Extra.DataSet.URL": "",
+    "dc:rights.skos:note": "",
+    "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral.prefLabel": "",
+    "vivo:Dataset.dc.format.other": "",
+    "finalCollection.tiemPeriod": "",
+    "dc:rightsHolder.dc:name.prefLabel": "",
+    "dc:license.dc:identifier": "",
+    "dc:subject.anzsrc:toa.skos:prefLabel": "Pure basic research",
+    "oid": "560846639f03d0785d88a7e6e0a5062d",
+    "redbox:disposalDate": "",
+    "dc:license.skos:prefLabel": "",
+    "dc:coverage.vivo:DateTimeInterval.vivo:end": "",
+    "vivo:Dataset.dc.format.prefLabel": "",
+    "dataLicensingAccess.manager": "  ",
+    "dc:identifier": "EOA",
+    "Extra.Website.URL": "",
+    "vivo:Dataset.dc:source.dc:location.skos:note": "",
+    "vivo:Dataset.dc:extent.prefLabel": "",
+    "dc:relation.bibo:Website": "",
+    "Extra.Collection.Methodology": "",
+    "agls:policy.skos:note": "",
+    "dc:rightsHolder.dc:description": "",
+    "finalCollection.Date.To": "",
+    "action": "save",
+    "func": "action",
+    "dc:title": "Impact of road infrastructure on livelihoods and land use in rural Ghana",
+    "Extra.Links": "",
+    "vivo:Dataset.dc.format": "",
+    "finalCollection.Date.From": "",
+    "agls:policy.dc:identifier": "",
+    "agls:protectiveMarking.skos:note": "",
+    "redbox:retentionPeriod.dc:date.skos:note.prefLabel": "",
+    "vivo:Dataset.dc:location.skos:note": "",
+    "dc:license.dc:identifier.other": "",
+    "redbox:retentionPeriod.dc:date.skos:note": "",
+    "dc:subject.anzsrc:seo.1..top.dropdown": "http://purl.org/asc/1297.0/2008/seo/97",
+    "dc:rightsHolder.dc:name": "",
+    "redbox:ContractualObligations": "",
+    "Extra.Software.Equipment": "",
+    "redbox:retentionPeriod.dc:date": "",
+    "redbox:retentionPeriod.dc:date.prefLabel": "",
+    "vivo:Dataset.redbox:DataStructureStandard": "",
+    "vivo:Dataset.dc:source.dc:location.rdf:PlainLiteral": "",
+    "Extra.Data.Access": "",
+    "dc:subject.anzsrc:toa.rdf:resource": "pure",
+    "dc:license.dc:identifier.url": "",
+    "finalLanguage": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral.prefLabel": "",
+    "keyword.1.": "",
+    "Extra.Collection.Supervisor": "",
+    "Extra.Collection.OtherDescription": "",
+    "vivo:Dataset.redbox:MetadataStandard": "",
+    "dc:RightsStatement": "",
+    "vivo:Dataset.dc:location.rdf:PlainLiteral": "",
+    "vivo:Dataset.redbox:DataAnalysisResources": "",
+    "dc:subject.anzsrc:for.2..bottom.dropdown": "http://purl.org/asc/1297.0/2008/for/120504",
+    "dc:subject.anzsrc:for.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/for/0701",
+    "dc:subject.anzsrc:for.3..bottom.dropdown": "http://purl.org/asc/1297.0/2008/for/120506",
+    "dc:subject.anzsrc:for.2..middle.dropdown": "http://purl.org/asc/1297.0/2008/for/1205",
+    "dc:subject.anzsrc:for.3..top.dropdown": "http://purl.org/asc/1297.0/2008/for/12",
+    "dc:subject.anzsrc:seo.1..middle.dropdown": "http://purl.org/asc/1297.0/2008/seo/9701",
+    "dc:subject.anzsrc:seo.2..bottom.dropdown": "http://purl.org/asc/1297.0/2008/seo/970112",
+    "dc:subject.anzsrc:seo.2..middle.dropdown": "http://purl.org/asc/1297.0/2008/seo/9701",
+    "dc:subject.anzsrc:seo.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/seo/970107",
+    "dc:subject.anzsrc:for.1..bottom.dropdown": "http://purl.org/asc/1297.0/2008/for/070199",
+    "dc:subject.anzsrc:seo.2..top.dropdown": "http://purl.org/asc/1297.0/2008/seo/97",
+    "dc:subject.anzsrc:for.2..top.dropdown": "http://purl.org/asc/1297.0/2008/for/12",
+    "dc:subject.anzsrc:for.3..middle.dropdown": "http://purl.org/asc/1297.0/2008/for/1205",
+    "dc:description.1.text": "<p>This project is to examine how the existence of good roads in rural areas in Ghana influence the livelihood strategies of the rural dwellers. It looks at how roads influence farm and non-farm activities in rural Ghana and how it consequently affects land cover change. It presents the case of areas with and without access to good roads to make comparisons of living conditions and community development.</p>",
+    "dc:description.1.shadow": "&lt;p&gt;This project is to examine how the existence of good roads in rural areas in Ghana influence the livelihood strategies of the rural dwellers. It looks at how roads influence farm and non-farm activities in rural Ghana and how it consequently affects land cover change. It presents the case of areas with and without access to good roads to make comparisons of living conditions and community development.&lt;/p&gt;",
+    "dc:description.1.type": "full",
+    "recordAsLocationDefault": "https://research.jcu.edu.au/researchdata/published/detail/560846639f03d0785d88a7e6e0a5062d",
+    "identifierText.1.creatorName.input": "",
+    "pcName.identifierText": "",
+    "identifierText.1.supName.input": "",
+    "identifierText.1.collaboratorName.input": "",
+    "finalKeywords": [],
+    "foaf:fundedBy.foaf:Agent": [
+        {
+            "dc_title": "James Cook University",
+            "dc_identifier": ""
+        }
+    ],
+    "foaf:fundedBy.vivo:Grant": [
+        {
+            "grant_number": "",
+            "dc_identifier": ""
+        }
+    ],
+    "dc:subject.anzsrc:for": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/070199",
+            "skos:prefLabel": "070199 - Agriculture, Land and Farm Management not elsewhere classified"
+        },
+        {
+            "skos:prefLabel": "120504 - Land Use and Environmental Planning",
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/120504"
+        },
+        {
+            "skos:prefLabel": "120506 - Transport Planning",
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/for/120506"
+        }
+    ],
+    "dc:subject.anzsrc:seo": [
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/970107",
+            "skos:prefLabel": "970107 - Expanding Knowledge in the Agricultural and Veterinary Sciences"
+        },
+        {
+            "rdf:resource": "http://purl.org/asc/1297.0/2008/seo/970112",
+            "skos:prefLabel": "970112 - Expanding Knowledge in Built Environment and Design"
+        }
+    ],
+    "locrel:rth.foaf:Person": {
+        "dc:identifier": "",
+        "givenname": "",
+        "familyname": "",
+        "honorific": "",
+        "email": ""
+    },
+    "locrel:prc.foaf:Person": {
+        "givenname": "",
+        "familyname": "",
+        "email": "",
+        "dc:identifier": "",
+        "honorific": ""
+    },
+    "locrel:clb.foaf:Person": [
+        {
+            "givenname": "",
+            "email": "",
+            "familyname": "",
+            "dc:identifier": "",
+            "honorific": ""
+        }
+    ],
+    "swrc:supervisor.foaf:Person": {
+        "familyname": "",
+        "dc:identifier": "",
+        "email": "",
+        "givenname": "",
+        "honorific": ""
+    },
+    "agls:protectiveMarking.dc:type": []
+}
