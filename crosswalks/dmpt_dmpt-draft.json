@@ -125,8 +125,8 @@
         }
       ],
       "type": "record",
-      "handler": "Person",
-      "repeatable": 1,
+      "handler": "AccessPerson",
+      "handleAll": true,
       "role": "Data Manager",
       "fields": {
         "dc:identifier": "dc:identifier",
