@@ -9,7 +9,7 @@ src/**/*.js.map
 test/**/*.js
 test/**/*.js.map
 logs/*.log
-##report*/**
+report*/**
 test/diag
 test/storage
 temp/
