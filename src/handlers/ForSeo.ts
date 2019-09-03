@@ -19,9 +19,9 @@ export class ForSeo extends HandlerBase implements Handler {
           _.set(curObj, dest, _.get(mainObj, `${src}[${idx}]`));
         });
         curObj['name'] = `${curObj['notation']} - ${curObj['label']}`;
-        const genealogy = this.genealogy(curObj['notation']);
-        if (!_.isEmpty(genealogy)) {
-          curObj['genealogy'] = genealogy;
+        const geneaology = this.geneaology(curObj['notation']);
+        if (!_.isEmpty(geneaology)) {
+          curObj['geneaology'] = geneaology;
         }
         output.push(curObj);
       });
@@ -47,7 +47,7 @@ export class ForSeo extends HandlerBase implements Handler {
         'name': name,
         'label': l1,
         'notation': m[2],
-        'genealogy': this.genealogy(m[2])
+        'geneaology': this.geneaology(m[2])
       };
       this.logger("handler", "for_seo", "", "succeeded", JSON.stringify(output));
       return output;
@@ -56,10 +56,10 @@ export class ForSeo extends HandlerBase implements Handler {
     }
   }
 
-// FOR or SEO code genealogy:
+// FOR or SEO code geneaology:
 // '112233' -> [ '11', '1122' ] etc
 
-  genealogy(code:string):string[] {
+  geneaology(code:string):string[] {
     var c = '';
     var g = [];
     for( var i = 0; i < code.length - 2; i += 2 ) {

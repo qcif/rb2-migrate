@@ -69,7 +69,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
     if (srcfield in src) {
       if (typeof (cwspec[srcfield]) === 'string') {
         // do not allow blanks into destination
-        dest[destfield] = !_.isEmpty(src[srcfield]) || src[srcfield] !== 'null' ? src[srcfield] : null;
+        dest[destfield] = !_.isEmpty(src[srcfield]) && src[srcfield] !== 'null' ? src[srcfield] : null;
         if (dest[destfield]) {
           logger('crosswalk', srcfield, destfield, "copied", dest[destfield]);
         } else {
@@ -129,7 +129,8 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                         delete nextDest['nestedNames'];
                       }
                       delete nextDest["destination"];
-                      delete nextDest["repeatable"];
+                      _.unset(nextDest, 'repeatable');
+                      _.unset(nextDest, 'singleUse');
                       if (isSingleUse) {
                         break;
                       }

@@ -56,8 +56,6 @@ export class AccessPerson extends HandlerBase implements Handler {
           console.log("skipping undefined output");
         }
       }
-      console.log('access person...');
-      console.dir(outputs);
       return outputs;
     }
   }

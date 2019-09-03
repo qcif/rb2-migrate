@@ -183,12 +183,10 @@
       "name": "vivo:Dataset_dc:location_rdf:PlainLiteral",
       "type": "valuemap",
       "map": {
-        "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
-        "eResearch storage platforms": "eresearch-platforms",
-        "Shared university network drive": "share-drive",
-        "survey-platform": "survey-platform",
-        "University provided collaboration space": "collab-space",
-        "Other": "other"
+        "Personal equipment": "dmpt-location_personal-equipment",
+        "Shared university network drive": "dmpt-location_shared-drive",
+        "University provided collaboration space": "dmpt-location_compliant-JCU-collab-space",
+        "Other": "dmpt-location-source_other"
       }
     },
     "vivo:Dataset.dc:location.skos:note": "_",
@@ -196,12 +194,10 @@
       "name": "_",
       "type": "valuemap",
       "map": {
-        "eResearch storage platforms (e.g. Omero, GitLab, etc)": "eresearch-platforms",
-        "eResearch storage platforms": "eresearch-platforms",
-        "Shared university network drive": "share-drive",
-        "survey-platform": "survey-platform",
-        "University provided collaboration space": "collab-space",
-        "Other": "other"
+        "Shared university network drive": "dmpt-location-source_shared-drive",
+        "Personal equipment": "dmpt-location-source_personal-equipment",
+        "University provided collaboration space": "dmpt-location-source_uni-collab-space",
+        "Other": "dmpt-location-source_other"
       }
     },
     "vivo:Dataset.dc:source.dc:location.skos:note": "_",
@@ -249,7 +245,11 @@
     "dc:coverage.dc:identifier": {
       "type": "record",
       "name": "_",
-      "repeatable": 1
+      "repeatable": 1,
+      "handler": "Country",
+      "fields": {
+        "country": "country"
+      }
     },
     "dc:accessRights": {
       "name": "_",

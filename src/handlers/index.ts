@@ -29,4 +29,5 @@ export {RequestIdentifier} from './RequestIdentifier';
 export {ProtectiveMarking} from './ProtectiveMarking';
 export {CitationSimpleDate} from './CitationSimpleDate';
 export {CitationSimplePublicationDate} from './CitationSimplePublicationDate';
-
+export {ResearchThemes} from './ResearchThemes';
+export {Country} from './Country';

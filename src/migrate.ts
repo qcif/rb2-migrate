@@ -163,9 +163,9 @@ async function index(options: Object): Promise<Object[][]> {
     log.info(`Limited to first ${oids.length} records`);
   }
   let allRecordsAttachments;
-  if (oids.length > 0) {
-    allRecordsAttachments = await collectRecordAttachments(rbSource);
-  }
+  // if (oids.length > 0) {
+  //   allRecordsAttachments = await collectRecordAttachments(rbSource);
+  // }
   // log.debug(`all records attachments are:`);
   // console.dir(allRecordsAttachments);
   let records = [];
@@ -174,10 +174,13 @@ async function index(options: Object): Promise<Object[][]> {
       log.debug(`oid is ${oid}`);
       let rbSourceRecord = await rbSource.getRecord(oid);
       const rbSourceRecordMetadata = await rbSource.getRecordMetadata(oid);
+      // if (rbSourceRecord) {
+      //   let recordAttachments = {};
+      //   recordAttachments['attachments'] = allRecordsAttachments[rbSourceRecordMetadata['objectId'] || rbSourceRecord[0]['id'] || rbSourceRecord['storage_id'] || rbSourceRecord['oid']] || [];
+      //   records.push(_.assign({}, rbSourceRecord, rbSourceRecordMetadata, recordAttachments));
+      // }
       if (rbSourceRecord) {
-        let recordAttachments = {};
-        recordAttachments['attachments'] = allRecordsAttachments[rbSourceRecordMetadata['objectId'] || rbSourceRecord[0]['id'] || rbSourceRecord['storage_id'] || rbSourceRecord['oid']] || [];
-        records.push(_.assign({}, rbSourceRecord, rbSourceRecordMetadata, recordAttachments));
+        records.push(_.assign({}, rbSourceRecord, rbSourceRecordMetadata));
       }
     } catch (error) {
       log.error("There was an error in indexing.");
@@ -331,6 +334,9 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
       const report = (stage, ofield, nfield, msg, value) => {
         report_lines.push([oid, stage, ofield, nfield, msg, value]);
+        if (_.isObjectLike(value)) {
+          value = JSON.stringify(value);
+        }
         updated[oid]['status'] = msg + ': ' + value; // status is always last thing
       };
       log.debug('checking for record owner...')
@@ -392,7 +398,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         if ('error' in perms) {
           throw(perms['error']);
         }
-        report('permissions', '', '', 'set', perms);
+        report('permissions', '', '', 'set', JSON.stringify(perms));
       } catch (e) {
         report('permissions', '', '', 'failed', e);
       }
@@ -408,7 +414,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         if ('error' in metaMetadataResult) {
           throw(metaMetadataResult['error']);
         }
-        report('metaMetaData', 'oid', 'legacyId', 'set', metaMetadataResult);
+        report('metaMetaData', 'oid', 'legacyId', 'set', JSON.stringify(metaMetadataResult));
       } catch (e) {
         report('metaMetaData', 'oid', 'legacyId', 'failed', e);
       }
@@ -467,8 +473,9 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
           }
         });
         // In only Redbox1, embargoed is part of metadata and not a workflow stage
+        // draft or self-submission should not go to embargoed workflow
         md2Pub["workflowStage"] = cwPub["to_workflow"];
-        if (_.get(md2Pub, 'embargoByDate', false)) {
+        if (_.get(md2Pub, 'embargoByDate', false) && !_.includes(['draft','jcu-self-submission-draft'], _.get(cw, 'workflow_step', ''))) {
           md2Pub["workflowStage"] = 'embargoed';
         }
         dumpjson(outdir, 'new', oid + '_publication', md2Pub);
@@ -484,26 +491,26 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         log.error("Publish error: " + e);
         report('published', '', '', 'publish failed', e.message);
       }
-      if (!_.isEmpty(record['attachments'])) {
-        try {
-          const result = await uploadAttachments(rbSource, rbDest, noid, oid, record, md2, pubOid, md2Pub, report);
-          if (!result) {
-            console.log('No result!!!');
-            throw('unknown error');
-          }
-          if ('error' in result) {
-            console.log('error in result');
-            console.dir(result);
-            throw(result['error']);
-          }
-        } catch (e) {
-          console.log('There was an error in uploading attachments.');
-          console.log(e);
-          report('attachments', '', '', 'failed', e);
-        }
-      } else {
-        log.info(`No attachments for record: ${oid}`);
-      }
+      // if (!_.isEmpty(record['attachments'])) {
+      //   try {
+      //     const result = await uploadAttachments(rbSource, rbDest, noid, oid, record, md2, pubOid, md2Pub, report);
+      //     if (!result) {
+      //       console.log('No result!!!');
+      //       throw('unknown error');
+      //     }
+      //     if ('error' in result) {
+      //       console.log('error in result');
+      //       console.dir(result);
+      //       throw(result['error']);
+      //     }
+      //   } catch (e) {
+      //     console.log('There was an error in uploading attachments.');
+      //     console.log(e);
+      //     report('attachments', '', '', 'failed', e);
+      //   }
+      // } else {
+      //   log.info(`No attachments for record: ${oid}`);
+      // }
     }
 
     log.info(`${n_crosswalked} crosswalked`);
@@ -651,7 +658,7 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
           log.verbose('Uploading metaMetadata: ');
           log.verbose(JSON.stringify(metaMetadataObject));
           const updateMetaMetaDataResult = await (<Redbox2>rbDest).updateRecordObjectMetadata(noid, metaMetadataObject);
-          reportFn('attachments', '', '', 'set', result);
+          reportFn('attachments', '', '', 'set', JSON.stringify(result));
         } catch (error) {
           log.error("There was a problem updating record metadata", error)
           errors.push({noid: error});

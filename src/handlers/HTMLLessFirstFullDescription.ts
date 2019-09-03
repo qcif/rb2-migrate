@@ -1,6 +1,7 @@
 import {Handler, HandlerBase} from './handlers';
 import * as _ from 'lodash';
 import * as striptags from 'striptags';
+import {htmlDescriptionFilter} from "../utils/helpers";
 
 export class HTMLLessFirstFullDescription extends HandlerBase implements Handler {
 
@@ -15,7 +16,9 @@ export class HTMLLessFirstFullDescription extends HandlerBase implements Handler
       });
     }
     if (firstFull) {
-      return striptags(firstFull.text, ['a'], '\n');
+      const strippedForNewLine = striptags(firstFull.text, htmlDescriptionFilter, '\n');
+      // ensure html tags don't remain in text
+      return striptags(strippedForNewLine);
     } else {
       return undefined;
     }
