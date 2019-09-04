@@ -163,9 +163,9 @@ async function index(options: Object): Promise<Object[][]> {
     log.info(`Limited to first ${oids.length} records`);
   }
   let allRecordsAttachments;
-  // if (oids.length > 0) {
-  //   allRecordsAttachments = await collectRecordAttachments(rbSource);
-  // }
+  if (oids.length > 0) {
+    allRecordsAttachments = await collectRecordAttachments(rbSource);
+  }
   // log.debug(`all records attachments are:`);
   // console.dir(allRecordsAttachments);
   let records = [];
@@ -174,13 +174,10 @@ async function index(options: Object): Promise<Object[][]> {
       log.debug(`oid is ${oid}`);
       let rbSourceRecord = await rbSource.getRecord(oid);
       const rbSourceRecordMetadata = await rbSource.getRecordMetadata(oid);
-      // if (rbSourceRecord) {
-      //   let recordAttachments = {};
-      //   recordAttachments['attachments'] = allRecordsAttachments[rbSourceRecordMetadata['objectId'] || rbSourceRecord[0]['id'] || rbSourceRecord['storage_id'] || rbSourceRecord['oid']] || [];
-      //   records.push(_.assign({}, rbSourceRecord, rbSourceRecordMetadata, recordAttachments));
-      // }
       if (rbSourceRecord) {
-        records.push(_.assign({}, rbSourceRecord, rbSourceRecordMetadata));
+        let recordAttachments = {};
+        recordAttachments['attachments'] = allRecordsAttachments[rbSourceRecordMetadata['objectId'] || rbSourceRecord[0]['id'] || rbSourceRecord['storage_id'] || rbSourceRecord['oid']] || [];
+        records.push(_.assign({}, rbSourceRecord, rbSourceRecordMetadata, recordAttachments));
       }
     } catch (error) {
       log.error("There was an error in indexing.");
@@ -491,26 +488,26 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         log.error("Publish error: " + e);
         report('published', '', '', 'publish failed', e.message);
       }
-      // if (!_.isEmpty(record['attachments'])) {
-      //   try {
-      //     const result = await uploadAttachments(rbSource, rbDest, noid, oid, record, md2, pubOid, md2Pub, report);
-      //     if (!result) {
-      //       console.log('No result!!!');
-      //       throw('unknown error');
-      //     }
-      //     if ('error' in result) {
-      //       console.log('error in result');
-      //       console.dir(result);
-      //       throw(result['error']);
-      //     }
-      //   } catch (e) {
-      //     console.log('There was an error in uploading attachments.');
-      //     console.log(e);
-      //     report('attachments', '', '', 'failed', e);
-      //   }
-      // } else {
-      //   log.info(`No attachments for record: ${oid}`);
-      // }
+      if (!_.isEmpty(record['attachments'])) {
+        try {
+          const result = await uploadAttachments(rbSource, rbDest, noid, oid, record, md2, pubOid, md2Pub, report);
+          if (!result) {
+            console.log('No result!!!');
+            throw('unknown error');
+          }
+          if ('error' in result) {
+            console.log('error in result');
+            console.dir(result);
+            throw(result['error']);
+          }
+        } catch (e) {
+          console.log('There was an error in uploading attachments.');
+          console.log(e);
+          report('attachments', '', '', 'failed', e);
+        }
+      } else {
+        log.info(`No attachments for record: ${oid}`);
+      }
     }
 
     log.info(`${n_crosswalked} crosswalked`);
