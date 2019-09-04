@@ -27,12 +27,7 @@
     }
   },
   "required": [
-    "title",
-    "description",
-    "finalKeywords",
-    "datatype",
-    "contributor_ci",
-    "contributor_data_manager"
+    "title"
   ],
   "ignore": [
     "action",

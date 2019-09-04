@@ -26,10 +26,7 @@
     }
   },
   "required": [
-    "title",
-    "dc:identifier",
-    "contributor_ci",
-    "contributor_data_manager"
+    "title"
   ],
   "ignore": [
     "action",
