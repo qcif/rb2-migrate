@@ -54,15 +54,24 @@
         "type": "type"
       }
     },
+    "foaf:fundedBy.foaf:Agent": {
+      "name": "_",
+      "type": "record",
+      "repeatable": 1,
+      "handler": "FundingBody",
+      "fields": {
+        "dc:identifier": "dc_identifier",
+        "skos:prefLabel": "dc_title"
+      }
+    },
     "foaf:fundedBy.vivo:Grant": {
       "name": "_",
       "type": "record",
       "repeatable": 1,
       "handler": "GrantBody",
       "fields": {
-        "warning": "mint_lookup",
         "dc:identifier": "dc_identifier",
-        "skos.prefLabel": "dc_title",
+        "skos:prefLabel": "dc_title",
         "redbox:grantNumber": "grant_number"
       }
     },
@@ -104,7 +113,7 @@
         }
       ],
       "type": "record",
-          "repeatable": true,
+      "repeatable": true,
       "handler": "Person",
       "fields": {
         "dc:identifier": "dc:identifier",
@@ -242,6 +251,46 @@
       "fields": {
         "foaf:name": ""
       }
+    },
+    "jcu:research.themes.tropicalEcoSystems": {
+      "name": "research_theme",
+      "theme": "tropicalEcoSystems",
+      "type": "record",
+      "additive": true,
+      "handleAll": true,
+      "handler": "ResearchThemes"
+    },
+    "jcu:research.themes.industriesEconomies": {
+      "name": "research_theme",
+      "theme": "industriesEconomies",
+      "type": "record",
+      "additive": true,
+      "handleAll": true,
+      "handler": "ResearchThemes"
+    },
+    "jcu:research.themes.peopleSocieties": {
+      "name": "research_theme",
+      "theme": "peopleSocieties",
+      "type": "record",
+      "additive": true,
+      "handleAll": true,
+      "handler": "ResearchThemes"
+    },
+    "jcu:research.themes.tropicalHealth": {
+      "name": "research_theme",
+      "theme": "tropicalHealth",
+      "type": "record",
+      "additive": true,
+      "handleAll": true,
+      "handler": "ResearchThemes"
+    },
+    "jcu:research.themes.notAligned": {
+      "name": "research_theme",
+      "theme": "notAligned",
+      "type": "record",
+      "additive": true,
+      "handleAll": true,
+      "handler": "ResearchThemes"
     }
   }
 }

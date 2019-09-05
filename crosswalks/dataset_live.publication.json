@@ -80,13 +80,22 @@
         "type": "type"
       }
     },
+    "foaf:fundedBy.foaf:Agent": {
+      "name": "_",
+      "type": "record",
+      "repeatable": 1,
+      "handler": "FundingBody",
+      "fields": {
+        "dc:identifier": "dc_identifier",
+        "skos:prefLabel": "dc_title"
+      }
+    },
     "foaf:fundedBy.vivo:Grant": {
       "name": "_",
       "type": "record",
       "repeatable": 1,
       "handler": "GrantBody",
       "fields": {
-        "warning": "mint_lookup",
         "dc:identifier": "dc_identifier",
         "skos:prefLabel": "dc_title",
         "redbox:grantNumber": "grant_number"

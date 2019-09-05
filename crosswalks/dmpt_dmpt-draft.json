@@ -72,9 +72,8 @@
       "repeatable": 1,
       "handler": "GrantBody",
       "fields": {
-        "warning": "mint_lookup",
         "dc:identifier": "dc_identifier",
-        "skos.prefLabel": "dc_title",
+        "skos:prefLabel": "dc_title",
         "redbox:grantNumber": "grant_number"
       }
     },
