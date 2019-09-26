@@ -27,7 +27,8 @@
     }
   },
   "required": [
-    "title"
+    "title",
+    "contributor_ci"
   ],
   "ignore": [
     "action",
@@ -158,7 +159,8 @@
       "handler": "URLDataLocations",
       "fields": {
         "dc:identifier": "location",
-        "type": "type"
+        "type": "type",
+        "skos:note": "notes"
       }
     },
     "vivo:Location.vivo:GeographicLocation": {
@@ -169,7 +171,8 @@
       "handler": "PhysicalDataLocations",
       "fields": {
         "gn:name": "location",
-        "type": "type"
+        "type": "type",
+        "skos:note": "notes"
       }
     },
     "dc:relation.swrc:Publication": {

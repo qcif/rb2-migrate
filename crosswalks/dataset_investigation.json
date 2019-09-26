@@ -27,7 +27,8 @@
     }
   },
   "required": [
-    "title"
+    "title",
+    "contributor_ci"
   ],
   "ignore": [
     "action",
