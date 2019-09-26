@@ -122,8 +122,14 @@ export abstract class BaseRedbox {
         return response.data;
       }
     } catch (e) {
-      console.log('Error in api get...')
-      console.log(e)
+      console.log('Error in api get...');
+      if (_.has(e, 'message')) {
+        console.log(`Error: ${e.message}`);
+      } else if (_.has(e, 'response')) {
+        console.dir(e.response);
+      } else {
+        console.dir(e);
+      }
       return undefined;
     }
   }

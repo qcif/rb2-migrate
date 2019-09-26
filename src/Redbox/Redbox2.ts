@@ -2,6 +2,7 @@ import {BaseRedbox, Redbox} from "./Redbox";
 
 
 const util = require('util');
+const _ = require('lodash');
 
 
 /* Redbox v2.0 api */
@@ -120,13 +121,17 @@ export class Redbox2 extends BaseRedbox implements Redbox {
   async createRecord(metadata: Object, packagetype: string, options?: Object): Promise<string | undefined> {
     let url = 'api/records/metadata/' + packagetype;
     let params: Object = {};
-    let resp = await this.apipost(url, metadata, options);
-    // console.log('have response...');
-    // console.dir(resp);
-    if (resp && 'oid' in resp) {
-      return resp['oid'];
-    } else {
-      return undefined;
+    try {
+      let resp = await this.apipost(url, metadata, options);
+      // console.log('have response...');
+      // console.dir(resp);
+      if (resp && 'oid' in resp) {
+        return resp['oid'];
+      }
+    } catch (e) {
+      console.log("Error in post");
+      console.dir(_.get(e, 'Error', ''));
+      return;
     }
   }
 

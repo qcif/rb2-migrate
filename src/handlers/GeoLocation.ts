@@ -55,13 +55,18 @@ export class GeoLocation extends HandlerBase implements Handler {
     });
     geometry['coordinates'] = [];
     let coordinates = geometry['coordinates'];
-    if (geometry['type'] == 'Polygon') {
+    if (geometry['type'] === 'Polygon') {
       coordinates.push([]);
       coordinates = coordinates[0];
     }
     _.forEach(_.split(sanitized, ','), function (pair, key) {
       const nextPair = _.split(pair, " ");
-      coordinates.push(([nextPair[0], nextPair[1]]));
+      // ensure Point has only 1 set of square brackets, not 2
+      if (geometry['type'] === 'Point') {
+        geometry['coordinates'] = nextPair;
+      } else {
+        coordinates.push(([nextPair[0], nextPair[1]]));
+      }
     });
     return {"geometry": geometry, "type": "Feature", "redbox:Fid": o["redbox:Fid"]};
   }
@@ -74,8 +79,11 @@ export class GeoLocation extends HandlerBase implements Handler {
         const changeOutput = _.cloneDeep(o);
         changeOutput['repeatable'] = dest['repeatable'] || changeOutput['repeatable'];
         changeOutput['destination'] = dest['to'];
-        if (dest['nestedNames']) {
+        if (!_.isEmpty(dest['nestedNames'])) {
           changeOutput['nestedNames'] = dest['nestedNames'];
+        }
+        if (!_.isEmpty(dest['additionalKeys'])) {
+          changeOutput['additionalKeys'] = dest['additionalKeys'];
         }
         result.push(changeOutput);
       }

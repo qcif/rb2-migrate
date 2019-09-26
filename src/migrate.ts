@@ -185,9 +185,8 @@ async function index(options: Object): Promise<Object[][]> {
     }
   }
   const errors = rbSource.errors;
-  log.info('Showing errors...');
-  log.info(errors);
   if (errors) {
+    log.info(errors);
     log.info(`Parse errors for ${errors.length} items`);
   }
   return [records, errors];
@@ -298,11 +297,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
     for (let record of records) {
 
-      if (args['wait']) {
-        const waitPeriod = args['wait'];
-        const waited = await sleep(waitPeriod);
-        log.debug('continue...');
-      }
+      await pauseMigration();
 
       let oid = record['oid'];
       if (_.isEmpty(oid)) {
@@ -320,10 +315,11 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
       let md = await rbSource.getRecord(oid);
       if (!md) {
-        log.error(`Couldn't get record for ${oid}`);
+        log.error(`Couldn't get source record for ${oid}`);
         updated[oid]['status'] = 'load failed';
         continue;
       }
+      log.info('1. got source record successfully');
 
 
       updated[oid]['title'] = md['dc:title'];
@@ -336,15 +332,17 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         }
         updated[oid]['status'] = msg + ': ' + value; // status is always last thing
       };
-      log.debug('checking for record owner...')
-      if (!record['owner']) {
-        report('load', '', '', 'no owner', '');
+      let titleCheck = record['dc:title'];
+      if (!_.isEmpty(titleCheck) && titleCheck.toLowerCase() === '[untitled]') {
+        log.info(`2. title for record: ${oid} failed validation.`);
+        report('load', '', '', 'Unacceptable title', `${titleCheck}`);
         continue;
+      } else {
+        log.error('2. have valid title...');
       }
 
-
       const [mdu, md2] = crosswalk(cw, md, report);
-      // console.log('have md2');
+      log.info('3. have md2');
       // console.dir(md2);
       updated[oid]['status'] = 'crosswalked';
       n_crosswalked += 1;
@@ -356,20 +354,49 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         dumpjson(outdir, 'new', oid, md2);
       }
 
+      log.debug('checking for record owner...')
+      if (_.isEmpty(record['owner'])) {
+        log.info('4. no owner...');
+        if (_.get(md2, 'contributor_ci.text_full_name')) {
+          record['owner'] = md2['contributor_ci']['text_full_name'];
+          report('load', '', '', 'no owner, replaced with ci full name', '');
+          log.info('4a. using CI as owner...');
+        } else {
+          report('load', '', 'contributor_ci', `No CI or owner`, '');
+          log.info('4a. fail as NO owner OR CI...');
+          continue;
+        }
+      } else {
+        log.info('4. have owner...');
+        log.debug(record['owner']);
+      }
+      const ci = md2['contributor_ci'];
+      console.log('ci...');
+      console.dir(md2['contributor_ci']);
+      if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
+        md2['contributor_ci']['email'] = record['owner'];
+        report('validate', '', 'contributor_ci', `CI without email: using owner: ${record['owner']}`, '');
+      }
+
       const errors = validate(record['owner'], cw['required'], md2, report);
 
       if (errors.length > 0) {
         report('validate', '', '', 'invalid', errors.join('; '));
+        log.error('5. failed validation.');
+        log.error(errors);
+        log.warn('skipping to next record...');
         continue;
       } else {
         // this will be the last status if we're in dry-run/index mode, so
         // it overwrites any warnings from validate() above
+        log.info('5. passed validation.');
         report('validate', '', '', 'valid', '');
       }
       if (!rbDest || args['index']) {
+        log.warn('6. No dest.');
         continue;
       }
-
+      log.info('6. dest present. continuing');
       try {
         log.debug('Creating data record...');
         noid = await rbDest.createRecord(md2, dest_type);
@@ -377,13 +404,16 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
           n_created += 1;
           updated[oid]['noid'] = noid;
           report('create', '', '', 'created', noid);
+          log.info('7. Create record succeeded');
         } else {
-          throw('null oid');
+          throw('Create data record failed, so no noid returned.');
         }
       } catch (e) {
-        log.info('There was an error.');
-        log.info(e);
+        log.error('7. There was an error in creating data record.');
+        log.warn('skipping to next record...');
+        log.error(e);
         report('create', '', '', 'create failed', e);
+        await pauseMigration();
         continue;
       }
 
@@ -396,13 +426,32 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
           throw(perms['error']);
         }
         report('permissions', '', '', 'set', JSON.stringify(perms));
+        log.info('8. Successfully created record permissions.');
       } catch (e) {
+        log.error('8. There was an error in creating data record permissions.');
+        log.error(e);
         report('permissions', '', '', 'failed', e);
+        log.warn('skipping to next record...');
+        continue;
       }
       try {
         log.info("Updating Redbox2 data record metaMetadata...");
         let metaMetadataObject = await rbDest.getRecordMetadata(noid);
         metaMetadataObject['legacyId'] = oid;
+        log.verbose('getting contributor_ci relationships...');
+        // Redbox2 Mint parties/relationships don't always match Redbox1 records. Persist these in case needed later in dataRecord life - no harm then in overwriting contributor_ci in Redbox2 or adding Redbox2 Mint relationships later.
+        log.verbose(JSON.stringify(_.get(md2, 'contributor_ci')));
+        const parties = _.get(md2, 'contributor_ci.parties');
+        if (!_.isEmpty(parties)) {
+          _.set(metaMetadataObject, 'legacy.contributor_ci.parties', parties);
+        }
+        const relationshipTypes = _.get(md2, 'contributor_ci.relationshipType');
+        if (!_.isEmpty(relationshipTypes)) {
+          _.set(metaMetadataObject, 'legacy.contributor_ci.relationshipType', relationshipTypes);
+        }
+        
+        _.set(metaMetadataObject, 'legacy.record', md);
+        log.verbose('metaMetadata object is:...');
         log.verbose(JSON.stringify(metaMetadataObject));
         const metaMetadataResult = await (<Redbox2>rbDest).updateRecordObjectMetadata(noid, metaMetadataObject);
         if (!metaMetadataResult) {
@@ -412,15 +461,23 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
           throw(metaMetadataResult['error']);
         }
         report('metaMetaData', 'oid', 'legacyId', 'set', JSON.stringify(metaMetadataResult));
+        log.info('9. Succeeded in updating record metaMetadata.');
       } catch (e) {
+        log.error('9. There was an error in updating record metaMetadata.');
+        log.error(e);
         report('metaMetaData', 'oid', 'legacyId', 'failed', e);
+        log.info('Ignoring metaMetaData fail. Ignoring skipping to next record...');
+        // continue;
       }
 
       if (cw['postTasks']) {
         try {
           recordMeta = await rbDest.getRecord(noid);
+          log.info('10. Succeeded in get for post tasks.');
         } catch (e) {
+          log.error('10. There was an error in get for post tasks.');
           report('postwalk', '', '', 'getRecord failed', e);
+          log.warn('skipping to next record...');
           continue;
         }
 
@@ -428,12 +485,17 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
           const newRecordMeta = postwalk(cw['postTasks'], recordMeta, report);
           dumpjson(outdir, 'new', oid + '_postwalk', newRecordMeta);
           const enoid = await rbDest.updateRecordMetadata(noid, newRecordMeta);
+          log.info('10b. Succeeded in post tasks metadata update.');
         } catch (e) {
+          log.error('10b. Failed in post tasks metadata update.');
           report('postwalk', '', '', 'postwalk failed', e);
         }
+      } else {
+        log.info('10. Skipping post tasks.');
       }
 
       if (!cwPub) {
+        log.info('11. Skipping publication as not requested.');
         continue;
       }
 
@@ -445,7 +507,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       let pubOid;
       try {
         let mdPub = await rbSource.getRecord(oid);
-        log.info(`Got record ${oid} for publication crosswalk`);
+        log.info(`11. Got record ${oid} for publication crosswalk`);
         report("publication", '', '', 'Crosswalking', '');
         const resPub = crosswalk(cwPub, mdPub, report_pub);
         mduPub = resPub[0];
@@ -472,7 +534,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         // In only Redbox1, embargoed is part of metadata and not a workflow stage
         // draft or self-submission should not go to embargoed workflow
         md2Pub["workflowStage"] = cwPub["to_workflow"];
-        if (_.get(md2Pub, 'embargoByDate', false) && !_.includes(['draft','jcu-self-submission-draft'], _.get(cw, 'workflow_step', ''))) {
+        if (_.get(md2Pub, 'embargoByDate', false) && !_.includes(['draft', 'jcu-self-submission-draft'], _.get(cw, 'workflow_step', ''))) {
           md2Pub["workflowStage"] = 'embargoed';
         }
         dumpjson(outdir, 'new', oid + '_publication', md2Pub);
@@ -482,10 +544,10 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         // console.log(`md2Pub now:`)
         // console.log(md2Pub)
         pubOid = await rbDest.createRecord(md2Pub, cwPub['dest_type']);
-        log.debug('completed, create ok.');
         report('published', '', '', 'publication created', '');
+        log.info('11. Publication create completed ok.');
       } catch (e) {
-        log.error("Publish error: " + e);
+        log.error("11. Publish error: " + e);
         report('published', '', '', 'publish failed', e.message);
       }
       if (!_.isEmpty(record['attachments'])) {
@@ -500,13 +562,14 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
             console.dir(result);
             throw(result['error']);
           }
+          log.info('12. Successfully uploaded attachments.');
         } catch (e) {
-          console.log('There was an error in uploading attachments.');
-          console.log(e);
+          console.error('12. There was an error in uploading attachments.');
+          console.error(e);
           report('attachments', '', '', 'failed', e);
         }
       } else {
-        log.info(`No attachments for record: ${oid}`);
+        log.info(`12. No attachments for record: ${oid}`);
       }
     }
 
@@ -524,7 +587,6 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
     for (const record of records) {
       const oid = record['storage_id'] || record['id'] || record['objectId'] || record['oid'] || '';
-      log.debug(`Found oid: ${oid}`);
       if (!_.isEmpty(oid)) {
         updated_list.push(updated[oid]);
       }
@@ -539,6 +601,14 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
     return [[], []];
   }
 
+}
+
+async function pauseMigration() {
+  if (args['wait']) {
+    const waitPeriod = args['wait'];
+    const waited = await sleep(waitPeriod);
+    log.debug('continue...');
+  }
 }
 
 // Set the permissions on a newly created record. Works like this:

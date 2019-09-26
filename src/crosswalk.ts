@@ -105,6 +105,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                 }
                 if (spec["destinations"]) {
                   const allNestedNames = {};
+                  const additionalKeys = {};
                   let repeats = repeat_handler(h, src[srcfield]);
                   repeats.forEach(rH => {
                     //if change destinations, there will be potentially multiple destinations
@@ -124,10 +125,24 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                           // console.log(nextDest);
                         }
                       }
+                      console.log('checking additional keys...');
+                      console.dir(nextDest);
+                      if (_.has(nextDest, 'additionalKeys')) {
+                        additionalKeys[destfield] = {};
+                        _.forEach(nextDest['additionalKeys'], function (value, key) {
+                          additionalKeys[destfield][key] = value;
+                        });
+                      }
+                      _.unset(nextDest, 'additionalKeys');
                       if (_.has(nextDest, 'nestedNames') && !allNestedNames[destfield]) {
                         allNestedNames[destfield] = nextDest['nestedNames'];
+                        console.log('all nested names now:');
+                        console.dir(allNestedNames);
                         delete nextDest['nestedNames'];
+                        console.log('all nested names after next dest delete:');
+                        console.dir(allNestedNames);
                       }
+                      _.unset(nextDest, 'nestedNames');
                       delete nextDest["destination"];
                       _.unset(nextDest, 'repeatable');
                       _.unset(nextDest, 'singleUse');
@@ -139,6 +154,9 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                   _.forEach(allNestedNames, function (nextNestedNames, destfield) {
                     dest[destfield] = nestedNames(nextNestedNames, dest[destfield]);
                   });
+                  _.assign(dest[destfield], additionalKeys[destfield]);
+                  console.log('after iteration of nested names:');
+                  console.dir(dest[destfield]);
 
                 } else {
                   //redbox2 may have nested map of field-names of depth-n, rather than just field-name depth of 1
@@ -318,14 +336,23 @@ function unflatten(cwjson: Object, original: Object, logger: LogCallback): Objec
               logger("records", field, "", "unknown subfield", sfield);
             } else {
               const mfield = spec['fields'][sfield];
-              if (!(rfield in output)) {
+              if (!_.has(output, rfield)) {
+                // console.log(`setting output[${rfield}] to empty array...`);
                 output[rfield] = [];
               }
-              if (!(i in output[rfield])) {
-                output[rfield][i] = {};
+              // console.log(`original field is ${original[field]}`);
+              // console.log(`output[${rfield}] is ${output[rfield]}`);
+              // console.log(`mfield is ${mfield}`);
+              if (!_.isString(output[rfield])) {
+                // console.log("setting output[" + rfield + "][" + i + "] to empty object...");
+                if (_.isEmpty(output[rfield][i])) {
+                  output[rfield][i] = {};
+                }
+                // console.log(`output[${rfield}][${i}] is ${output[rfield][i]}`);
+                output[rfield][i][mfield] = original[field];
+              } else {
+                // console.log('did not copy..................');
               }
-              logger("records", field, mfield, "copied", original[field])
-              output[rfield][i][mfield] = original[field];
               delete output[field];
             }
           }
@@ -406,17 +433,14 @@ export function validate(owner: string, required: string[], js: Object, logger: 
   const errors = [];
 
   const ci = js['contributor_ci'];
-
-  if (!ci) {
+  if (_.isEmpty(ci)) {
     logger('validate', '', 'contributor_ci', 'No CI', '');
     errors.push('No CI');
+    console.log('5a. No ci.');
   } else {
-    if (!ci['email']) {
-
-      logger('validate', '', 'contributor_ci', 'CI without email: using owner', '');
-      ci['email'] = owner;
-    } else if (ci['email'] !== owner) {
-      logger('validate', '', 'ci', 'CI =/= record owner', '');
+    // if (ci['email'] !== owner) {
+    if (ci['email'] === owner) {
+      logger('validate', '', 'ci', `CI is record owner: ${owner}`, '');
     }
   }
 
@@ -424,9 +448,11 @@ export function validate(owner: string, required: string[], js: Object, logger: 
 
   if (!dm) {
     logger('validate', '', 'contributor_data_manager', 'No data manager', '');
+    console.log('5a. No DM in validation.');
   } else {
     if (!dm['email']) {
-      logger('validate', '', 'contributor_data_manager', 'DM without email', '');
+      logger('validate', '', 'contributor_data_manager', 'Data manager without email', '');
+      console.log('5a. No DM email in validation.');
     }
   }
 
