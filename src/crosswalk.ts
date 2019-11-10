@@ -125,8 +125,8 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                           // console.log(nextDest);
                         }
                       }
-                      console.log('checking additional keys...');
-                      console.dir(nextDest);
+                      // console.log('checking additional keys...');
+                      // console.dir(nextDest);
                       if (_.has(nextDest, 'additionalKeys')) {
                         additionalKeys[destfield] = {};
                         _.forEach(nextDest['additionalKeys'], function (value, key) {
@@ -136,11 +136,11 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                       _.unset(nextDest, 'additionalKeys');
                       if (_.has(nextDest, 'nestedNames') && !allNestedNames[destfield]) {
                         allNestedNames[destfield] = nextDest['nestedNames'];
-                        console.log('all nested names now:');
-                        console.dir(allNestedNames);
+                        // console.log('all nested names now:');
+                        // console.dir(allNestedNames);
                         delete nextDest['nestedNames'];
-                        console.log('all nested names after next dest delete:');
-                        console.dir(allNestedNames);
+                        // console.log('all nested names after next dest delete:');
+                        // console.dir(allNestedNames);
                       }
                       _.unset(nextDest, 'nestedNames');
                       delete nextDest["destination"];
@@ -155,8 +155,8 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                     dest[destfield] = nestedNames(nextNestedNames, dest[destfield]);
                   });
                   _.assign(dest[destfield], additionalKeys[destfield]);
-                  console.log('after iteration of nested names:');
-                  console.dir(dest[destfield]);
+                  // console.log('after iteration of nested names:');
+                  // console.dir(dest[destfield]);
 
                 } else {
                   //redbox2 may have nested map of field-names of depth-n, rather than just field-name depth of 1
@@ -436,7 +436,7 @@ export function validate(owner: string, required: string[], js: Object, logger: 
   if (_.isEmpty(ci)) {
     logger('validate', '', 'contributor_ci', 'No CI', '');
     errors.push('No CI');
-    console.log('5a. No ci.');
+    console.log('No ci.');
   } else {
     // if (ci['email'] !== owner) {
     if (ci['email'] === owner) {
@@ -448,11 +448,11 @@ export function validate(owner: string, required: string[], js: Object, logger: 
 
   if (!dm) {
     logger('validate', '', 'contributor_data_manager', 'No data manager', '');
-    console.log('5a. No DM in validation.');
+    console.log('No DM in validation.');
   } else {
     if (!dm['email']) {
       logger('validate', '', 'contributor_data_manager', 'Data manager without email', '');
-      console.log('5a. No DM email in validation.');
+      console.log('No DM email in validation.');
     }
   }
 

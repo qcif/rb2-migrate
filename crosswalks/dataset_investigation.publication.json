@@ -114,6 +114,18 @@
         "foaf:familyName": "familyname"
       }
     },
+    "locrel:prc.foaf:Person": {
+      "name": "dataLicensingAccess_manager",
+      "type": "record",
+      "handler": "SingleTextFieldFromPerson",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
     "dc:rightsHolder.dc:name": {
       "name": "dc:rightsHolder_dc:name",
       "type": "valuemap",
@@ -131,7 +143,8 @@
       "handler": "URLDataLocations",
       "fields": {
         "dc:identifier": "location",
-        "type": "type"
+        "type": "type",
+        "skos:note": "notes"
       }
     },
     "vivo:Location.vivo:GeographicLocation": {
@@ -142,7 +155,8 @@
       "handler": "PhysicalDataLocations",
       "fields": {
         "gn:name": "location",
-        "type": "type"
+        "type": "type",
+        "skos:note": "notes"
       }
     },
     "dc:relation.swrc:Publication": {

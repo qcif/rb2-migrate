@@ -24,6 +24,7 @@ const path = require('path');
 const winston = require('winston');
 const stringify = require('csv-stringify/lib/sync');
 const _ = require('lodash');
+const parse = require('csv-parse');
 
 function getlogger() {
   const logcfs = config.get('logs');
@@ -147,7 +148,7 @@ async function index(options: Object): Promise<Object[][]> {
       filter = `(${recordFilterOr})%20AND%20${recordFilterJoinOr}`
     }
   }
-  log.debug(`Sending filter to solr: ${filter}`);
+  log.debug(`Sending filter to solr: ${JSON.stringify(filter)}`);
   const returnedList = await rbSource.listSolr(filter);
   oids = returnedList.map(function (d) {
     let returnedId = d['id'] || d['storage_id'] || d['oid'] || d['objectId'];
@@ -293,6 +294,14 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
   const updated = {};
 
+  const recordOwnerCsvFileName = _.get(config, 'recordOwnersCsvFilename');
+  log.debug(`csv file name is: ${recordOwnerCsvFileName}`);
+  const recordOwnerCsvFilePath = `resources/${recordOwnerCsvFileName}`;
+  log.debug(`csv file to parse is: ${recordOwnerCsvFilePath}`);
+  if (!fs.existsSync(recordOwnerCsvFilePath)) {
+    throw new Error(`Unable to find file: ${recordOwnerCsvFilePath}`);
+  }
+
   try {
 
     for (let record of records) {
@@ -334,11 +343,11 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       };
       let titleCheck = record['dc:title'];
       if (!_.isEmpty(titleCheck) && titleCheck.toLowerCase() === '[untitled]') {
-        log.info(`2. title for record: ${oid} failed validation.`);
+        log.error(`2. title for record: ${oid} failed validation.`);
         report('load', '', '', 'Unacceptable title', `${titleCheck}`);
         continue;
       } else {
-        log.error('2. have valid title...');
+        log.info('2. have valid title...');
       }
 
       const [mdu, md2] = crosswalk(cw, md, report);
@@ -354,9 +363,10 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         dumpjson(outdir, 'new', oid, md2);
       }
 
-      log.debug('checking for record owner...')
+      //TODO: check that can get record owner email details into migration (from database -> may need to export and read into migration)
+      log.debug('Checking for record owner...');
       if (_.isEmpty(record['owner'])) {
-        log.info('4. no owner...');
+        log.info('4. No owner. Will use CI data...');
         if (_.get(md2, 'contributor_ci.text_full_name')) {
           record['owner'] = md2['contributor_ci']['text_full_name'];
           report('load', '', '', 'no owner, replaced with ci full name', '');
@@ -367,17 +377,92 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
           continue;
         }
       } else {
-        log.info('4. have owner...');
+        log.info('4. Have owner...');
         log.debug(record['owner']);
       }
       const ci = md2['contributor_ci'];
-      console.log('ci...');
-      console.dir(md2['contributor_ci']);
       if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
         md2['contributor_ci']['email'] = record['owner'];
         report('validate', '', 'contributor_ci', `CI without email: using owner: ${record['owner']}`, '');
       }
-
+      // log.debug(`CI data is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
+      // if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
+      //   log.debug('Have a CI, but no CI email. Searching for alternative email...');
+      //   // let readStream = null;
+      //   let parser = null;
+      //   let readStream = null;
+      //   try {
+      //     readStream = fs.createReadStream(recordOwnerCsvFilePath)
+      //       .on('data', (data) => {
+      //         log.info("A data event was emitted.");
+      //       })
+      //       .on('ready', function (error) {
+      //         log.debug('The read stream is open and ready for use...');
+      //       })
+      //       .on('error', function (error) {
+      //         log.warn("Error in reading stream.");
+      //         throw new Error(error);
+      //       })
+      //       .on('close', function () {
+      //         log.info('Read stream completed.');
+      //       });
+      //     parser = parse({
+      //       columns: ['id', 'owner', 'email', 'text_full_name']
+      //     });
+      //     parser.on('readable', () => {
+      //       log.info(`Inside csv parser...`);
+      //       let row;
+      //       while (row = parser.read()) {
+      //         log.debug('Reading next row...');
+      //         const nextOwner = _.get(row, 'owner');
+      //         log.debug(`Next owner for ${JSON.stringify(row, null, 4)} is: ${nextOwner}`);
+      //         if (!_.isEmpty(nextOwner) && nextOwner === record['owner']) {
+      //           log.debug(`Found match: ${JSON.stringify(row, null, 4)}`);
+      //           md2['contributor_ci']['email'] = row['email'];
+      //           const logMessage = `CI without email: using owner: ${record['owner']} with email: ${row['email']}`;
+      //           log.info(`4a. ${logMessage}`);
+      //           report('validate', '', 'contributor_ci', logMessage, '');
+      //           parser.end();
+      //         }
+      //       }
+      //     });
+      //     parser.on('error', function (error) {
+      //       log.warn("Error in reading data.");
+      //       throw new Error(error);
+      //     });
+      //     parser.on('end', function () {
+      //       log.info('Record owner search completed.');
+      //     });
+      //
+      //     let result = readStream.pipe(parser);
+      //     log.info(`result is: ${JSON.stringify(result)}`);
+      //   } catch (error) {
+      //     log.warn("Problem reading record owners csv file. Ending csv search prematurely.");
+      //     log.error(error);
+      //     log.error('5. failed CI email check.');
+      //     report('validate', '', 'contributor_ci', `CI without email and no matching record owner for: ${record['owner']}. No CI email recorded.`, '');
+      //     if (parser) {
+      //       log.info("Unable to find match due to error. Closing parser.");
+      //       parser.end();
+      //       log.debug('Parser closed.');
+      //     }
+      //     log.warn('Skipping to next record...');
+      //     continue;
+      //   } finally {
+      //     if (parser) {
+      //       log.info("Unable to find match as completed iteration. Closing parser.");
+      //       parser.end();
+      //       log.debug('Parser closed.');
+      //     }
+      //     if (readStream) {
+      //       log.info("Closing stream.");
+      //       readStream.close();
+      //       log.debug('stream closed.');
+      //     }
+      //   }
+      //   log.debug('CI email replacement completed.');
+      //   log.info(`CI data now is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
+      // }
       const errors = validate(record['owner'], cw['required'], md2, report);
 
       if (errors.length > 0) {
@@ -449,10 +534,10 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         if (!_.isEmpty(relationshipTypes)) {
           _.set(metaMetadataObject, 'legacy.contributor_ci.relationshipType', relationshipTypes);
         }
-        
+
         _.set(metaMetadataObject, 'legacy.record', md);
-        log.verbose('metaMetadata object is:...');
-        log.verbose(JSON.stringify(metaMetadataObject));
+        // log.verbose('metaMetadata object is:...');
+        // log.verbose(JSON.stringify(metaMetadataObject));
         const metaMetadataResult = await (<Redbox2>rbDest).updateRecordObjectMetadata(noid, metaMetadataObject);
         if (!metaMetadataResult) {
           throw('Unknown error in setting metaMetadata.');
@@ -723,7 +808,7 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
           let metaMetadataObject = await rbDest.getRecordMetadata(noid);
           metaMetadataObject['attachmentFields'] = ["dataLocations"];
           log.verbose('Uploading metaMetadata: ');
-          log.verbose(JSON.stringify(metaMetadataObject));
+          // log.verbose(JSON.stringify(metaMetadataObject));
           const updateMetaMetaDataResult = await (<Redbox2>rbDest).updateRecordObjectMetadata(noid, metaMetadataObject);
           reportFn('attachments', '', '', 'set', JSON.stringify(result));
         } catch (error) {

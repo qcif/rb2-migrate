@@ -12,6 +12,7 @@ export {ForSeo} from './ForSeo';
 export {Person} from './Person';
 export {AccessPerson} from './AccessPerson';
 export {SingleTextFieldPerson} from './SingleTextFieldPerson';
+export {SingleTextFieldFromPerson} from './SingleTextFieldFromPerson';
 export {FundingBody} from './FundingBody';
 export {GrantBody} from './GrantBody';
 export {DataLocations} from './DataLocations';

@@ -100,10 +100,10 @@ export class Redbox1 extends BaseRedbox implements Redbox {
     if (fl) {
       url = `${url}&fl=${fl}`;
     }
-    console.log(url);
+    // console.log(url);
     try {
       const message = util.format("Solr search: %j: %d", url, start);
-      console.log(message);
+      // console.log(message);
       let response = await this.solrAi.get(url, {});
       if (response && response.status === 200) {
         // console.dir(response.data);

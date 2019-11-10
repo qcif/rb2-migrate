@@ -36,7 +36,7 @@ const htmlDescriptionFilter = ['a', 'em', 'sub'];
 
 
 export function getCountryName(countryCode) {
-  const countryJson = fs.readJsonSync('resources/countrycodes.json', {encoding: 'utf-8'})
+  const countryJson = fs.readJsonSync('resources/countrycodes.json', {encoding: 'utf-8'});
   console.dir(countryJson[countryCode]) // => 2.0.0
   return _.get(countryJson, countryCode, '');
 }
