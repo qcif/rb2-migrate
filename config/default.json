@@ -68,5 +68,6 @@
       "filename": "./logs/debug.log",
       "level": "debug"
     }
-  ]
+  ],
+  "recordOwnersCsvFilename": "JCU_record_owners.csv"
 }
