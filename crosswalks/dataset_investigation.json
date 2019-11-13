@@ -37,24 +37,7 @@
   ],
   "fields": {
     "dc:title": "title",
-    "dc:subject.vivo:keyword": {
-      "name": "finalKeywords",
-      "type": "record",
-      "handler": "FlatKeywords",
-      "repeatable": 1,
-      "fields": {
-        "rdf:PlainLiteral": ""
-      }
-    },
-    "dc:description": {
-      "type": "record",
-      "name": "description",
-      "handler": "HTMLLessFirstFullDescription",
-      "fields": {
-        "text": "text",
-        "type": "type"
-      }
-    },
+    "dc_description": "description",
     "foaf:fundedBy.foaf:Agent": {
       "name": "_",
       "type": "record",
@@ -77,15 +60,10 @@
       }
     },
     "locrel:prc.foaf:Person": {
-      "destinations": [
-        {
-          "to": "contributor_data_manager",
-          "role": "Data Manager"
-        }
-      ],
+      "name": "contributor_data_manager",
       "type": "record",
       "handler": "Person",
-      "repeatable": 1,
+      "role": "Data Manager",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -194,26 +172,6 @@
         "dataset": "dataset",
         "registry": "registry",
         "repository": "repository"
-      }
-    },
-    "dc:subject.anzsrc:for": {
-      "name": "dc:subject_anzsrc:for",
-      "type": "record",
-      "handler": "ForSeo",
-      "repeatable": 1,
-      "fields": {
-        "skos:prefLabel": "skos:prefLabel",
-        "rdf:resource": "rdf:resource"
-      }
-    },
-    "dc:subject.anzsrc:seo": {
-      "name": "dc:subject_anzsrc:seo",
-      "type": "record",
-      "handler": "ForSeo",
-      "repeatable": 1,
-      "fields": {
-        "skos:prefLabel": "skos:prefLabel",
-        "rdf:resource": "rdf:resource"
       }
     },
     "redbox:retentionPeriod": {
