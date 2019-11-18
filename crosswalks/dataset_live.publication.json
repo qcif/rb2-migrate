@@ -50,12 +50,6 @@
       "handleAll": true,
       "handler": "SharedTitle"
     },
-    "jcu:request.doi": {
-      "name": "requestIdentifier",
-      "type": "record",
-      "handleAll": true,
-      "handler": "RequestIdentifier"
-    },
     "dc:subject.vivo:keyword": {
       "name": "finalKeywords",
       "type": "record",
@@ -65,21 +59,7 @@
         "rdf:PlainLiteral": ""
       }
     },
-    "dc:description": {
-      "destinations": [
-        {
-          "to": "other_descriptions"
-        }
-      ],
-      "type": "record",
-      "name": "description",
-      "handleAll": true,
-      "handler": "HTMLMultiDescription",
-      "fields": {
-        "text": "text",
-        "type": "type"
-      }
-    },
+    "dc_description": "description",
     "foaf:fundedBy.foaf:Agent": {
       "name": "_",
       "type": "record",
@@ -114,6 +94,44 @@
         "foaf:email": "email",
         "foaf:givenName": "givenname",
         "foaf:familyName": "familyname"
+      }
+    },
+    "swrc:supervisor.foaf:Person": {
+      "name": "creators",
+      "additive": 1,
+      "role": "Advisor",
+      "type": "record",
+      "handler": "Person",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "locrel:prc.foaf:Person": {
+      "name": "creators",
+      "additive": 1,
+      "role": "Advisor",
+      "type": "record",
+      "handler": "Person",
+      "fields": {
+        "dc:identifier": "dc:identifier",
+        "foaf:title": "honorific",
+        "foaf:email": "email",
+        "foaf:givenName": "givenname",
+        "foaf:familyName": "familyname"
+      }
+    },
+    "dc:contributor.locrel:clb": {
+      "name": "creators",
+      "type": "record",
+      "repeatable": 1,
+      "additive": 1,
+      "role": "Collaborator",
+      "fields": {
+        "foaf:Agent": "fullname"
       }
     },
     "locrel:prc.foaf:Person": {
@@ -304,7 +322,6 @@
         "on": true
       }
     },
-    "jcu:data.depositedBy.text": "legal_statement",
     "dc:biblioGraphicCitation": {
       "name": "citation_other",
       "type": "record",

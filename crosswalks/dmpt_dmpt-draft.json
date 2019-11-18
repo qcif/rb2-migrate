@@ -49,11 +49,6 @@
       "handler": "HTMLLessDescription"
     },
     "dc:identifier": "dc:identifier",
-    "finalKeywords": {
-      "name": "_",
-      "type": "record",
-      "repeatable": 1
-    },
     "dc:relation.bibo:Website": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:start": "_",
     "dc:coverage.vivo:DateTimeInterval.vivo:end": "_",

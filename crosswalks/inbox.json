@@ -1,7 +1,7 @@
 {
   "idfield": "oid",
-  "source_type": "jcu-self-submission",
-  "workflow_step": "jcu-self-submission-draft",
+  "source_type": "inbox",
+  "workflow_step": "inbox",
   "dest_type": "dataRecord",
   "permissions": {
     "user_id": "email",
@@ -37,24 +37,7 @@
   ],
   "fields": {
     "dc:title": "title",
-    "dc:subject.vivo:keyword": {
-      "name": "finalKeywords",
-      "type": "record",
-      "handler": "FlatKeywords",
-      "repeatable": 1,
-      "fields": {
-        "rdf:PlainLiteral": ""
-      }
-    },
-    "dc:description": {
-      "type": "record",
-      "name": "description",
-      "handler": "HTMLLessFirstFullDescription",
-      "fields": {
-        "text": "text",
-        "type": "type"
-      }
-    },
+    "dc_description": "description",
     "foaf:fundedBy.foaf:Agent": {
       "name": "_",
       "type": "record",
@@ -77,15 +60,10 @@
       }
     },
     "locrel:prc.foaf:Person": {
-      "destinations": [
-        {
-          "to": "contributor_data_manager",
-          "role": "Data Manager"
-        }
-      ],
+      "name": "contributor_data_manager",
       "type": "record",
       "handler": "Person",
-      "repeatable": 1,
+      "role": "Data Manager",
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
@@ -106,15 +84,9 @@
       }
     },
     "swrc:supervisor.foaf:Person": {
-      "destinations": [
-        {
-          "to": "contributor_supervisor",
+      "name": "contributor_supervisor",
           "role": "Advisor",
-          "repeatable": true
-        }
-      ],
       "type": "record",
-      "repeatable": true,
       "handler": "Person",
       "fields": {
         "dc:identifier": "dc:identifier",
@@ -144,11 +116,7 @@
         "foaf:title": "honorific",
         "foaf:email": "email",
         "foaf:givenName": "givenname",
-        "foaf:familyName": "familyname",
-        "foaf:Organization.dc:identifier": "affiliationA",
-        "foaf:Organization.B.dc:identifier": "affiliationB",
-        "foaf:Organization.C.dc:identifier": "affiliationC",
-        "jcu:relationshipType": "relationshipType"
+        "foaf:familyName": "familyname"
       }
     },
     "bibo:Website": {
@@ -196,26 +164,6 @@
         "repository": "repository"
       }
     },
-    "dc:subject.anzsrc:for": {
-      "name": "dc:subject_anzsrc:for",
-      "type": "record",
-      "handler": "ForSeo",
-      "repeatable": 1,
-      "fields": {
-        "skos:prefLabel": "skos:prefLabel",
-        "rdf:resource": "rdf:resource"
-      }
-    },
-    "dc:subject.anzsrc:seo": {
-      "name": "dc:subject_anzsrc:seo",
-      "type": "record",
-      "handler": "ForSeo",
-      "repeatable": 1,
-      "fields": {
-        "skos:prefLabel": "skos:prefLabel",
-        "rdf:resource": "rdf:resource"
-      }
-    },
     "redbox:retentionPeriod": {
       "name": "redbox:retentionPeriod_dc:date",
       "type": "valuemap",
@@ -223,15 +171,32 @@
         "1year": "1year",
         "5years": "5years",
         "7years": "7years",
+        "10years": "10years",
         "15years": "15years",
         "20years": "20years",
         "permanent": "permanent",
         "12 months (minor project)": "1year",
         "5 years (minimum for projects with publications)": "5years",
+        "5 years after publication (general research)": "5years",
+        "5 Years": "5years",
         "7 years": "7years",
+        "10 years": "10years",
         "15 years (all clinical trials)": "15years",
+        "15 years": "15years",
+        "20 years": "20years",
         "Indefinitely": "permanent",
-        "indefinitely": "permanent"
+        "indefinitely": "permanent",
+        "indefinite": "permanent",
+        "Retain indefinitely": "permanent",
+        "Retained indefinitely": "permanent",
+        "Perpetuity": "permanent",
+        "Indefinite": "permanent",
+        "Seven years (beginning December 2012)": "7years",
+        "1": "1year",
+        "5": "5years",
+        "7": "7years",
+        "15": "15years",
+        "20": "20years"
       }
     },
     "redbox:retentionPeriod.dc:date.skos:note": {
@@ -242,6 +207,7 @@
         "controversial": "controversial",
         "ofinterest": "ofinterest",
         "costly_impossible": "costly_impossible",
+        "It would be costly or impossible to reproduce": "costly_impossible",
         "commercial": "commercial"
       }
     },
@@ -254,46 +220,6 @@
       "fields": {
         "foaf:name": ""
       }
-    },
-    "jcu:research.themes.tropicalEcoSystems": {
-      "name": "research_theme",
-      "theme": "tropicalEcoSystems",
-      "type": "record",
-      "additive": true,
-      "handleAll": true,
-      "handler": "ResearchThemes"
-    },
-    "jcu:research.themes.industriesEconomies": {
-      "name": "research_theme",
-      "theme": "industriesEconomies",
-      "type": "record",
-      "additive": true,
-      "handleAll": true,
-      "handler": "ResearchThemes"
-    },
-    "jcu:research.themes.peopleSocieties": {
-      "name": "research_theme",
-      "theme": "peopleSocieties",
-      "type": "record",
-      "additive": true,
-      "handleAll": true,
-      "handler": "ResearchThemes"
-    },
-    "jcu:research.themes.tropicalHealth": {
-      "name": "research_theme",
-      "theme": "tropicalHealth",
-      "type": "record",
-      "additive": true,
-      "handleAll": true,
-      "handler": "ResearchThemes"
-    },
-    "jcu:research.themes.notAligned": {
-      "name": "research_theme",
-      "theme": "notAligned",
-      "type": "record",
-      "additive": true,
-      "handleAll": true,
-      "handler": "ResearchThemes"
     }
   }
 }
