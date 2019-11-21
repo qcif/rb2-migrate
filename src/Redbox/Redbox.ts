@@ -67,8 +67,8 @@ export abstract class BaseRedbox {
 
 
   constructor(cf: Object) {
-    this.baseURL = cf['baseURL'];
-    this.apiKey = cf['apiKey'];
+    this.baseURL = _.get(cf, 'baseURL');
+    this.apiKey = _.get(cf, 'apiKey');
     this.progress = undefined;
   }
 

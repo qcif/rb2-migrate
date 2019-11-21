@@ -24,8 +24,6 @@ export class Redbox1 extends BaseRedbox implements Redbox {
     super(cf);
     this.version = 'Redbox1';
     this.solrURL = cf['solrURL']; //solrURL works with full http address, example: http://localhost:8000/solr/fascinator
-    assert.notEqual(this.solrURL, undefined, 'Undefined solrURL in Redbox1 config');
-    console.log("solrURL = " + this.solrURL);
     this.initApiClient();
     this.initSolrClient();
   }

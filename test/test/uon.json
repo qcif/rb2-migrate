@@ -1,0 +1,136 @@
+{
+  "Contact Person": [
+    "Bray Mark"
+  ],
+  "Funding Body/s": [
+    "FairWork Commission"
+  ],
+  "Grant Numbers": [
+    "LP140100696"
+  ],
+  "Notes": [
+    "Ending"
+  ],
+  "date_created": "2016-03-31T16:35:00Z",
+  "dc:coverage.vivo:DateTimeInterval.vivo:end": [
+    "2016-06-30"
+  ],
+  "dc:coverage.vivo:DateTimeInterval.vivo:start": [
+    "2014-07-01"
+  ],
+  "dc_coverage": [
+    "2016-06-30",
+    "2014-07-01"
+  ],
+  "dc_description": [
+    ""
+  ],
+  "dc_format": [
+    "application/x-fascinator-package"
+  ],
+  "dc_title": "Facilitating workplace change: Redefining the role of industrial tribunals in Australia",
+  "display_type": "submission-request",
+  "foaf:fundedBy.foaf:Agent.1.skos:prefLabel": [
+    "FairWork Commission"
+  ],
+  "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": [
+    "LP140100696"
+  ],
+  "harvest_config": "d0a4fb1c652d0adfadf98c0298c33c25",
+  "harvest_rules": "eb0e42854822013a476e3f8c804629d7",
+  "id": "94ed8127feb8bac36230c759548efe48",
+  "last_modified": "2016-03-31T16:35:00Z",
+  "oai_set": [
+    "default"
+  ],
+  "owner": "guest",
+  "packageType": [
+    "dataset"
+  ],
+  "redbox:formVersion": [
+    "1.6"
+  ],
+  "redbox:newForm": [
+    "true"
+  ],
+  "redbox:submissionProcess.dc:date": [
+    "2016-03-31 16:30:50"
+  ],
+  "redbox:submissionProcess.dc:title": [
+    "Facilitating workplace change: Redefining the role of industrial tribunals in Australia"
+  ],
+  "redbox:submissionProcess.locrel:prc.foaf:Person.foaf:name": [
+    "Bray Mark"
+  ],
+  "redbox:submissionProcess.redbox:submitted": [
+    "true"
+  ],
+  "redbox:submissionProcess.skos:note": [
+    "Ending"
+  ],
+  "reporting_dc:coverage.vivo:DateTimeInterval": [
+    "2014-07-01 to 2016-06-30"
+  ],
+  "reporting_foaf:fundedBy.foaf:Agent.skos:prefLabel": [
+    "FairWork Commission"
+  ],
+  "reporting_foaf:fundedBy.vivo:Grant.skos:prefLabel": [
+    "LP140100696"
+  ],
+  "repository_name": [
+    "ReDBox"
+  ],
+  "repository_type": [
+    "Metadata Registry"
+  ],
+  "security_filter": [
+    "librarian",
+    "reviewer",
+    "admin"
+  ],
+  "storage_id": "94ed8127feb8bac36230c759548efe48",
+  "uon:aalerts.uon:odi.uon:existence_start": [
+    "2014-07-01"
+  ],
+  "uon:alerts.uon:odi.uon:alert_status": [
+    "Ending"
+  ],
+  "uon:alerts.uon:odi.uon:existence_end": [
+    "2016-06-30"
+  ],
+  "uon:alerts.uon:odi.uon:funding_body": [
+    "FairWork Commission"
+  ],
+  "uon:alerts.uon:odi.uon:grant_id": [
+    "LP140100696"
+  ],
+  "uon:alerts.uon:odi.uon:id": [
+    "0000022750"
+  ],
+  "uon:alerts.uon:odi.uon:last_update": [
+    "2016-04-01"
+  ],
+  "uon:alerts.uon:odi.uon:name": [
+    "Facilitating workplace change: Redefining the role of industrial tribunals in Australia"
+  ],
+  "uon:alerts.uon:odi.uon:primary_investigator": [
+    "Bray Mark"
+  ],
+  "viewId": [
+    "default"
+  ],
+  "workflow_id": "dataset",
+  "workflow_security": [
+    "guest",
+    "guest"
+  ],
+  "workflow_source": [
+    "Default Alert"
+  ],
+  "workflow_step": [
+    "inbox"
+  ],
+  "workflow_step_label": [
+    "Inbox"
+  ]
+}

@@ -1,8 +1,7 @@
 {
   "idfield": "oid",
   "source_type": "dataset",
-  "workflow_step": "live",
-  "dest_type": "dataRecord",
+  "dest_type": "dataset",
   "publish": true,
   "permissions": {
     "user_id": "email",
@@ -29,12 +28,9 @@
   },
   "required": [
     "title",
-    "contributor_ci"
+    "description"
   ],
   "ignore": [
-    "action",
-    "oid",
-    "objMeta"
   ],
   "fields": {
     "dc:title": "title",

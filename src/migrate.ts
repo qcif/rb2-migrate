@@ -7,6 +7,7 @@ import {crosswalk, validate} from './crosswalk';
 import {ArgumentParser} from 'argparse';
 import {postwalk} from './postwalk';
 import * as FormData from "form-data";
+import {Redbox1CsvFiles} from "./Redbox/Redbox1CsvFiles";
 
 const MANDATORY_CW = [
   'idfield',
@@ -48,8 +49,8 @@ function connect(server: string): Redbox {
       return new Redbox1(cf);
     } else if (cf['version'] === 'Redbox1Files') {
       return new Redbox1Files(cf);
-      // } else if (cf['version'] === 'RDA') {
-      //   return new RDA(cf);
+    } else if (cf['version'] === 'Redbox1CsvFiles') {
+      return new Redbox1CsvFiles(cf);
     } else {
       return new Redbox2(cf);
     }

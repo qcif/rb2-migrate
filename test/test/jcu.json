@@ -1,0 +1,647 @@
+{
+  "accessRight-selection": [
+    "Please contact the data manager or nominated primary contact to negotiate access to this data. If you have difficulty, please contact researchdata@jcu.edu.au for assistance."
+  ],
+  "action": [
+    "save"
+  ],
+  "create_timestamp": [
+    "2019-03-15T22:53:23Z"
+  ],
+  "date_object_created": "2014-08-17T07:31:50Z",
+  "date_object_modified": "2019-03-16T08:53:23Z",
+  "dc:accessRights.dc:RightsStatement.skos:prefLabel": [
+    "This dataset is made available under the Public Domain Dedication and License"
+  ],
+  "dc:accessRights.skos:prefLabel": [
+    "Please contact the data manager or nominated primary contact to negotiate access to this data. If you have difficulty, please contact researchdata@jcu.edu.au for assistance."
+  ],
+  "dc:accessRightsType": [
+    "conditional"
+  ],
+  "dc:coverage.vivo:DateTimeInterval.vivo:end": [
+    "2014-12-20"
+  ],
+  "dc:coverage.vivo:DateTimeInterval.vivo:start": [
+    "2011-03-01"
+  ],
+  "dc:coverage.vivo:GeographicLocation.1.dc:type": [
+    "iso31661"
+  ],
+  "dc:coverage.vivo:GeographicLocation.1.dc:typeLabel": [
+    "Country code (iso31661)"
+  ],
+  "dc:coverage.vivo:GeographicLocation.1.rdf:PlainLiteral": [
+    "Queensland and New South Wales"
+  ],
+  "dc:coverage.vivo:GeographicLocation.2.dc:type": [
+    "text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.2.dc:typeLabel": [
+    "Free text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.2.rdf:PlainLiteral": [
+    "POLYGON((153.26367180795 -28.374243632988,153.50153021696 -28.071207059368,153.62146857343 -27.717157985715,153.61174647539 -27.346451122765,153.47331558952 -26.995410059177,153.21972649545 -26.698753329031,152.87580226056 -26.486057292809,152.47520858521 -26.378657254,152.05715836946 -26.387366732847,151.66257328114 -26.511307821559,151.33007805795 -26.738006476553,151.09221964895 -27.04474012971,150.97228129247 -27.400960770542,150.98200339051 -27.771483932751,151.12043427638 -28.120056224518,151.37402337045 -28.412902407568,151.71794760535 -28.621901782347,152.11854128069 -28.72713083533,152.53659149645 -28.718604998427,152.93117658476 -28.597132063842,153.26367180795 -28.374243632988))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.2.redbox:Fid": [
+    "OpenLayers.Feature.Vector_783"
+  ],
+  "dc:coverage.vivo:GeographicLocation.2.redbox:wktRaw": [
+    "POLYGON((153.26367180795 -28.374243632988,153.50153021696 -28.071207059368,153.62146857343 -27.717157985715,153.61174647539 -27.346451122765,153.47331558952 -26.995410059177,153.21972649545 -26.698753329031,152.87580226056 -26.486057292809,152.47520858521 -26.378657254,152.05715836946 -26.387366732847,151.66257328114 -26.511307821559,151.33007805795 -26.738006476553,151.09221964895 -27.04474012971,150.97228129247 -27.400960770542,150.98200339051 -27.771483932751,151.12043427638 -28.120056224518,151.37402337045 -28.412902407568,151.71794760535 -28.621901782347,152.11854128069 -28.72713083533,152.53659149645 -28.718604998427,152.93117658476 -28.597132063842,153.26367180795 -28.374243632988))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.3.dc:type": [
+    "text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.3.dc:typeLabel": [
+    "Free text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.3.rdf:PlainLiteral": [
+    "POLYGON((146.49609368295 -26.93406879431,146.77509222719 -26.702072174958,146.96010451274 -26.403795305927,147.03302024804 -26.06805520068,146.9867019329 -25.727554938168,146.82568352671 -25.415741137307,146.56572663295 -25.163482102776,146.23227764361 -24.995913036263,145.85797686904 -24.929808982148,145.47946347697 -24.971804421798,145.13378899546 -25.11768341442,144.85479045123 -25.352831051397,144.66977816567 -25.65378840583,144.59686243037 -25.990714414358,144.64318074551 -26.330452871727,144.80419915171 -26.639848244633,145.06415604547 -26.888956200216,145.39760503481 -27.053845172486,145.77190580937 -27.118763626394,146.15041920145 -27.077529788037,146.49609368295 -26.93406879431))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.3.redbox:Fid": [
+    "OpenLayers.Feature.Vector_1123"
+  ],
+  "dc:coverage.vivo:GeographicLocation.3.redbox:wktRaw": [
+    "POLYGON((146.49609368295 -26.93406879431,146.77509222719 -26.702072174958,146.96010451274 -26.403795305927,147.03302024804 -26.06805520068,146.9867019329 -25.727554938168,146.82568352671 -25.415741137307,146.56572663295 -25.163482102776,146.23227764361 -24.995913036263,145.85797686904 -24.929808982148,145.47946347697 -24.971804421798,145.13378899546 -25.11768341442,144.85479045123 -25.352831051397,144.66977816567 -25.65378840583,144.59686243037 -25.990714414358,144.64318074551 -26.330452871727,144.80419915171 -26.639848244633,145.06415604547 -26.888956200216,145.39760503481 -27.053845172486,145.77190580937 -27.118763626394,146.15041920145 -27.077529788037,146.49609368295 -26.93406879431))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.4.dc:type": [
+    "text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.4.dc:typeLabel": [
+    "Free text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.4.rdf:PlainLiteral": [
+    "POLYGON((144.45758038201 -23.240756986963,144.85046845316 -22.773458146568,145.06724435457 -22.215188725799,145.08668855066 -21.61991161521,144.90689770802 -21.045877411584,144.54547100701 -20.549908551033,144.03778741134 -20.181580634779,143.43354252859 -19.977981491117,142.7918840579 -19.959706310061,142.17562200108 -20.128606919949,141.64508038201 -20.467588556742,141.25219231086 -20.94248062768,141.03541640945 -21.505737566234,141.01597221336 -22.101489788846,141.195763056 -22.6713050212,141.55718975701 -23.159973837504,142.06487335268 -23.520710136776,142.66911823543 -23.719325023233,143.31077670612 -23.737125493858,143.92703876294 -23.572440842857,144.45758038201 -23.240756986963))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.4.redbox:Fid": [
+    "OpenLayers.Feature.Vector_1522"
+  ],
+  "dc:coverage.vivo:GeographicLocation.4.redbox:wktRaw": [
+    "POLYGON((144.45758038201 -23.240756986963,144.85046845316 -22.773458146568,145.06724435457 -22.215188725799,145.08668855066 -21.61991161521,144.90689770802 -21.045877411584,144.54547100701 -20.549908551033,144.03778741134 -20.181580634779,143.43354252859 -19.977981491117,142.7918840579 -19.959706310061,142.17562200108 -20.128606919949,141.64508038201 -20.467588556742,141.25219231086 -20.94248062768,141.03541640945 -21.505737566234,141.01597221336 -22.101489788846,141.195763056 -22.6713050212,141.55718975701 -23.159973837504,142.06487335268 -23.520710136776,142.66911823543 -23.719325023233,143.31077670612 -23.737125493858,143.92703876294 -23.572440842857,144.45758038201 -23.240756986963))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.5.dc:type": [
+    "text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.5.dc:typeLabel": [
+    "Free text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.5.rdf:PlainLiteral": [
+    "POLYGON((144.06207256951 -14.731766016333,144.21642740339 -14.65425692616,144.33846621719 -14.534348982946,144.41624300152 -14.383722404156,144.44214442282 -14.2170766902,144.41363506951 -14.050708784258,144.33350563573 -13.900923248279,144.20959974876 -13.782428402042,144.05404618011 -13.706878820819,143.88207159689 -13.68171370742,143.71051006951 -13.709412467027,143.55615523563 -13.78724610571,143.43411642183 -13.907550843845,143.35633963751 -14.058494901585,143.33043821621 -14.225257505761,143.35894756951 -14.391497061239,143.43907700329 -14.540958035784,143.56298289026 -14.659056087518,143.71853645891 -14.734288202971,143.89051104214 -14.759336433878,144.06207256951 -14.731766016333))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.5.redbox:Fid": [
+    "OpenLayers.Feature.Vector_1623"
+  ],
+  "dc:coverage.vivo:GeographicLocation.5.redbox:wktRaw": [
+    "POLYGON((144.06207256951 -14.731766016333,144.21642740339 -14.65425692616,144.33846621719 -14.534348982946,144.41624300152 -14.383722404156,144.44214442282 -14.2170766902,144.41363506951 -14.050708784258,144.33350563573 -13.900923248279,144.20959974876 -13.782428402042,144.05404618011 -13.706878820819,143.88207159689 -13.68171370742,143.71051006951 -13.709412467027,143.55615523563 -13.78724610571,143.43411642183 -13.907550843845,143.35633963751 -14.058494901585,143.33043821621 -14.225257505761,143.35894756951 -14.391497061239,143.43907700329 -14.540958035784,143.56298289026 -14.659056087518,143.71853645891 -14.734288202971,143.89051104214 -14.759336433878,144.06207256951 -14.731766016333))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.6.dc:type": [
+    "text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.6.dc:typeLabel": [
+    "Free text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.6.rdf:PlainLiteral": [
+    "POLYGON((150.63189678826 -34.574805989936,150.8633026872 -34.257476735684,150.96451513014 -33.89522838781,150.92562673798 -33.523205926512,150.75044417749 -33.177958987411,150.45611553826 -32.893809710281,150.07145175821 -32.699290263021,149.63410640824 -32.614077601874,149.18688989837 -32.646828079629,148.77357889652 -32.794212114532,148.43463116327 -33.04128639742,148.20322526432 -33.363150380147,148.10201282138 -33.72765391802,148.14090121354 -34.098790308551,148.31608377403 -34.440348501325,148.61041241326 -34.719415732864,148.99507619331 -34.909401115201,149.43242154329 -34.992359219007,149.87963805316 -34.960494539471,150.29294905501 -34.816798449793,150.63189678826 -34.574805989936))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.6.redbox:Fid": [
+    "OpenLayers.Feature.Vector_2219"
+  ],
+  "dc:coverage.vivo:GeographicLocation.6.redbox:wktRaw": [
+    "POLYGON((150.63189678826 -34.574805989936,150.8633026872 -34.257476735684,150.96451513014 -33.89522838781,150.92562673798 -33.523205926512,150.75044417749 -33.177958987411,150.45611553826 -32.893809710281,150.07145175821 -32.699290263021,149.63410640824 -32.614077601874,149.18688989837 -32.646828079629,148.77357889652 -32.794212114532,148.43463116327 -33.04128639742,148.20322526432 -33.363150380147,148.10201282138 -33.72765391802,148.14090121354 -34.098790308551,148.31608377403 -34.440348501325,148.61041241326 -34.719415732864,148.99507619331 -34.909401115201,149.43242154329 -34.992359219007,149.87963805316 -34.960494539471,150.29294905501 -34.816798449793,150.63189678826 -34.574805989936))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.7.dc:type": [
+    "text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.7.dc:typeLabel": [
+    "Free text"
+  ],
+  "dc:coverage.vivo:GeographicLocation.7.rdf:PlainLiteral": [
+    "POLYGON((144.36968975702 -33.478569980027,144.49165568872 -33.020035583502,144.43821915709 -32.549955217857,144.21461090216 -32.114573144264,143.84271925788 -31.757336420696,143.35894756952 -31.514322305338,142.81065078057 -31.410287374479,142.25150000094 -31.455882082545,141.73622880478 -31.646434911638,141.31527552687 -31.962486935015,141.02984600701 -32.371996991514,140.90788007531 -32.833893475814,140.96131660694 -33.302471632617,141.18492486187 -33.73206136386,141.55681650615 -34.081429082926,142.04058819451 -34.317503467378,142.58888498346 -34.418177839454,143.14803576309 -34.374084599604,143.66330695925 -34.189322126135,144.08426023716 -33.881138620024,144.36968975702 -33.478569980027))"
+  ],
+  "dc:coverage.vivo:GeographicLocation.7.redbox:Fid": [
+    "OpenLayers.Feature.Vector_2864"
+  ],
+  "dc:coverage.vivo:GeographicLocation.7.redbox:wktRaw": [
+    "POLYGON((144.36968975702 -33.478569980027,144.49165568872 -33.020035583502,144.43821915709 -32.549955217857,144.21461090216 -32.114573144264,143.84271925788 -31.757336420696,143.35894756952 -31.514322305338,142.81065078057 -31.410287374479,142.25150000094 -31.455882082545,141.73622880478 -31.646434911638,141.31527552687 -31.962486935015,141.02984600701 -32.371996991514,140.90788007531 -32.833893475814,140.96131660694 -33.302471632617,141.18492486187 -33.73206136386,141.55681650615 -34.081429082926,142.04058819451 -34.317503467378,142.58888498346 -34.418177839454,143.14803576309 -34.374084599604,143.66330695925 -34.189322126135,144.08426023716 -33.881138620024,144.36968975702 -33.478569980027))"
+  ],
+  "dc:creator.foaf:Person.1.dc:identifier": [
+    "jcu.edu.au/parties/people/25C5FBC9C6C4C5767536A433F638F905"
+  ],
+  "dc:creator.foaf:Person.1.foaf:Organization.B.dc:identifier": [
+    "jcu.edu.au/parties/group/6280"
+  ],
+  "dc:creator.foaf:Person.1.foaf:Organization.B.skos:prefLabel": [
+    "School of Veterinary & Biomedical Sciences"
+  ],
+  "dc:creator.foaf:Person.1.foaf:Organization.C.dc:identifier": [
+    "jcu.edu.au/parties/group/6000"
+  ],
+  "dc:creator.foaf:Person.1.foaf:Organization.C.skos:prefLabel": [
+    "James Cook University"
+  ],
+  "dc:creator.foaf:Person.1.foaf:Organization.dc:identifier": [
+    "jcu.edu.au/parties/group/6283"
+  ],
+  "dc:creator.foaf:Person.1.foaf:Organization.skos:prefLabel": [
+    "Australian Institute for Tropical Veterinary & Animal Science"
+  ],
+  "dc:creator.foaf:Person.1.foaf:email": [
+    "daniel.maianogueira@my.jcu.edu.au"
+  ],
+  "dc:creator.foaf:Person.1.foaf:familyName": [
+    "Maia Nogueira"
+  ],
+  "dc:creator.foaf:Person.1.foaf:givenName": [
+    "Daniel"
+  ],
+  "dc:creator.foaf:Person.1.foaf:title": [
+    "MR"
+  ],
+  "dc:creator.foaf:Person.2.dc:identifier": [
+    "jcu.edu.au/parties/people/470D7880400F8B37624358863EE38EC5"
+  ],
+  "dc:creator.foaf:Person.2.foaf:Organization.B.dc:identifier": [
+    "jcu.edu.au/parties/group/6280"
+  ],
+  "dc:creator.foaf:Person.2.foaf:Organization.B.skos:prefLabel": [
+    "School of Veterinary & Biomedical Sciences"
+  ],
+  "dc:creator.foaf:Person.2.foaf:Organization.C.dc:identifier": [
+    "jcu.edu.au/parties/group/6000"
+  ],
+  "dc:creator.foaf:Person.2.foaf:Organization.C.skos:prefLabel": [
+    "James Cook University"
+  ],
+  "dc:creator.foaf:Person.2.foaf:Organization.dc:identifier": [
+    "jcu.edu.au/parties/group/6286"
+  ],
+  "dc:creator.foaf:Person.2.foaf:Organization.skos:prefLabel": [
+    "Discipline of Animal Health and Production"
+  ],
+  "dc:creator.foaf:Person.2.foaf:email": [
+    "anthony.parker@jcu.edu.au"
+  ],
+  "dc:creator.foaf:Person.2.foaf:familyName": [
+    "Parker"
+  ],
+  "dc:creator.foaf:Person.2.foaf:givenName": [
+    "Anthony"
+  ],
+  "dc:creator.foaf:Person.2.foaf:title": [
+    "Dr"
+  ],
+  "dc:creator.foaf:Person.3.dc:identifier": [
+    "jcu.edu.au/parties/people/A71A8C277273DEE976DA805ECA834F9F"
+  ],
+  "dc:creator.foaf:Person.3.foaf:Organization.B.dc:identifier": [
+    "jcu.edu.au/parties/group/6280"
+  ],
+  "dc:creator.foaf:Person.3.foaf:Organization.B.skos:prefLabel": [
+    "School of Veterinary & Biomedical Sciences"
+  ],
+  "dc:creator.foaf:Person.3.foaf:Organization.dc:identifier": [
+    "jcu.edu.au/parties/group/6283"
+  ],
+  "dc:creator.foaf:Person.3.foaf:Organization.skos:prefLabel": [
+    "Australian Institute for Tropical Veterinary & Animal Science"
+  ],
+  "dc:creator.foaf:Person.3.foaf:email": [
+    "john.cavalieri@jcu.edu.au"
+  ],
+  "dc:creator.foaf:Person.3.foaf:familyName": [
+    "Cavalieri"
+  ],
+  "dc:creator.foaf:Person.3.foaf:givenName": [
+    "John"
+  ],
+  "dc:creator.foaf:Person.3.foaf:title": [
+    "A/Prof"
+  ],
+  "dc:creator.foaf:Person.4.dc:identifier": [
+    "jcu.edu.au/parties/people/B5641F263DC88BB19C7094C0F6E4A1B6"
+  ],
+  "dc:creator.foaf:Person.4.foaf:Organization.B.dc:identifier": [
+    "jcu.edu.au/parties/group/6280"
+  ],
+  "dc:creator.foaf:Person.4.foaf:Organization.B.skos:prefLabel": [
+    "School of Veterinary & Biomedical Sciences"
+  ],
+  "dc:creator.foaf:Person.4.foaf:Organization.C.dc:identifier": [
+    "jcu.edu.au/parties/group/6000"
+  ],
+  "dc:creator.foaf:Person.4.foaf:Organization.C.skos:prefLabel": [
+    "James Cook University"
+  ],
+  "dc:creator.foaf:Person.4.foaf:Organization.dc:identifier": [
+    "jcu.edu.au/parties/group/6283"
+  ],
+  "dc:creator.foaf:Person.4.foaf:Organization.skos:prefLabel": [
+    "Australian Institute for Tropical Veterinary & Animal Science"
+  ],
+  "dc:creator.foaf:Person.4.foaf:email": [
+    "lee.fitzpatrick@jcu.edu.au"
+  ],
+  "dc:creator.foaf:Person.4.foaf:familyName": [
+    "Fitzpatrick"
+  ],
+  "dc:creator.foaf:Person.4.foaf:givenName": [
+    "Lee"
+  ],
+  "dc:creator.foaf:Person.4.foaf:title": [
+    "Prof"
+  ],
+  "dc:creator.foaf:Person.5.dc:identifier": [
+    "jcu.edu.au/parties/people/4C239EB9BFE54D7C3A110E9E02EEE5C8"
+  ],
+  "dc:creator.foaf:Person.5.foaf:Organization.B.dc:identifier": [
+    "jcu.edu.au/parties/group/6280"
+  ],
+  "dc:creator.foaf:Person.5.foaf:Organization.B.skos:prefLabel": [
+    "School of Veterinary & Biomedical Sciences"
+  ],
+  "dc:creator.foaf:Person.5.foaf:Organization.C.dc:identifier": [
+    "jcu.edu.au/parties/group/6000"
+  ],
+  "dc:creator.foaf:Person.5.foaf:Organization.C.skos:prefLabel": [
+    "James Cook University"
+  ],
+  "dc:creator.foaf:Person.5.foaf:Organization.dc:identifier": [
+    "jcu.edu.au/parties/group/6283"
+  ],
+  "dc:creator.foaf:Person.5.foaf:Organization.skos:prefLabel": [
+    "Australian Institute for Tropical Veterinary & Animal Science"
+  ],
+  "dc:creator.foaf:Person.5.foaf:email": [
+    "bruce.gummow@jcu.edu.au"
+  ],
+  "dc:creator.foaf:Person.5.foaf:familyName": [
+    "Gummow"
+  ],
+  "dc:creator.foaf:Person.5.foaf:givenName": [
+    "Bruce"
+  ],
+  "dc:creator.foaf:Person.5.foaf:title": [
+    "Prof"
+  ],
+  "dc:creator.foaf:Person.6.dc:identifier": [
+    "jcu.edu.au/parties/people/8E0E19C9858008B5617461BC0C89251F"
+  ],
+  "dc:creator.foaf:Person.6.foaf:Organization.B.dc:identifier": [
+    "jcu.edu.au/parties/group/6623"
+  ],
+  "dc:creator.foaf:Person.6.foaf:Organization.B.skos:prefLabel": [
+    "Discipline of Plant & Agricultural Sciences"
+  ],
+  "dc:creator.foaf:Person.6.foaf:Organization.C.dc:identifier": [
+    "jcu.edu.au/parties/group/6000"
+  ],
+  "dc:creator.foaf:Person.6.foaf:Organization.C.skos:prefLabel": [
+    "James Cook University"
+  ],
+  "dc:creator.foaf:Person.6.foaf:Organization.dc:identifier": [
+    "jcu.edu.au/parties/group/6283"
+  ],
+  "dc:creator.foaf:Person.6.foaf:Organization.skos:prefLabel": [
+    "Australian Institute for Tropical Veterinary & Animal Science"
+  ],
+  "dc:creator.foaf:Person.6.foaf:email": [
+    "christopher.gardiner@jcu.edu.au"
+  ],
+  "dc:creator.foaf:Person.6.foaf:familyName": [
+    "Gardiner"
+  ],
+  "dc:creator.foaf:Person.6.foaf:givenName": [
+    "Christopher"
+  ],
+  "dc:creator.foaf:Person.6.foaf:title": [
+    "Mr"
+  ],
+  "dc:description.1.shadow": [
+    "&lt;p&gt;This dataset contains observational data (meat goat survey) and collection data (experiments on field)&lt;/p&gt;"
+  ],
+  "dc:description.1.text": [
+    "<p>This dataset contains observational data (meat goat survey) and collection data (experiments on field)</p>"
+  ],
+  "dc:description.1.type": [
+    "brief"
+  ],
+  "dc:extent": [
+    "31 questionnaires, 6,000 plasma samples and 50GB of data"
+  ],
+  "dc:relation.swrc:Publication.1.dc:identifier": [
+    "http://www.scopemed.org/?mno=24156"
+  ],
+  "dc:relation.swrc:Publication.1.dc:title": [
+    "Reproductive and productive performance of crossbred goats submitted to three matings in two years under an agro-ecological production system in the semi-arid region of Brazil"
+  ],
+  "dc:relation.swrc:Publication.2.dc:identifier": [
+    "http://www.alice.cnptia.embrapa.br/handle/doc/928507"
+  ],
+  "dc:relation.swrc:Publication.2.dc:title": [
+    "Effect of hormonal treatment and energy supplementation on reproductive performance in rangeland goats during the non-breeding season: preliminary results"
+  ],
+  "dc:relation.swrc:Publication.3.dc:identifier": [
+    "http://www.alice.cnptia.embrapa.br/handle/doc/928496"
+  ],
+  "dc:relation.swrc:Publication.3.dc:title": [
+    "Observations on the productive performance of crossbred kids from three mating seasons in the semi-arid region of Brazil"
+  ],
+  "dc:relation.swrc:Publication.4.dc:identifier": [
+    "http://www.alice.cnptia.embrapa.br/handle/doc/928503"
+  ],
+  "dc:relation.swrc:Publication.4.dc:title": [
+    "Reproductive performance of crossbred goats submitted to three matings in two years under an agro-ecological production system in the semi-arid region of Brazi"
+  ],
+  "dc:relation.vivo:Dataset.1.redbox:origin": [
+    "on"
+  ],
+  "dc:relation.vivo:Dataset.1.redbox:publish": [
+    "on"
+  ],
+  "dc:subject.anzsrc:for.1..bottom.dropdown": [
+    "http://purl.org/asc/1297.0/2008/for/070206"
+  ],
+  "dc:subject.anzsrc:for.1..middle.dropdown": [
+    "http://purl.org/asc/1297.0/2008/for/0702"
+  ],
+  "dc:subject.anzsrc:for.1..top.dropdown": [
+    "http://purl.org/asc/1297.0/2008/for/07"
+  ],
+  "dc:subject.anzsrc:for.1.rdf:resource": [
+    "http://purl.org/asc/1297.0/2008/for/070206"
+  ],
+  "dc:subject.anzsrc:for.1.skos:prefLabel": [
+    "070206 - Animal Reproduction"
+  ],
+  "dc:subject.anzsrc:for.2..bottom.dropdown": [
+    "http://purl.org/asc/1297.0/2008/for/070204"
+  ],
+  "dc:subject.anzsrc:for.2..middle.dropdown": [
+    "http://purl.org/asc/1297.0/2008/for/0702"
+  ],
+  "dc:subject.anzsrc:for.2..top.dropdown": [
+    "http://purl.org/asc/1297.0/2008/for/07"
+  ],
+  "dc:subject.anzsrc:for.2.rdf:resource": [
+    "http://purl.org/asc/1297.0/2008/for/070204"
+  ],
+  "dc:subject.anzsrc:for.2.skos:prefLabel": [
+    "070204 - Animal Nutrition"
+  ],
+  "dc:subject.anzsrc:seo.1..bottom.dropdown": [
+    "http://purl.org/asc/1297.0/2008/seo/830304"
+  ],
+  "dc:subject.anzsrc:seo.1..middle.dropdown": [
+    "http://purl.org/asc/1297.0/2008/seo/8303"
+  ],
+  "dc:subject.anzsrc:seo.1..top.dropdown": [
+    "http://purl.org/asc/1297.0/2008/seo/83"
+  ],
+  "dc:subject.anzsrc:seo.1.rdf:resource": [
+    "http://purl.org/asc/1297.0/2008/seo/830304"
+  ],
+  "dc:subject.anzsrc:seo.1.skos:prefLabel": [
+    "830304 - Goats"
+  ],
+  "dc:subject.vivo:keyword.1.rdf:PlainLiteral": [
+    "Goats, seasonality, ultrasound, reproduction, nutrition"
+  ],
+  "dc:subject.vivo:keyword.2.rdf:PlainLiteral": [
+    "survey, producers, goat industry"
+  ],
+  "dc:title": [
+    "Meat goat production in the dry tropics and subtropics of Australia"
+  ],
+  "dc:type.rdf:PlainLiteral": [
+    "collection"
+  ],
+  "dc:type.skos:prefLabel": [
+    "Collection"
+  ],
+  "dc_accessRights": [
+    "Please contact the data manager or nominated primary contact to negotiate access to this data. If you have difficulty, please contact researchdata@jcu.edu.au for assistance.",
+    "This dataset is made available under the Public Domain Dedication and License"
+  ],
+  "dc_accessRightsType": [
+    "conditional"
+  ],
+  "dc_coverage": [
+    "Queensland and New South Wales",
+    "2011-03-01",
+    "2014-12-20",
+    "iso31661",
+    "Country code (iso31661)",
+    "Free text",
+    "text",
+    "POLYGON((153.26367180795 -28.374243632988,153.50153021696 -28.071207059368,153.62146857343 -27.717157985715,153.61174647539 -27.346451122765,153.47331558952 -26.995410059177,153.21972649545 -26.698753329031,152.87580226056 -26.486057292809,152.47520858521 -26.378657254,152.05715836946 -26.387366732847,151.66257328114 -26.511307821559,151.33007805795 -26.738006476553,151.09221964895 -27.04474012971,150.97228129247 -27.400960770542,150.98200339051 -27.771483932751,151.12043427638 -28.120056224518,151.37402337045 -28.412902407568,151.71794760535 -28.621901782347,152.11854128069 -28.72713083533,152.53659149645 -28.718604998427,152.93117658476 -28.597132063842,153.26367180795 -28.374243632988))",
+    "OpenLayers.Feature.Vector_783",
+    "POLYGON((153.26367180795 -28.374243632988,153.50153021696 -28.071207059368,153.62146857343 -27.717157985715,153.61174647539 -27.346451122765,153.47331558952 -26.995410059177,153.21972649545 -26.698753329031,152.87580226056 -26.486057292809,152.47520858521 -26.378657254,152.05715836946 -26.387366732847,151.66257328114 -26.511307821559,151.33007805795 -26.738006476553,151.09221964895 -27.04474012971,150.97228129247 -27.400960770542,150.98200339051 -27.771483932751,151.12043427638 -28.120056224518,151.37402337045 -28.412902407568,151.71794760535 -28.621901782347,152.11854128069 -28.72713083533,152.53659149645 -28.718604998427,152.93117658476 -28.597132063842,153.26367180795 -28.374243632988))",
+    "Free text",
+    "text",
+    "OpenLayers.Feature.Vector_1623",
+    "text",
+    "POLYGON((144.36968975702 -33.478569980027,144.49165568872 -33.020035583502,144.43821915709 -32.549955217857,144.21461090216 -32.114573144264,143.84271925788 -31.757336420696,143.35894756952 -31.514322305338,142.81065078057 -31.410287374479,142.25150000094 -31.455882082545,141.73622880478 -31.646434911638,141.31527552687 -31.962486935015,141.02984600701 -32.371996991514,140.90788007531 -32.833893475814,140.96131660694 -33.302471632617,141.18492486187 -33.73206136386,141.55681650615 -34.081429082926,142.04058819451 -34.317503467378,142.58888498346 -34.418177839454,143.14803576309 -34.374084599604,143.66330695925 -34.189322126135,144.08426023716 -33.881138620024,144.36968975702 -33.478569980027))",
+    "OpenLayers.Feature.Vector_2219",
+    "Free text",
+    "POLYGON((144.45758038201 -23.240756986963,144.85046845316 -22.773458146568,145.06724435457 -22.215188725799,145.08668855066 -21.61991161521,144.90689770802 -21.045877411584,144.54547100701 -20.549908551033,144.03778741134 -20.181580634779,143.43354252859 -19.977981491117,142.7918840579 -19.959706310061,142.17562200108 -20.128606919949,141.64508038201 -20.467588556742,141.25219231086 -20.94248062768,141.03541640945 -21.505737566234,141.01597221336 -22.101489788846,141.195763056 -22.6713050212,141.55718975701 -23.159973837504,142.06487335268 -23.520710136776,142.66911823543 -23.719325023233,143.31077670612 -23.737125493858,143.92703876294 -23.572440842857,144.45758038201 -23.240756986963))",
+    "text",
+    "Free text",
+    "POLYGON((146.49609368295 -26.93406879431,146.77509222719 -26.702072174958,146.96010451274 -26.403795305927,147.03302024804 -26.06805520068,146.9867019329 -25.727554938168,146.82568352671 -25.415741137307,146.56572663295 -25.163482102776,146.23227764361 -24.995913036263,145.85797686904 -24.929808982148,145.47946347697 -24.971804421798,145.13378899546 -25.11768341442,144.85479045123 -25.352831051397,144.66977816567 -25.65378840583,144.59686243037 -25.990714414358,144.64318074551 -26.330452871727,144.80419915171 -26.639848244633,145.06415604547 -26.888956200216,145.39760503481 -27.053845172486,145.77190580937 -27.118763626394,146.15041920145 -27.077529788037,146.49609368295 -26.93406879431))",
+    "OpenLayers.Feature.Vector_1522",
+    "OpenLayers.Feature.Vector_1123",
+    "POLYGON((150.63189678826 -34.574805989936,150.8633026872 -34.257476735684,150.96451513014 -33.89522838781,150.92562673798 -33.523205926512,150.75044417749 -33.177958987411,150.45611553826 -32.893809710281,150.07145175821 -32.699290263021,149.63410640824 -32.614077601874,149.18688989837 -32.646828079629,148.77357889652 -32.794212114532,148.43463116327 -33.04128639742,148.20322526432 -33.363150380147,148.10201282138 -33.72765391802,148.14090121354 -34.098790308551,148.31608377403 -34.440348501325,148.61041241326 -34.719415732864,148.99507619331 -34.909401115201,149.43242154329 -34.992359219007,149.87963805316 -34.960494539471,150.29294905501 -34.816798449793,150.63189678826 -34.574805989936))",
+    "POLYGON((144.36968975702 -33.478569980027,144.49165568872 -33.020035583502,144.43821915709 -32.549955217857,144.21461090216 -32.114573144264,143.84271925788 -31.757336420696,143.35894756952 -31.514322305338,142.81065078057 -31.410287374479,142.25150000094 -31.455882082545,141.73622880478 -31.646434911638,141.31527552687 -31.962486935015,141.02984600701 -32.371996991514,140.90788007531 -32.833893475814,140.96131660694 -33.302471632617,141.18492486187 -33.73206136386,141.55681650615 -34.081429082926,142.04058819451 -34.317503467378,142.58888498346 -34.418177839454,143.14803576309 -34.374084599604,143.66330695925 -34.189322126135,144.08426023716 -33.881138620024,144.36968975702 -33.478569980027))",
+    "POLYGON((144.06207256951 -14.731766016333,144.21642740339 -14.65425692616,144.33846621719 -14.534348982946,144.41624300152 -14.383722404156,144.44214442282 -14.2170766902,144.41363506951 -14.050708784258,144.33350563573 -13.900923248279,144.20959974876 -13.782428402042,144.05404618011 -13.706878820819,143.88207159689 -13.68171370742,143.71051006951 -13.709412467027,143.55615523563 -13.78724610571,143.43411642183 -13.907550843845,143.35633963751 -14.058494901585,143.33043821621 -14.225257505761,143.35894756951 -14.391497061239,143.43907700329 -14.540958035784,143.56298289026 -14.659056087518,143.71853645891 -14.734288202971,143.89051104214 -14.759336433878,144.06207256951 -14.731766016333))",
+    "POLYGON((146.49609368295 -26.93406879431,146.77509222719 -26.702072174958,146.96010451274 -26.403795305927,147.03302024804 -26.06805520068,146.9867019329 -25.727554938168,146.82568352671 -25.415741137307,146.56572663295 -25.163482102776,146.23227764361 -24.995913036263,145.85797686904 -24.929808982148,145.47946347697 -24.971804421798,145.13378899546 -25.11768341442,144.85479045123 -25.352831051397,144.66977816567 -25.65378840583,144.59686243037 -25.990714414358,144.64318074551 -26.330452871727,144.80419915171 -26.639848244633,145.06415604547 -26.888956200216,145.39760503481 -27.053845172486,145.77190580937 -27.118763626394,146.15041920145 -27.077529788037,146.49609368295 -26.93406879431))",
+    "OpenLayers.Feature.Vector_2864",
+    "Free text",
+    "text",
+    "POLYGON((144.45758038201 -23.240756986963,144.85046845316 -22.773458146568,145.06724435457 -22.215188725799,145.08668855066 -21.61991161521,144.90689770802 -21.045877411584,144.54547100701 -20.549908551033,144.03778741134 -20.181580634779,143.43354252859 -19.977981491117,142.7918840579 -19.959706310061,142.17562200108 -20.128606919949,141.64508038201 -20.467588556742,141.25219231086 -20.94248062768,141.03541640945 -21.505737566234,141.01597221336 -22.101489788846,141.195763056 -22.6713050212,141.55718975701 -23.159973837504,142.06487335268 -23.520710136776,142.66911823543 -23.719325023233,143.31077670612 -23.737125493858,143.92703876294 -23.572440842857,144.45758038201 -23.240756986963))",
+    "POLYGON((144.06207256951 -14.731766016333,144.21642740339 -14.65425692616,144.33846621719 -14.534348982946,144.41624300152 -14.383722404156,144.44214442282 -14.2170766902,144.41363506951 -14.050708784258,144.33350563573 -13.900923248279,144.20959974876 -13.782428402042,144.05404618011 -13.706878820819,143.88207159689 -13.68171370742,143.71051006951 -13.709412467027,143.55615523563 -13.78724610571,143.43411642183 -13.907550843845,143.35633963751 -14.058494901585,143.33043821621 -14.225257505761,143.35894756951 -14.391497061239,143.43907700329 -14.540958035784,143.56298289026 -14.659056087518,143.71853645891 -14.734288202971,143.89051104214 -14.759336433878,144.06207256951 -14.731766016333))",
+    "text",
+    "POLYGON((150.63189678826 -34.574805989936,150.8633026872 -34.257476735684,150.96451513014 -33.89522838781,150.92562673798 -33.523205926512,150.75044417749 -33.177958987411,150.45611553826 -32.893809710281,150.07145175821 -32.699290263021,149.63410640824 -32.614077601874,149.18688989837 -32.646828079629,148.77357889652 -32.794212114532,148.43463116327 -33.04128639742,148.20322526432 -33.363150380147,148.10201282138 -33.72765391802,148.14090121354 -34.098790308551,148.31608377403 -34.440348501325,148.61041241326 -34.719415732864,148.99507619331 -34.909401115201,149.43242154329 -34.992359219007,149.87963805316 -34.960494539471,150.29294905501 -34.816798449793,150.63189678826 -34.574805989936))",
+    "Free text"
+  ],
+  "dc_description": [
+    "<p>This dataset contains observational data (meat goat survey) and collection data (experiments on field)</p>",
+    "&lt;p&gt;This dataset contains observational data (meat goat survey) and collection data (experiments on field)&lt;/p&gt;",
+    "brief",
+    ""
+  ],
+  "dc_extent": [
+    "31 questionnaires, 6,000 plasma samples and 50GB of data"
+  ],
+  "dc_format": [
+    "application/x-fascinator-package"
+  ],
+  "dc_relation": [
+    "on",
+    "Reproductive and productive performance of crossbred goats submitted to three matings in two years under an agro-ecological production system in the semi-arid region of Brazil",
+    "on",
+    "Effect of hormonal treatment and energy supplementation on reproductive performance in rangeland goats during the non-breeding season: preliminary results",
+    "Reproductive performance of crossbred goats submitted to three matings in two years under an agro-ecological production system in the semi-arid region of Brazi",
+    "Observations on the productive performance of crossbred kids from three mating seasons in the semi-arid region of Brazil"
+  ],
+  "dc_subject": [
+    "http://purl.org/asc/1297.0/2008/for/07",
+    "830304 - Goats",
+    "Goats, seasonality, ultrasound, reproduction, nutrition",
+    "http://purl.org/asc/1297.0/2008/seo/83",
+    "070206 - Animal Reproduction",
+    "http://purl.org/asc/1297.0/2008/for/070204",
+    "http://purl.org/asc/1297.0/2008/for/0702",
+    "survey, producers, goat industry",
+    "070204 - Animal Nutrition",
+    "http://purl.org/asc/1297.0/2008/seo/830304",
+    "http://purl.org/asc/1297.0/2008/for/07",
+    "http://purl.org/asc/1297.0/2008/for/0702",
+    "http://purl.org/asc/1297.0/2008/seo/8303",
+    "http://purl.org/asc/1297.0/2008/for/070206"
+  ],
+  "dc_title": "Meat goat production in the dry tropics and subtropics of Australia",
+  "dc_type": "collection",
+  "depositedBy": [
+    "<b>For research data being deposited by its creator:</b>\n                                             <ul><li>I declare that I am a creator of this research data, as a single or joint creator, and that the information provided is true and correct at time of submission.</li>\n                                                 <li>I declare that I have included in the metadata all relevant information relating to legal rights and ethical obligations that apply to the research data.</li>\n                                                 <li>In self-archiving this research data and associated metadata, I grant James Cook University an irrevocable, non-exclusive licence to store both the data and metadata and make the metadata information (and research data where applicable) available online on a publicly accessible website, JCU Research Data.</li>\n                                                 <li>To the extent that I am the copyright owner, I acknowledge that by depositing my work to Research Data there is no transfer of copyright ownership in the work to James Cook University.</li>\n                                                 <li>I understand that the University reserves the right to remove the metadata record from Research Data at any time for any reason.</li>\n                                             </ul>"
+  ],
+  "display_type": "package-jcu-self-submission",
+  "foaf:fundedBy.vivo:Grant.1.redbox:internalGrant": [
+    "null"
+  ],
+  "foaf:fundedBy.vivo:Grant.1.skos:prefLabel": [
+    "\"Australian Meat Goat Industry Survey\" from Meat & Livestock Australia (MLA)"
+  ],
+  "foaf:fundedBy.vivo:Grant.2.dc:identifier": [
+    "urn:uoe:internal"
+  ],
+  "foaf:fundedBy.vivo:Grant.2.redbox:grantNumber": [
+    "6286.93767.0208"
+  ],
+  "foaf:fundedBy.vivo:Grant.2.redbox:internalGrant": [
+    "on"
+  ],
+  "foaf:fundedBy.vivo:Grant.2.skos:prefLabel": [
+    "Graduate Research Sheme 2014 \"Meat Goat Production in Australia\""
+  ],
+  "foaf:fundedBy.vivo:Grant.3.redbox:internalGrant": [
+    "null"
+  ],
+  "foaf:fundedBy.vivo:Grant.3.skos:prefLabel": [
+    "Embrapa Brazil (Bench fee for hormonal assays)"
+  ],
+  "func": [
+    "action"
+  ],
+  "harvest_config": "b4bb29d205075a4728c2d66127d5ed02",
+  "harvest_rules": "ab1823e4722969bf2907c22e67b31b75",
+  "id": "46416b696b917178e710f65a1c2ab558",
+  "jcu:data.depositedBy.name": [
+    "Daniel Maia Nogueira"
+  ],
+  "jcu:data.depositedBy.text": [
+    "<b>For research data being deposited by its creator:</b>\n                                             <ul><li>I declare that I am a creator of this research data, as a single or joint creator, and that the information provided is true and correct at time of submission.</li>\n                                                 <li>I declare that I have included in the metadata all relevant information relating to legal rights and ethical obligations that apply to the research data.</li>\n                                                 <li>In self-archiving this research data and associated metadata, I grant James Cook University an irrevocable, non-exclusive licence to store both the data and metadata and make the metadata information (and research data where applicable) available online on a publicly accessible website, JCU Research Data.</li>\n                                                 <li>To the extent that I am the copyright owner, I acknowledge that by depositing my work to Research Data there is no transfer of copyright ownership in the work to James Cook University.</li>\n                                                 <li>I understand that the University reserves the right to remove the metadata record from Research Data at any time for any reason.</li>\n                                             </ul>"
+  ],
+  "jcu:data.depositedBy.userId": [
+    "ZG5TpA8GFIrRL1X2kvZm4wYMVsA"
+  ],
+  "jcu:data.depositedBy.userSource": [
+    "Shibboleth"
+  ],
+  "jcu:research.themes.industriesEconomies": [
+    "null"
+  ],
+  "jcu:research.themes.notAligned": [
+    "null"
+  ],
+  "jcu:research.themes.peopleSocieties": [
+    "null"
+  ],
+  "jcu:research.themes.tropicalEcoSystems": [
+    "null"
+  ],
+  "jcu:research.themes.tropicalHealth": [
+    "on"
+  ],
+  "keywords": [
+    "Goats, seasonality, ultrasound, reproduction, nutrition",
+    "survey, producers, goat industry"
+  ],
+  "last_modified": "2019-03-15T12:53:23Z",
+  "locrel:own.foaf:Agent.1.foaf:name": [
+    "James Cook University"
+  ],
+  "locrel:prc.foaf:Person.dc:identifier": [
+    "jcu.edu.au/parties/people/25C5FBC9C6C4C5767536A433F638F905"
+  ],
+  "locrel:prc.foaf:Person.foaf:email": [
+    "daniel.maianogueira@my.jcu.edu.au"
+  ],
+  "locrel:prc.foaf:Person.foaf:familyName": [
+    "Maia Nogueira"
+  ],
+  "locrel:prc.foaf:Person.foaf:givenName": [
+    "Daniel"
+  ],
+  "locrel:prc.foaf:Person.foaf:title": [
+    "MR"
+  ],
+  "oai_set": [
+    "default"
+  ],
+  "oid": [
+    "46416b696b917178e710f65a1c2ab558"
+  ],
+  "owner": "ZG5TpA8GFIrRL1X2kvZm4wYMVsA",
+  "packageType": [
+    "jcu-self-submission"
+  ],
+  "project.name": [
+    "New Project"
+  ],
+  "readyforreview.1": [
+    "null"
+  ],
+  "recordAsLocationDefault": [
+    "https://research.jcu.edu.au/researchdata/published/detail/46416b696b917178e710f65a1c2ab558"
+  ],
+  "redbox:embargo.dc:date": [
+    "2015-02-23"
+  ],
+  "redbox:embargo.redbox:isEmbargoed": [
+    "on"
+  ],
+  "redbox:formVersion": [
+    "1.9"
+  ],
+  "redbox:newForm": [
+    "true"
+  ],
+  "redbox:retentionPeriod": [
+    "5 years (minimum for projects with publications)"
+  ],
+  "repository_name": [
+    "ReDBox"
+  ],
+  "repository_type": [
+    "Data Management Portal"
+  ],
+  "security_filter": [
+    "admin"
+  ],
+  "storage_id": "46416b696b917178e710f65a1c2ab558",
+  "viewId": [
+    "dashboard"
+  ],
+  "vivo:Location.vivo:GeographicLocation.gn:name": [
+    "Tony Parker's office (DB.087-208): Data of goat Survey (questionnaires)\nJohn Cavalieri's office (DB.087-027): Ultrasound data (ovaries maps)\nReproduction Lab (DB. 087-211): Blood samples in the freezer\nSchool of Veterinary and Biomedical Science\nJames Cook University"
+  ],
+  "workflow_id": "jcu-self-submission",
+  "workflow_security": [
+    "admin"
+  ],
+  "workflow_step": [
+    "jcu-self-submission-draft"
+  ],
+  "workflow_step_label": [
+    "JCU Researcher dataset - Draft"
+  ]
+}
