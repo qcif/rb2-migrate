@@ -8,6 +8,7 @@ import {ArgumentParser} from 'argparse';
 import {postwalk} from './postwalk';
 import * as FormData from "form-data";
 import {Redbox1CsvFiles} from "./Redbox/Redbox1CsvFiles";
+import csv = require("csvtojson");
 
 const MANDATORY_CW = [
   'idfield',
@@ -137,20 +138,9 @@ async function index(options: Object): Promise<Object[][]> {
     if (cw['workflow_step']) {
       _.merge(filter, {workflow_step: cw['workflow_step']});
     }
-    //handle record filtering early rather than later
-    if (recordId) {
-      let recordFilterOr = rbSource.makeSolrQueryOR({
-        id: recordId,
-        storage_id: recordId,
-        objectId: recordId,
-        oid: recordId
-      });
-      let recordFilterJoinOr = rbSource.makeSolrQueryAND(filter);
-      filter = `(${recordFilterOr})%20AND%20${recordFilterJoinOr}`
-    }
+    log.debug(`filter is: ${JSON.stringify(filter, null, 4)}`)
   }
-  log.debug(`Sending filter to solr: ${JSON.stringify(filter)}`);
-  const returnedList = await rbSource.listSolr(filter);
+  const returnedList = await rbSource.listCsv(filter);
   oids = returnedList.map(function (d) {
     let returnedId = d['id'] || d['storage_id'] || d['oid'] || d['objectId'];
     if (_.isArray(returnedId)) {
@@ -295,14 +285,6 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
   const updated = {};
 
-  const recordOwnerCsvFileName = _.get(config, 'recordOwnersCsvFilename');
-  log.debug(`csv file name is: ${recordOwnerCsvFileName}`);
-  const recordOwnerCsvFilePath = `resources/${recordOwnerCsvFileName}`;
-  log.debug(`csv file to parse is: ${recordOwnerCsvFilePath}`);
-  if (!fs.existsSync(recordOwnerCsvFilePath)) {
-    throw new Error(`Unable to find file: ${recordOwnerCsvFilePath}`);
-  }
-
   try {
 
     for (let record of records) {
@@ -310,6 +292,10 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       await pauseMigration();
 
       let oid = record['oid'];
+      console.log('record is now:');
+      console.log(record);
+      console.log('oid is:');
+      console.log(oid);
       if (_.isEmpty(oid)) {
         oid = record['objectId'];
       }
@@ -323,7 +309,8 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       _.assign(updated[oid], record);
       log.info(`Processing oid ${oid}`);
 
-      let md = await rbSource.getRecord(oid);
+      // let md = await rbSource.getRecord(oid);
+      let md = record;
       if (!md) {
         log.error(`Couldn't get source record for ${oid}`);
         updated[oid]['status'] = 'load failed';
@@ -353,7 +340,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
       const [mdu, md2] = crosswalk(cw, md, report);
       log.info('3. have md2');
-      // console.dir(md2);
+      console.dir(md2);
       updated[oid]['status'] = 'crosswalked';
       n_crosswalked += 1;
       var noid = 'new_' + oid;
@@ -364,28 +351,27 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         dumpjson(outdir, 'new', oid, md2);
       }
 
-      //TODO: check that can get record owner email details into migration (from database -> may need to export and read into migration)
-      log.debug('Checking for record owner...');
-      if (_.isEmpty(record['owner'])) {
-        log.info('4. No owner. Will use CI data...');
-        if (_.get(md2, 'contributor_ci.text_full_name')) {
-          record['owner'] = md2['contributor_ci']['text_full_name'];
-          report('load', '', '', 'no owner, replaced with ci full name', '');
-          log.info('4a. using CI as owner...');
-        } else {
-          report('load', '', 'contributor_ci', `No CI or owner`, '');
-          log.info('4a. fail as NO owner OR CI...');
-          continue;
-        }
-      } else {
-        log.info('4. Have owner...');
-        log.debug(record['owner']);
-      }
-      const ci = md2['contributor_ci'];
-      if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
-        md2['contributor_ci']['email'] = record['owner'];
-        report('validate', '', 'contributor_ci', `CI without email: using owner: ${record['owner']}`, '');
-      }
+      // log.debug('Checking for record owner...');
+      // if (_.isEmpty(record['owner'])) {
+      //   log.info('4. No owner. Will use CI data...');
+      //   if (_.get(md2, 'contributor_ci.text_full_name')) {
+      //     record['owner'] = md2['contributor_ci']['text_full_name'];
+      //     report('load', '', '', 'no owner, replaced with ci full name', '');
+      //     log.info('4a. using CI as owner...');
+      //   } else {
+      //     report('load', '', 'contributor_ci', `No CI or owner`, '');
+      //     log.info('4a. fail as NO owner OR CI...');
+      //     continue;
+      //   }
+      // } else {
+      //   log.info('4. Have owner...');
+      //   log.debug(record['owner']);
+      // }
+      // const ci = md2['contributor_ci'];
+      // if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
+      //   md2['contributor_ci']['email'] = record['owner'];
+      //   report('validate', '', 'contributor_ci', `CI without email: using owner: ${record['owner']}`, '');
+      // }
       // log.debug(`CI data is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
       // if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
       //   log.debug('Have a CI, but no CI email. Searching for alternative email...');
@@ -592,7 +578,8 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
       let pubOid;
       try {
-        let mdPub = await rbSource.getRecord(oid);
+        // let mdPub = await rbSource.getRecord(oid);
+        let mdPub = record;
         log.info(`11. Got record ${oid} for publication crosswalk`);
         report("publication", '', '', 'Crosswalking', '');
         const resPub = crosswalk(cwPub, mdPub, report_pub);
@@ -906,8 +893,31 @@ async function main(args) {
     info(args['source']);
   } else {
 
-    var [records, errors] = await index(args);
-    await writeerrors(errors, path.join(outdir, `errors_${timestamp}.csv`));
+    let records = [];
+
+    await csv()
+      .fromFile('resources/input.csv')
+      .subscribe((jsonObj, index) => {
+        return new Promise((resolve, reject) => {
+          log.debug('next line...');
+          log.debug(index);
+          jsonObj.oid = `${index}`;
+          resolve();
+        })
+      })
+      .on('data', (jsonObj) => {
+        log.debug('have transformed data..');
+        log.debug(JSON.stringify(JSON.parse(jsonObj.toString())), null, 4);
+        records.push(JSON.parse(jsonObj.toString()));
+      })
+      .on('error', (err) => {
+        console.log(err)
+      })
+      .on('end', () => {
+        console.log('done!')
+      });
+
+    log.debug(`records are: ${records}`);
 
     if (args['crosswalk']) {
       const [updated_records, report] = await migrate(args, outdir, records);
@@ -917,6 +927,8 @@ async function main(args) {
       await writeindex(records, path.join(outdir, `index_${timestamp}.csv`));
     }
   }
+
+
 }
 
 

@@ -32,3 +32,4 @@ export {CitationSimpleDate} from './CitationSimpleDate';
 export {CitationSimplePublicationDate} from './CitationSimplePublicationDate';
 export {ResearchThemes} from './ResearchThemes';
 export {Country} from './Country';
+export {Custodian} from './Custodian';

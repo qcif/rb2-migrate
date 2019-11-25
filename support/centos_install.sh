@@ -21,9 +21,13 @@ which nvm && exit 1
 
 echo "Installing yarn..."
 curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo || exit 1
+ yum -y install yarn
 
 echo "Installing nvm..."
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash || exit 1
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 echo "Installing node..."
 nvm install node --lts || exit 1

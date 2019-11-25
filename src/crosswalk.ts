@@ -184,7 +184,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                   if (spec["additive"]) {
                     handleAdditive(dest, destfield, allHandled);
                   } else {
-                    _.assign(dest, allHandled);
+                    _.merge(dest, allHandled);
                   }
                 } else if (isSourceFieldAnArray) {
                   const first = src[srcfield][0]
@@ -432,29 +432,29 @@ export function validate(owner: string, required: string[], js: Object, logger: 
 
   const errors = [];
 
-  const ci = js['contributor_ci'];
-  if (_.isEmpty(ci)) {
-    logger('validate', '', 'contributor_ci', 'No CI', '');
-    errors.push('No CI');
-    console.log('No ci.');
-  } else {
-    // if (ci['email'] !== owner) {
-    if (ci['email'] === owner) {
-      logger('validate', '', 'ci', `CI is record owner: ${owner}`, '');
-    }
-  }
-
-  const dm = js['contributor_data_manager'];
-
-  if (!dm) {
-    logger('validate', '', 'contributor_data_manager', 'No data manager', '');
-    console.log('No DM in validation.');
-  } else {
-    if (!dm['email']) {
-      logger('validate', '', 'contributor_data_manager', 'Data manager without email', '');
-      console.log('No DM email in validation.');
-    }
-  }
+  // const ci = js['contributor_ci'];
+  // if (_.isEmpty(ci)) {
+  //   logger('validate', '', 'contributor_ci', 'No CI', '');
+  //   errors.push('No CI');
+  //   console.log('No ci.');
+  // } else {
+  //   // if (ci['email'] !== owner) {
+  //   if (ci['email'] === owner) {
+  //     logger('validate', '', 'ci', `CI is record owner: ${owner}`, '');
+  //   }
+  // }
+  //
+  // const dm = js['contributor_data_manager'];
+  //
+  // if (!dm) {
+  //   logger('validate', '', 'contributor_data_manager', 'No data manager', '');
+  //   console.log('No DM in validation.');
+  // } else {
+  //   if (!dm['email']) {
+  //     logger('validate', '', 'contributor_data_manager', 'Data manager without email', '');
+  //     console.log('No DM email in validation.');
+  //   }
+  // }
 
   required.map((f) => {
     if (!js[f]) {

@@ -12,7 +12,7 @@ const qs = require('qs');
 const path = require('path');
 const util = require('util');
 const _ = require('lodash');
-const exec = util.promisify(require('child_process').exec);
+// const exec = util.promisify(require('child_process').exec);
 const fs = require('fs-extra');
 
 
@@ -190,9 +190,10 @@ export class Redbox1Files extends Redbox1 implements Redbox {
     this.errors = {};
     try {
       console.log("about to gather files...")
-      const {stdout, stderr} = await exec(cmd);
+      // const {stdout, stderr} = await exec(cmd);
       console.log("all files have been gathered")
-      const files = stdout.split("\n").slice(0, -1);
+      // const files = stdout.split("\n").slice(0, -1);
+      const files = []
       console.log("files are sliced....")
       for (var i in files) {
         const fn = files[i];
