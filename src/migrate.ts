@@ -2,7 +2,7 @@
 // Typescript version of Stash 2 -> 3 migration code
 //
 
-import {Redbox, Redbox1, Redbox1Files, Redbox2} from './Redbox';
+import {Redbox, Redbox1, Redbox2} from './Redbox';
 import {crosswalk, validate} from './crosswalk';
 import {ArgumentParser} from 'argparse';
 import {postwalk} from './postwalk';
@@ -46,10 +46,6 @@ function connect(server: string): Redbox {
     const cf = config.get('servers.' + server);
     if (cf['version'] === 'Redbox1') {
       return new Redbox1(cf);
-    } else if (cf['version'] === 'Redbox1Files') {
-      return new Redbox1Files(cf);
-      // } else if (cf['version'] === 'RDA') {
-      //   return new RDA(cf);
     } else {
       return new Redbox2(cf);
     }
