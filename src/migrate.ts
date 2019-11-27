@@ -693,22 +693,22 @@ async function pauseMigration() {
 // This preserves any extra people granted view access in RB 1.9
 
 async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oid: string, md2: Object, pcw: Object): Promise<Object> {
-  var perms = await rbSource.getPermissions(oid);
+  // var perms = await rbSource.getPermissions(oid);
   var nperms = {view: [], edit: []};
-  if (!perms) {
-    perms = {view: [], edit: []};
-  }
-  const users = await usermap(rbSource, oid, md2, pcw);
-  for (const cat in users) {
-    for (const user in users[cat]) {
-      for (const p in pcw[cat]) {
-        if (!(user in perms[p])) {
-          perms[p].push(user);
-        }
-      }
-    }
-    ['view', ' edit'].map((p) => perms[p] = _.union(perms[p], nperms[p]));
-  }
+  // if (!perms) {
+   var perms = {view: ['Guest'], edit: []};
+  // }
+  // const users = await usermap(rbSource, oid, md2, pcw);
+  // for (const cat in users) {
+  //   for (const user in users[cat]) {
+  //     for (const p in pcw[cat]) {
+  //       if (!(user in perms[p])) {
+  //         perms[p].push(user);
+  //       }
+  //     }
+  //   }
+  //   ['view', ' edit'].map((p) => perms[p] = _.union(perms[p], nperms[p]));
+  // }
   log.debug("Permissions:");
   log.info(JSON.stringify(perms));
   try {

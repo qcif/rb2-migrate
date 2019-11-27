@@ -1,47 +1,18 @@
 {
   "servers": {
     "Test1_9": {
-      "version": "Redbox1",
-      "baseURL": "http://localhost:9010/redbox/api/v1.1/",
-      "baseFile": "resources/ehq-draft.csv",
-      "apiKey": "471fe03d-4f52-494c-b189-0c565d2d6d94",
-      "solrURL": "http://localhost:9010/solr/fascinator",
+      "version": "Redbox1CsvFiles",
+      "baseURL": "http://localhost",
+      "baseFile": "resources/input.csv",
+      "solrURL": "http://localhost:9010",
+      "apiKey": "",
       "packageTypes": [
-        "dmpt",
-        "dataset",
-        "self-submission",
-        "jcu-self-submission"
+        "dataset"
       ],
       "crosswalks": {
-        "dmpt": {
-          "dmpt-draft": [
-            "rdmp"
-          ]
-        },
-        "jcu-self-submission": {
-          "jcu-self-submission-draft": [
-            "dataRecord",
-            "dataPublication"
-          ]
-        },
-        "self-submission": {
-          "self-submission-draft": [
-            "dataRecord",
-            "dataPublication"
-          ]
-        },
         "dataset": {
-          "investigation": [
-            "dataRecord",
-            "dataPublication"
-          ],
-          "live": [
-            "dataRecord",
-            "dataPublication"
-          ],
-          "metadata-review": [
-            "dataRecord",
-            "dataPublication"
+          "dataset": [
+            "data"
           ]
         }
       }
@@ -49,12 +20,12 @@
     "Test2_0": {
       "version": "Redbox2",
       "baseURL": "http://localhost:1500",
-      "apiKey": "cf3c63e0-5163-4d80-9d22-b01578da364f",
+      "apiKey": "",
+
       "packageTypes": [
-        "rdmp",
-        "dataRecord",
-        "dataPublication",
-        "workspace"
+        "data",
+        "inbox",
+        "custodian"
       ],
       "branding": "default",
       "portal": "rdmp"

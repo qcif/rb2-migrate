@@ -20,7 +20,7 @@
     "Test2_0": {
       "version": "Redbox2",
       "baseURL": "http://localhost:1500",
-      "apiKey": "1234",
+      "apiKey": "",
 
       "packageTypes": [
         "data",
