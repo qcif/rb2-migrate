@@ -7,6 +7,8 @@ import {crosswalk, validate} from './crosswalk';
 import {ArgumentParser} from 'argparse';
 import {postwalk} from './postwalk';
 import * as FormData from "form-data";
+import * as stream from 'stream';
+const csv = require('csv-parser');
 
 const MANDATORY_CW = [
   'idfield',
@@ -24,7 +26,6 @@ const path = require('path');
 const winston = require('winston');
 const stringify = require('csv-stringify/lib/sync');
 const _ = require('lodash');
-const parse = require('csv-parse');
 
 function getlogger() {
   const logcfs = config.get('logs');
@@ -299,7 +300,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
   }
 
   try {
-
+    const csvParserErrorOK = "PARSE ENDED OK";
     for (let record of records) {
 
       await pauseMigration();
@@ -377,88 +378,50 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         log.debug(record['owner']);
       }
       const ci = md2['contributor_ci'];
+      log.debug(`CI data is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
       if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
-        md2['contributor_ci']['email'] = record['owner'];
-        report('validate', '', 'contributor_ci', `CI without email: using owner: ${record['owner']}`, '');
+        log.debug('Have a CI, but no CI email. Searching for alternative email...');
+        let readStream = null;
+        let parser = null;
+        try {
+          readStream = await fs.createReadStream(recordOwnerCsvFilePath);
+          parser = csv(['id', 'owner', 'email', 'text_full_name']);
+          parser.on('data', (row) => {
+            log.debug('Reading next row...');
+            const nextOwner = _.get(row, 'owner');
+            log.debug(`Next owner for ${JSON.stringify(row, null, 4)} is: ${nextOwner}`);
+            if (!_.isEmpty(nextOwner) && nextOwner === record['owner']) {
+              log.debug(`Found match: ${JSON.stringify(row, null, 4)}`);
+              md2['contributor_ci']['email'] = row['email'];
+              const logMessage = `CI without email: using owner: ${record['owner']} with email: ${row['email']}`;
+              log.info(`4a. ${logMessage}`);
+              report('validate', '', 'contributor_ci', logMessage, '');
+              const e = new Error(csvParserErrorOK);
+              parser.destroy(e);
+            }
+          }).on('close', function () {
+            log.debug("Got to end of parsing through close...");
+          });
+          readStream.on('close', function () {
+            log.debug("Got to end of reading through close...");
+          });
+          const pipeline = util.promisify(stream.pipeline);
+          await pipeline(readStream, parser);
+        } catch (error) {
+          if (error.message != csvParserErrorOK) {
+            log.warn("Problem reading record owners csv file. Ending csv search prematurely.");
+            log.error(error);
+            log.error('5. failed CI email check.');
+            report('validate', '', 'contributor_ci', `CI without email and no matching record owner for: ${record['owner']}. No CI email recorded.`, '');
+            log.warn('Skipping to next record...');
+            continue;
+          } else {
+            log.debug('Parser was closed OK (probably because it found a match).');
       }
-      // log.debug(`CI data is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
-      // if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
-      //   log.debug('Have a CI, but no CI email. Searching for alternative email...');
-      //   // let readStream = null;
-      //   let parser = null;
-      //   let readStream = null;
-      //   try {
-      //     readStream = fs.createReadStream(recordOwnerCsvFilePath)
-      //       .on('data', (data) => {
-      //         log.info("A data event was emitted.");
-      //       })
-      //       .on('ready', function (error) {
-      //         log.debug('The read stream is open and ready for use...');
-      //       })
-      //       .on('error', function (error) {
-      //         log.warn("Error in reading stream.");
-      //         throw new Error(error);
-      //       })
-      //       .on('close', function () {
-      //         log.info('Read stream completed.');
-      //       });
-      //     parser = parse({
-      //       columns: ['id', 'owner', 'email', 'text_full_name']
-      //     });
-      //     parser.on('readable', () => {
-      //       log.info(`Inside csv parser...`);
-      //       let row;
-      //       while (row = parser.read()) {
-      //         log.debug('Reading next row...');
-      //         const nextOwner = _.get(row, 'owner');
-      //         log.debug(`Next owner for ${JSON.stringify(row, null, 4)} is: ${nextOwner}`);
-      //         if (!_.isEmpty(nextOwner) && nextOwner === record['owner']) {
-      //           log.debug(`Found match: ${JSON.stringify(row, null, 4)}`);
-      //           md2['contributor_ci']['email'] = row['email'];
-      //           const logMessage = `CI without email: using owner: ${record['owner']} with email: ${row['email']}`;
-      //           log.info(`4a. ${logMessage}`);
-      //           report('validate', '', 'contributor_ci', logMessage, '');
-      //           parser.end();
-      //         }
-      //       }
-      //     });
-      //     parser.on('error', function (error) {
-      //       log.warn("Error in reading data.");
-      //       throw new Error(error);
-      //     });
-      //     parser.on('end', function () {
-      //       log.info('Record owner search completed.');
-      //     });
-      //
-      //     let result = readStream.pipe(parser);
-      //     log.info(`result is: ${JSON.stringify(result)}`);
-      //   } catch (error) {
-      //     log.warn("Problem reading record owners csv file. Ending csv search prematurely.");
-      //     log.error(error);
-      //     log.error('5. failed CI email check.');
-      //     report('validate', '', 'contributor_ci', `CI without email and no matching record owner for: ${record['owner']}. No CI email recorded.`, '');
-      //     if (parser) {
-      //       log.info("Unable to find match due to error. Closing parser.");
-      //       parser.end();
-      //       log.debug('Parser closed.');
-      //     }
-      //     log.warn('Skipping to next record...');
-      //     continue;
-      //   } finally {
-      //     if (parser) {
-      //       log.info("Unable to find match as completed iteration. Closing parser.");
-      //       parser.end();
-      //       log.debug('Parser closed.');
-      //     }
-      //     if (readStream) {
-      //       log.info("Closing stream.");
-      //       readStream.close();
-      //       log.debug('stream closed.');
-      //     }
-      //   }
-      //   log.debug('CI email replacement completed.');
-      //   log.info(`CI data now is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
-      // }
+        }
+        log.debug('CI email replacement completed.');
+        log.info(`CI data now is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
+      }
       const errors = validate(record['owner'], cw['required'], md2, report);
 
       if (errors.length > 0) {
