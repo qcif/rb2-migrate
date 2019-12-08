@@ -1,11 +1,6 @@
 {
   "servers": {
-    "Test1_9": {
-      "version": "Redbox1CsvFiles",
-      "baseURL": "http://localhost",
-      "baseFile": "resources/input.csv",
-      "solrURL": "http://localhost:9010",
-      "apiKey": "",
+    "source": {
       "packageTypes": [
         "dataset"
       ],
@@ -14,18 +9,21 @@
           "dataset": [
             "data"
           ]
+        },
+        "knowledgeBase": {
+          "knowledgeBase": [
+            "dataRecord"
+          ]
         }
       }
     },
     "Test2_0": {
       "version": "Redbox2",
       "baseURL": "http://localhost:1500",
-      "apiKey": "",
-
+      "apiKey": "24e0273a-22fb-4707-b163-457e763b8919",
       "packageTypes": [
         "data",
-        "inbox",
-        "custodian"
+        "dataRecord"
       ],
       "branding": "default",
       "portal": "rdmp"

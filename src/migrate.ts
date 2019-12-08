@@ -8,7 +8,7 @@ import {ArgumentParser} from 'argparse';
 import {postwalk} from './postwalk';
 import * as FormData from "form-data";
 import {Redbox1CsvFiles} from "./Redbox/Redbox1CsvFiles";
-import csv = require("csvtojson");
+import csv = require('csvtojson');
 
 const MANDATORY_CW = [
   'idfield',
@@ -42,6 +42,7 @@ function getlogger() {
     })
   });
 }
+
 
 function connect(server: string): Redbox {
   if (server) {
@@ -83,154 +84,6 @@ async function loadcrosswalk(packagetype: string): Promise<Object | undefined> {
   }
 }
 
-// info: prints out info about a source to STDOUT, including a list of
-// available crosswalk files
-
-async function info(source: string) {
-  log.debug('Source');
-  const rbSource = connect(source);
-  const r = await rbSource.info();
-  log.info(r);
-  const crosswalk_d = config.get('crosswalks');
-  if (crosswalk_d) {
-    log.info("Available crosswalks:");
-    const d = await fs.readdir(crosswalk_d);
-    d.map((f) => {
-      var m = f.match(/^(.*?)\.json$/);
-      if (m) {
-        log.info(m[1]);
-      }
-    });
-    log.info("Run the script with --index and no --crosswalk for a list of all records in --source");
-  } else {
-    log.info("No crosswalks configured");
-  }
-}
-
-
-// index: calls source.list to get a list of oids for the requested
-// crosswalk, or all oids in the source if there's no crosswalk.
-
-// returns two lists of objects: an index of {} representing each
-// oid, and a list of errors
-
-async function index(options: Object): Promise<Object[][]> {
-  const source = options['source'];
-  const crosswalk_file = options['crosswalk'];
-  const limit = options['number'];
-  const recordId = options['record'];
-  var rbSource;
-
-  try {
-    rbSource = connect(source);
-  } catch (e) {
-    log.error('Error connecting to source rb ' + source + ': ' + e);
-    throw new Error(e);
-  }
-
-  var oids;
-
-  let filter = {};
-  if (crosswalk_file) {
-    const cw = await loadcrosswalk(`${crosswalk_file}.json`);
-    const source_type = cw['source_type'];
-    _.merge(filter, {packageType: source_type});
-    if (cw['workflow_step']) {
-      _.merge(filter, {workflow_step: cw['workflow_step']});
-    }
-    log.debug(`filter is: ${JSON.stringify(filter, null, 4)}`)
-  }
-  const returnedList = await rbSource.listCsv(filter);
-  oids = returnedList.map(function (d) {
-    let returnedId = d['id'] || d['storage_id'] || d['oid'] || d['objectId'];
-    if (_.isArray(returnedId)) {
-      returnedId = _.head(returnedId);
-    }
-    log.verbose(`returning id: ${returnedId}`);
-    return returnedId;
-  });
-  log.info(`Loaded index of ${oids.length} records`);
-  if (limit && parseInt(limit) > 0) {
-    oids.splice(limit);
-    log.info(`Limited to first ${oids.length} records`);
-  }
-  let allRecordsAttachments;
-  if (oids.length > 0) {
-    allRecordsAttachments = await collectRecordAttachments(rbSource);
-  }
-  // log.debug(`all records attachments are:`);
-  // console.dir(allRecordsAttachments);
-  let records = [];
-  for (let oid of oids) {
-    try {
-      log.debug(`oid is ${oid}`);
-      let rbSourceRecord = await rbSource.getRecord(oid);
-      const rbSourceRecordMetadata = await rbSource.getRecordMetadata(oid);
-      if (rbSourceRecord) {
-        let recordAttachments = {};
-        recordAttachments['attachments'] = allRecordsAttachments[rbSourceRecordMetadata['objectId'] || rbSourceRecord[0]['id'] || rbSourceRecord['storage_id'] || rbSourceRecord['oid']] || [];
-        records.push(_.assign({}, rbSourceRecord, rbSourceRecordMetadata, recordAttachments));
-      }
-    } catch (error) {
-      log.error("There was an error in indexing.");
-      log.error(error);
-    }
-  }
-  const errors = rbSource.errors;
-  if (errors) {
-    log.info(errors);
-    log.info(`Parse errors for ${errors.length} items`);
-  }
-  return [records, errors];
-}
-
-
-async function collectRecordAttachments(rbSource: Redbox1): Promise<Object> {
-  const attachments = await rbSource.prepareAndGetSolr({
-    display_type: 'attachment'
-  }, ['id', 'storage_id', 'oid', 'objectId', 'filename', 'attached_to']);
-  log.info(`Number of attachments returned: ${attachments.length}`);
-  const attachmentsBrief = {};
-  _.forEach(attachments, function (attachment) {
-    // log.verbose('Next attachment...');
-    // log.verbose(attachment);
-    let attachId = attachment['id'] || attachment['storage_id'] || attachment['oid'];
-    if (_.isArray(attachId)) {
-      attachId = _.head(attachId);
-    }
-    if (attachId && _.has(attachment, 'filename')) {
-      // log.debug("Found attachment match:");
-      // log.verbose(JSON.stringify(attachment));
-      let filename = attachment['filename'];
-      if (_.isArray(filename)) {
-        filename = _.head(filename);
-      }
-      // log.verbose(`filename to attach is: ${filename}`);
-      let nextAttachment = {
-        attachId: attachId,
-        attachFilename: filename
-      };
-      let attachmentName = attachment.attached_to[0];
-      if (_.isEmpty(attachmentsBrief[attachmentName])) {
-        attachmentsBrief[attachmentName] = [];
-      }
-      attachmentsBrief[attachmentName].push(nextAttachment);
-    } else {
-      // log.verbose(`No filename found for attachment: ${_.toString(attachId)}`);
-    }
-  });
-  log.debug('Completed collecting all attachments for each record');
-  // log.verbose(JSON.stringify(attachmentsBrief, null, 4));
-  return attachmentsBrief;
-}
-
-// migrate - takes the list of records from index() plus the args
-// object, and returns a new copy of the index (with extra metadata and
-// status messages from the crosswalk) and the detailed report.
-
-// Note that even after refactoring index() out of it, this function is
-// still a mess
-
 async function migrate(options: Object, outdir: string, records: Object[]): Promise<Object[][]> {
   const source = options['source'];
   const dest = options['dest'];
@@ -253,14 +106,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
     }
   }
 
-  var rbSource, rbDest;
-
-  try {
-    rbSource = connect(source);
-  } catch (e) {
-    log.error('Error connecting to source rb ' + source + ': ' + e);
-    throw new Error(e);
-  }
+  var rbDest;
 
   try {
     rbDest = connect(dest);
@@ -309,7 +155,6 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       _.assign(updated[oid], record);
       log.info(`Processing oid ${oid}`);
 
-      // let md = await rbSource.getRecord(oid);
       let md = record;
       if (!md) {
         log.error(`Couldn't get source record for ${oid}`);
@@ -318,10 +163,6 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       }
       log.info('1. got source record successfully');
 
-
-      updated[oid]['title'] = md['dc:title'];
-      updated[oid]['description'] = md['dc:description'];
-
       const report = (stage, ofield, nfield, msg, value) => {
         report_lines.push([oid, stage, ofield, nfield, msg, value]);
         if (_.isObjectLike(value)) {
@@ -329,14 +170,6 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         }
         updated[oid]['status'] = msg + ': ' + value; // status is always last thing
       };
-      let titleCheck = record['dc:title'];
-      if (!_.isEmpty(titleCheck) && titleCheck.toLowerCase() === '[untitled]') {
-        log.error(`2. title for record: ${oid} failed validation.`);
-        report('load', '', '', 'Unacceptable title', `${titleCheck}`);
-        continue;
-      } else {
-        log.info('2. have valid title...');
-      }
 
       const [mdu, md2] = crosswalk(cw, md, report);
       log.info('3. have md2');
@@ -351,105 +184,6 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         dumpjson(outdir, 'new', oid, md2);
       }
 
-      // log.debug('Checking for record owner...');
-      // if (_.isEmpty(record['owner'])) {
-      //   log.info('4. No owner. Will use CI data...');
-      //   if (_.get(md2, 'contributor_ci.text_full_name')) {
-      //     record['owner'] = md2['contributor_ci']['text_full_name'];
-      //     report('load', '', '', 'no owner, replaced with ci full name', '');
-      //     log.info('4a. using CI as owner...');
-      //   } else {
-      //     report('load', '', 'contributor_ci', `No CI or owner`, '');
-      //     log.info('4a. fail as NO owner OR CI...');
-      //     continue;
-      //   }
-      // } else {
-      //   log.info('4. Have owner...');
-      //   log.debug(record['owner']);
-      // }
-      // const ci = md2['contributor_ci'];
-      // if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
-      //   md2['contributor_ci']['email'] = record['owner'];
-      //   report('validate', '', 'contributor_ci', `CI without email: using owner: ${record['owner']}`, '');
-      // }
-      // log.debug(`CI data is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
-      // if (!_.isEmpty(ci) && _.isEmpty(ci['email'])) {
-      //   log.debug('Have a CI, but no CI email. Searching for alternative email...');
-      //   // let readStream = null;
-      //   let parser = null;
-      //   let readStream = null;
-      //   try {
-      //     readStream = fs.createReadStream(recordOwnerCsvFilePath)
-      //       .on('data', (data) => {
-      //         log.info("A data event was emitted.");
-      //       })
-      //       .on('ready', function (error) {
-      //         log.debug('The read stream is open and ready for use...');
-      //       })
-      //       .on('error', function (error) {
-      //         log.warn("Error in reading stream.");
-      //         throw new Error(error);
-      //       })
-      //       .on('close', function () {
-      //         log.info('Read stream completed.');
-      //       });
-      //     parser = parse({
-      //       columns: ['id', 'owner', 'email', 'text_full_name']
-      //     });
-      //     parser.on('readable', () => {
-      //       log.info(`Inside csv parser...`);
-      //       let row;
-      //       while (row = parser.read()) {
-      //         log.debug('Reading next row...');
-      //         const nextOwner = _.get(row, 'owner');
-      //         log.debug(`Next owner for ${JSON.stringify(row, null, 4)} is: ${nextOwner}`);
-      //         if (!_.isEmpty(nextOwner) && nextOwner === record['owner']) {
-      //           log.debug(`Found match: ${JSON.stringify(row, null, 4)}`);
-      //           md2['contributor_ci']['email'] = row['email'];
-      //           const logMessage = `CI without email: using owner: ${record['owner']} with email: ${row['email']}`;
-      //           log.info(`4a. ${logMessage}`);
-      //           report('validate', '', 'contributor_ci', logMessage, '');
-      //           parser.end();
-      //         }
-      //       }
-      //     });
-      //     parser.on('error', function (error) {
-      //       log.warn("Error in reading data.");
-      //       throw new Error(error);
-      //     });
-      //     parser.on('end', function () {
-      //       log.info('Record owner search completed.');
-      //     });
-      //
-      //     let result = readStream.pipe(parser);
-      //     log.info(`result is: ${JSON.stringify(result)}`);
-      //   } catch (error) {
-      //     log.warn("Problem reading record owners csv file. Ending csv search prematurely.");
-      //     log.error(error);
-      //     log.error('5. failed CI email check.');
-      //     report('validate', '', 'contributor_ci', `CI without email and no matching record owner for: ${record['owner']}. No CI email recorded.`, '');
-      //     if (parser) {
-      //       log.info("Unable to find match due to error. Closing parser.");
-      //       parser.end();
-      //       log.debug('Parser closed.');
-      //     }
-      //     log.warn('Skipping to next record...');
-      //     continue;
-      //   } finally {
-      //     if (parser) {
-      //       log.info("Unable to find match as completed iteration. Closing parser.");
-      //       parser.end();
-      //       log.debug('Parser closed.');
-      //     }
-      //     if (readStream) {
-      //       log.info("Closing stream.");
-      //       readStream.close();
-      //       log.debug('stream closed.');
-      //     }
-      //   }
-      //   log.debug('CI email replacement completed.');
-      //   log.info(`CI data now is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
-      // }
       const errors = validate(record['owner'], cw['required'], md2, report);
 
       if (errors.length > 0) {
@@ -490,7 +224,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       }
 
       try {
-        const perms = await setpermissions(rbSource, rbDest, noid, oid, md2, cw['permissions']);
+        const perms = await setpermissions(rbDest, noid, oid, md2, cw['permissions']);
         if (!perms) {
           throw('unknown error');
         }
@@ -578,7 +312,6 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
       let pubOid;
       try {
-        // let mdPub = await rbSource.getRecord(oid);
         let mdPub = record;
         log.info(`11. Got record ${oid} for publication crosswalk`);
         report("publication", '', '', 'Crosswalking', '');
@@ -623,27 +356,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         log.error("11. Publish error: " + e);
         report('published', '', '', 'publish failed', e.message);
       }
-      if (!_.isEmpty(record['attachments'])) {
-        try {
-          const result = await uploadAttachments(rbSource, rbDest, noid, oid, record, md2, pubOid, md2Pub, report);
-          if (!result) {
-            console.log('No result!!!');
-            throw('unknown error');
-          }
-          if ('error' in result) {
-            console.log('error in result');
-            console.dir(result);
-            throw(result['error']);
-          }
-          log.info('12. Successfully uploaded attachments.');
-        } catch (e) {
-          console.error('12. There was an error in uploading attachments.');
-          console.error(e);
-          report('attachments', '', '', 'failed', e);
-        }
-      } else {
-        log.info(`12. No attachments for record: ${oid}`);
-      }
+      log.info(`12. No attachments for record: ${oid}`);
     }
 
     log.info(`${n_crosswalked} crosswalked`);
@@ -692,23 +405,9 @@ async function pauseMigration() {
 //
 // This preserves any extra people granted view access in RB 1.9
 
-async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oid: string, md2: Object, pcw: Object): Promise<Object> {
-  // var perms = await rbSource.getPermissions(oid);
+async function setpermissions(rbDest: Redbox, noid: string, oid: string, md2: Object, pcw: Object): Promise<Object> {
   var nperms = {view: [], edit: []};
-  // if (!perms) {
-   var perms = {view: ['Guest'], edit: []};
-  // }
-  // const users = await usermap(rbSource, oid, md2, pcw);
-  // for (const cat in users) {
-  //   for (const user in users[cat]) {
-  //     for (const p in pcw[cat]) {
-  //       if (!(user in perms[p])) {
-  //         perms[p].push(user);
-  //       }
-  //     }
-  //   }
-  //   ['view', ' edit'].map((p) => perms[p] = _.union(perms[p], nperms[p]));
-  // }
+  var perms = {view: ['Guest'], edit: []};
   log.debug("Permissions:");
   log.info(JSON.stringify(perms));
   try {
@@ -718,123 +417,6 @@ async function setpermissions(rbSource: Redbox, rbDest: Redbox, noid: string, oi
   } catch (e) {
     throw e;
   }
-}
-
-async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string, oid: string, redbox1Record: Object, redbox2Record: Object, pubOid: string, redbox2PubRecord: Object, reportFn: any): Promise<Object> {
-  const magicFileBytesMaxSize = 104857600;
-
-  // guessing that it is better to call redbox2 (ie: redbox2 can handle the traffic) for each attachment rather than trying to send all attachments at once (in case any attachment is large)
-  log.info('Fetching and uploading any attachments...');
-  log.verbose(`Have ${redbox1Record['attachments'].length} attachments...`);
-  let dataLocations = redbox2Record['dataLocations'] || [];
-  let errors = [];
-  for (const attachment of redbox1Record['attachments']) {
-    // log.verbose('Next attachment to fetch:', JSON.stringify(attachment));
-    // ensure data returned is a stream - the default, string, will corrupt binary data - so can send straight on to upstream
-    const id = attachment.attachId;
-    const filename = encodeURIComponent(attachment.attachFilename);
-    log.verbose(`next attachment filename is: ${filename}`);
-    const data = await rbSource.readDatastream(id, filename, {responseType: 'stream'});
-    if (_.get(data, 'statusCode') != '200') {
-      log.warn(`Attachment read datastream failed for ${JSON.stringify(attachment)}. Skipping this iteration...`);
-      errors.push({'message': 'No get nor write datastream result', oid: noid, attachment: JSON.stringify(attachment)});
-      continue;
-    }
-    log.verbose('Have Redbox1 attachment data. Sending upstream...');
-    log.verbose(`Received data type is: ${typeof data}`);
-    log.info('Fetching attachment workflow metadata...');
-    let workflowMetadata = await rbSource.readDatastream(id, "workflow.metadata", {});
-    if (_.isEmpty(workflowMetadata)) {
-      log.info("Problem finding 'workflow.metadata'. Trying 'attachments.metadata' instead...");
-      workflowMetadata = await rbSource.readDatastream(id, "attachments.metadata", {});
-    }
-    log.verbose(JSON.stringify(workflowMetadata));
-    let form = new FormData();
-    form.append('attachmentFields', data);
-    log.info('Waiting for upload to complete...');
-    const result = await (<Redbox2>rbDest).writeDatastreams(noid, form, {
-      maxContentLength: magicFileBytesMaxSize,
-      headers: {...form.getHeaders(),}
-    });
-    if (!result || !_.has(result, 'message')) {
-      log.warn("No result received. Sending to errors");
-      errors.push({'message': 'No write datastream result', oid: noid, attachment: JSON.stringify(attachment)});
-    } else {
-      log.debug(JSON.stringify(result));
-      log.debug('Completed next upload. Updating metadata....');
-      const resultMessage = result['message'];
-      if (resultMessage['code'] != '200' || resultMessage['oid'] != noid || resultMessage['fileIds'].length != 1) {
-        // allow other pending attachments to succeed - only throw errors after all attachments attempted to upload
-        log.warn("Result was not successful. Sending to errors.");
-        errors.push(JSON.stringify(result));
-      } else {
-        const fileId = resultMessage.fileIds[0];
-        const location = `${resultMessage.oid}/attach/${fileId}`;
-        let nextLocation = _.omitBy({
-          type: 'attachment',
-          location: location,
-          name: attachment.attachFilename,
-          fileId: fileId,
-          uploadUrl: `${rbDest.baseURL}/record/${location}`,
-          notes: _.get(workflowMetadata, 'formData.fileDescription'),
-          accessRights: _.get(workflowMetadata, 'formData.access_rights'),
-          attachmentType: _.get(workflowMetadata, 'formData.attachment_type')
-        }, _.isEmpty);
-        console.log('built next data location:');
-        console.dir(nextLocation);
-        dataLocations.push(nextLocation);
-        // report on each successful upload, so upload errors, only, can be thrown afterwards.
-        try {
-          // update data location for Redbox2 dataRecord metadata: dataLocations
-          redbox2Record['dataLocations'] = dataLocations;
-          const metadataResult = await rbDest.updateRecordMetadata(noid, redbox2Record);
-          log.verbose('Metadata update result is: ', metadataResult);
-          // update data location for Redbox2 dataPublication metadata: dataLocations
-          redbox2PubRecord['dataLocations'] = dataLocations;
-          const metadataPubResult = await rbDest.updateRecordMetadata(pubOid, redbox2PubRecord);
-          log.verbose('Metadata publication update result is: ', metadataPubResult);
-          let metaMetadataObject = await rbDest.getRecordMetadata(noid);
-          metaMetadataObject['attachmentFields'] = ["dataLocations"];
-          log.verbose('Uploading metaMetadata: ');
-          // log.verbose(JSON.stringify(metaMetadataObject));
-          const updateMetaMetaDataResult = await (<Redbox2>rbDest).updateRecordObjectMetadata(noid, metaMetadataObject);
-          reportFn('attachments', '', '', 'set', JSON.stringify(result));
-        } catch (error) {
-          log.error("There was a problem updating record metadata", error)
-          errors.push({noid: error});
-        }
-      }
-    }
-  }
-  if (!_.isEmpty(errors)) {
-    throw new Error(`There was a problem uploading 1 or more attachments for: ${noid}: ${JSON.stringify(errors)}`);
-  } else {
-    log.info(`All upload attachments successfully completed for ${oid}`);
-    return {'success': true};
-  }
-}
-
-
-// build a dict of user categories (ie contributor_ci) to lists of user IDs
-
-async function usermap(rbSource: Redbox, oid: string, md2: Object, pcw: Object): Promise<{ [cat: string]: [string] }> {
-  var users = {};
-
-  const id_field = pcw['user_id'];
-
-  for (var c in pcw['permissions']) {
-    if (c === '_owner') {
-      const oldperms = await rbSource.getPermissions(oid);
-      users[c] = [oldperms['edit'][0]];
-    } else if (c in md2) {
-      if (Array.isArray(md2[c])) {
-        users[c] = md2[c].map((u) => u[id_field])
-      } else {
-        users[c] = [md2[c][id_field]];
-      }
-    }
-  }
-  return users;
 }
 
 
@@ -882,6 +464,25 @@ async function writereport(report: Object, fn: string): Promise<void> {
   log.info('Report done.');
 }
 
+function getInputResource() {
+  const resources = _.get(config, ['servers', 'source', 'resources']);
+  const resourcesDir = _.get(resources, 'directory', 'resources');
+  return function (crosswalkFileName) {
+    const crosswalkFilePath = `${resourcesDir}/${crosswalkFileName}.csv`;
+    return crosswalkFilePath
+  }
+}
+
+const inputResourceFile = getInputResource();
+
+function defaultHandler() {
+  return new Promise((resolve, reject) => {
+    log.debug('next line...');
+    log.debug(index);
+    jsonObj.oid = `${index}_${args['crosswalk']}`;
+    resolve();
+  })
+}
 
 async function main(args) {
 
@@ -890,18 +491,21 @@ async function main(args) {
   const outdir = path.join(args['outdir'], `report_${name}_${timestamp}`);
 
   if (!(args['crosswalk'] || args['index'])) {
-    info(args['source']);
+    throw new Error("Usage: A crosswalk must be provided. An index only is not permitted.");
   } else {
-
     let records = [];
-
+    const sourceFilePath = inputResourceFile(args['crosswalk']);
+    log.debug(`csv file path is: ${sourceFilePath}`);
+    if (!fs.existsSync(sourceFilePath)) {
+      throw new Error(`Unable to find source file: ${sourceFilePath}`);
+    }
     await csv()
-      .fromFile('resources/input.csv')
+      .fromFile(sourceFilePath)
       .subscribe((jsonObj, index) => {
         return new Promise((resolve, reject) => {
           log.debug('next line...');
           log.debug(index);
-          jsonObj.oid = `${index}`;
+          jsonObj.oid = `${index}_${args['crosswalk']}`;
           resolve();
         })
       })
@@ -951,7 +555,7 @@ parser.addArgument(
   ['-c', '--crosswalk'],
   {
     help: 'Crosswalk (package type + workflow step). Leave empty for a list of available crosswalks.',
-    defaultValue: null
+    defaultValue: 'dataset'
   }
 );
 
@@ -959,7 +563,7 @@ parser.addArgument(
   ['-s', '--source'],
   {
     help: 'ReDBox server to migrate records from.',
-    defaultValue: 'Test1_9'
+    defaultValue: 'source'
   }
 );
 
