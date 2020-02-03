@@ -552,13 +552,17 @@ async function ingestCsv(inputCsv, crosswalk) {
     _.set(current, `${nextNode}`, next);
   }
 
+  function capitalizeAndSpace(n) {
+    return _.capitalize(_.lowerCase(n));
+  }
+
   await csv()
     .fromFile(sourceFilePath)
     .preFileLine((fileLineString, lineIdx) => {
       return new Promise((resolve, reject) => {
         if (lineIdx === 0) {
           // ensure headers are consistent
-          fileLineString = _.join(_.map(_.split(fileLineString, ','), _.camelCase));
+          fileLineString = _.join(_.map(_.split(fileLineString, ','), capitalizeAndSpace));
           log.debug(`incoming headers are: ${fileLineString}`)
         }
         log.debug(`incoming: ${fileLineString}`);

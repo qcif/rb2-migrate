@@ -32,44 +32,44 @@
   "ignore": [
   ],
   "fields": {
-    "recordId": "_",
-    "colSeqId": "_",
-    "metadataType": "_",
-    "metadataSubtype": "_",
-    "colStatus": "_",
-    "colStatusDate": "_",
-    "colApprovType": "_",
-    "securityClass": "_",
-    "orgName": "_",
-    "effectiveFrom": "_",
-    "effectiveTo": "_",
-    "shortName": "_",
-    "guideForUse": "_",
-    "purpose": "_",
-    "coverage": "_",
-    "content": "_",
-    "siteImplemented": "_",
-    "publishedOutput": "_",
-    "frequency": "_",
-    "accessibility": "_",
-    "accessConstraint": "_",
-    "useConstraint": "_",
-    "methodology": "_",
-    "statisticalUnit": "_",
-    "reportingRequirements": "_",
-    "reportingReqFreq": "_",
-    "generalComments": "_",
-    "systemName": "_",
-    "sourceOrganisation": "_",
-    "sourceDocument": "_",
-    "dateLastReviewed": "_",
-    "keywords": "_",
-    "applicationCustodian": "_",
-    "applicationCustodianPositionDetails": "_",
-    "qhddMetadataStructureComplete": "_",
-    "name": "title",
-    "description": "description",
-    "dataCustodianStatewide": {
+    "Record id": "_",
+    "Col seq id": "_",
+    "Name": "Title",
+    "Metadata type": "_",
+    "Metadata subtype": "_",
+    "Col status": "_",
+    "Col status date": "_",
+    "Col approv type": "_",
+    "Security class": "_",
+    "Org name": "_",
+    "Effective from": "_",
+    "Effective to": "_",
+    "Description": "_",
+    "Short name": "_",
+    "Guide for use": "_",
+    "Purpose": "_",
+    "Coverage": "_",
+    "Content": "_",
+    "Site implemented": "_",
+    "Published output": "_",
+    "Frequency": "_",
+    "Accessibility": "_",
+    "Access constraint": "_",
+    "Use constraint": "_",
+    "Methodology": "_",
+    "Statistical unit": "_",
+    "Reporting requirements": "_",
+    "Reporting req freq": "_",
+    "General comments": "_",
+    "System name": "_",
+    "Source organisation": "_",
+    "Source document": "_",
+    "Date last reviewed": "_",
+    "Keywords": "_",
+    "Application custodian": "_",
+    "Application custodian position details": "_",
+    "Qhdd metadata structure complete": "_",
+    "Data custodian statewide": {
       "destinations": [
         {
           "to": "name"
@@ -79,7 +79,7 @@
       "handleAll": true,
       "handler": "Custodian"
     },
-    "dataCustodianPositionDetails": {
+    "Data custodian position details": {
       "destinations": [
         {
           "to": "position"
@@ -89,7 +89,7 @@
       "handleAll": true,
       "handler": "Custodian"
     },
-    "contactTel": {
+    "Contact tel": {
       "destinations": [
         {
           "to": "telephone"
@@ -99,7 +99,7 @@
       "handleAll": true,
       "handler": "Custodian"
     },
-    "email": {
+    "Email": {
       "destinations": [
         {
           "to": "email"
@@ -109,7 +109,7 @@
       "handleAll": true,
       "handler": "Custodian"
     },
-    "fax": {
+    "Fax": {
       "destinations": [
         {
           "to": "fax"
