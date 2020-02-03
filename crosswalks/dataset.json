@@ -28,15 +28,48 @@
     }
   },
   "required": [
-    "title",
-    "description"
   ],
   "ignore": [
   ],
   "fields": {
-    "Application -collection Name": "title",
-    "Application Description": "description",
-    "Data Custodian (statewide)": {
+    "recordId": "_",
+    "colSeqId": "_",
+    "metadataType": "_",
+    "metadataSubtype": "_",
+    "colStatus": "_",
+    "colStatusDate": "_",
+    "colApprovType": "_",
+    "securityClass": "_",
+    "orgName": "_",
+    "effectiveFrom": "_",
+    "effectiveTo": "_",
+    "shortName": "_",
+    "guideForUse": "_",
+    "purpose": "_",
+    "coverage": "_",
+    "content": "_",
+    "siteImplemented": "_",
+    "publishedOutput": "_",
+    "frequency": "_",
+    "accessibility": "_",
+    "accessConstraint": "_",
+    "useConstraint": "_",
+    "methodology": "_",
+    "statisticalUnit": "_",
+    "reportingRequirements": "_",
+    "reportingReqFreq": "_",
+    "generalComments": "_",
+    "systemName": "_",
+    "sourceOrganisation": "_",
+    "sourceDocument": "_",
+    "dateLastReviewed": "_",
+    "keywords": "_",
+    "applicationCustodian": "_",
+    "applicationCustodianPositionDetails": "_",
+    "qhddMetadataStructureComplete": "_",
+    "name": "title",
+    "description": "description",
+    "dataCustodianStatewide": {
       "destinations": [
         {
           "to": "name"
@@ -46,10 +79,40 @@
       "handleAll": true,
       "handler": "Custodian"
     },
-    "Data Custodian Position Details": {
+    "dataCustodianPositionDetails": {
       "destinations": [
         {
           "to": "position"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "Custodian"
+    },
+    "contactTel": {
+      "destinations": [
+        {
+          "to": "telephone"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "Custodian"
+    },
+    "email": {
+      "destinations": [
+        {
+          "to": "email"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "Custodian"
+    },
+    "fax": {
+      "destinations": [
+        {
+          "to": "fax"
         }
       ],
       "type": "record",

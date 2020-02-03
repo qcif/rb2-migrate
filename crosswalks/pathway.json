@@ -1,0 +1,77 @@
+{
+  "idfield": "oid",
+  "source_type": "pathway",
+  "dest_type": "pathway",
+  "to_workflow": "published",
+  "publish": true,
+  "permissions": {
+    "user_id": "email",
+    "permissions": {
+      "_owner_": [
+        "view",
+        "edit"
+      ],
+      "contributor_ci": [
+        "view",
+        "edit"
+      ],
+      "contributor_data_manager": [
+        "view",
+        "edit"
+      ],
+      "contributors": [
+        "view"
+      ],
+      "contributor_supervisor": [
+        "view"
+      ]
+    }
+  },
+  "required": [
+  ],
+  "ignore": [
+  ],
+  "fields": {
+    "questions": {
+      "destinations": [
+        {
+          "to": "questions"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "Pathway"
+    },
+    "responses": {
+      "destinations": [
+        {
+          "to": "responses"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "Pathway"
+    },
+    "help": {
+      "destinations": [
+        {
+          "to": "help"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "Pathway"
+    },
+    "summary": {
+      "destinations": [
+        {
+          "to": "summary"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "Pathway"
+    }
+  }
+}
+

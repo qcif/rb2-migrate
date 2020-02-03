@@ -2,13 +2,14 @@
 // Typescript version of Stash 2 -> 3 migration code
 //
 
-import {Redbox, Redbox1, Redbox1Files, Redbox2} from './Redbox';
+import {Redbox, Redbox1, Redbox2} from './Redbox';
 import {crosswalk, validate} from './crosswalk';
 import {ArgumentParser} from 'argparse';
 import {postwalk} from './postwalk';
 import * as FormData from "form-data";
 import {Redbox1CsvFiles} from "./Redbox/Redbox1CsvFiles";
 import csv = require('csvtojson');
+import json = Mocha.reporters.json;
 
 const MANDATORY_CW = [
   'idfield',
@@ -49,8 +50,6 @@ function connect(server: string): Redbox {
     const cf = config.get('servers.' + server);
     if (cf['version'] === 'Redbox1') {
       return new Redbox1(cf);
-    } else if (cf['version'] === 'Redbox1Files') {
-      return new Redbox1Files(cf);
     } else if (cf['version'] === 'Redbox1CsvFiles') {
       return new Redbox1CsvFiles(cf);
     } else {
@@ -406,13 +405,14 @@ async function pauseMigration() {
 // This preserves any extra people granted view access in RB 1.9
 
 async function setpermissions(rbDest: Redbox, noid: string, oid: string, md2: Object, pcw: Object): Promise<Object> {
-  var nperms = {view: [], edit: []};
-  var perms = {view: ['Guest'], edit: []};
+  var perms = {view: ['guest'], edit: ['guest']};
   log.debug("Permissions:");
   log.info(JSON.stringify(perms));
   try {
-    const view = await rbDest.grantPermission(noid, 'view', perms['view']);
-    const edit = await rbDest.grantPermission(noid, 'edit', perms['edit']);
+    const view = await rbDest.grantPermission(noid, 'view', {users: perms['view']});
+    log.debug(`view is `);
+    log.debug(JSON.stringify(view));
+    const edit = await rbDest.grantPermission(noid, 'edit', {users: perms['edit']});
     return {'success': true};
   } catch (e) {
     throw e;
@@ -475,15 +475,6 @@ function getInputResource() {
 
 const inputResourceFile = getInputResource();
 
-function defaultHandler() {
-  return new Promise((resolve, reject) => {
-    log.debug('next line...');
-    log.debug(index);
-    jsonObj.oid = `${index}_${args['crosswalk']}`;
-    resolve();
-  })
-}
-
 async function main(args) {
 
   const timestamp = Date.now().toString();
@@ -492,47 +483,200 @@ async function main(args) {
 
   if (!(args['crosswalk'] || args['index'])) {
     throw new Error("Usage: A crosswalk must be provided. An index only is not permitted.");
+  }
+  const inputCsv = args['csv'] || args['crosswalk'];
+  const records = await ingestCsv(inputCsv, args['crosswalk']);
+  log.debug(`records are ${JSON.stringify(records, null, 4)}`);
+  // log.debug('Migrating custodian and related data for searching...');
+  if (args['crosswalk']) {
+    const [updated_records, report] = await migrate(args, outdir, records);
+    await writeindex(updated_records, path.join(outdir, `index_${timestamp}.csv`));
+    await writereport(report, path.join(outdir, `report_${timestamp}.csv`));
   } else {
-    let records = [];
-    const sourceFilePath = inputResourceFile(args['crosswalk']);
-    log.debug(`csv file path is: ${sourceFilePath}`);
-    if (!fs.existsSync(sourceFilePath)) {
-      throw new Error(`Unable to find source file: ${sourceFilePath}`);
-    }
-    await csv()
-      .fromFile(sourceFilePath)
-      .subscribe((jsonObj, index) => {
-        return new Promise((resolve, reject) => {
-          log.debug('next line...');
-          log.debug(index);
-          jsonObj.oid = `${index}_${args['crosswalk']}`;
-          resolve();
-        })
-      })
-      .on('data', (jsonObj) => {
-        log.debug('have transformed data..');
-        log.debug(JSON.stringify(JSON.parse(jsonObj.toString())), null, 4);
-        records.push(JSON.parse(jsonObj.toString()));
-      })
-      .on('error', (err) => {
-        console.log(err)
-      })
-      .on('end', () => {
-        console.log('done!')
-      });
-
-    log.debug(`records are: ${records}`);
-
-    if (args['crosswalk']) {
-      const [updated_records, report] = await migrate(args, outdir, records);
-      await writeindex(updated_records, path.join(outdir, `index_${timestamp}.csv`));
-      await writereport(report, path.join(outdir, `report_${timestamp}.csv`));
-    } else {
-      await writeindex(records, path.join(outdir, `index_${timestamp}.csv`));
-    }
+    await writeindex(records, path.join(outdir, `index_${timestamp}.csv`));
   }
 
+  // await pocGraphLib();
+}
 
+async function ingestCsv(inputCsv, crosswalk) {
+  const sourceFilePath = inputResourceFile(inputCsv);
+  log.debug(`csv file path is: ${sourceFilePath}`);
+  if (!fs.existsSync(sourceFilePath)) {
+    throw new Error(`Unable to find source file: ${sourceFilePath}`);
+  }
+  const records = [];
+  let pathway = {};
+  let responsesTracker = {};
+  let qNo, kNo, rNo, hNo, sNo;
+  qNo = rNo = hNo = sNo = 0;
+
+  function buildPathway(current, next) {
+    const pNo = `p${next['pathway']}`;
+    let type, key, subType;
+    switch (next['type']) {
+      case 'question':
+        type = 'questions';
+        key = `q${++qNo}`;
+        break;
+      case 'tool tip':
+      case 'popup':
+      case 'help':
+      case 'local help':
+        type = 'help';
+        key = `h${++hNo}`;
+        // subType = _.camelCase(next['type']);
+        break;
+      case 'response':
+        type = 'responses';
+        key = `r${++rNo}`;
+        let currentResponsesTracker = _.get(responsesTracker, pNo);
+        if (!currentResponsesTracker) {
+          currentResponsesTracker = [];
+          _.set(responsesTracker, pNo, currentResponsesTracker)
+        } else if (_.includes(currentResponsesTracker, next['content'])) {
+          log.warn(`${current[pNo][type]} already contains value: ${next['content']}`);
+          return;
+        }
+        currentResponsesTracker.push(next['content']);
+        break;
+      case 'summary':
+        type = 'endOfPathSummary';
+        key = `s${++sNo}`;
+        break;
+      default:
+        log.warn(`No handler for type: ${next['type']}. Skipping...`)
+        return
+    }
+    let nextNode = `${pNo}.${type}.${key}`;
+    _.set(current, `${nextNode}`, next);
+  }
+
+  await csv()
+    .fromFile(sourceFilePath)
+    .preFileLine((fileLineString, lineIdx) => {
+      return new Promise((resolve, reject) => {
+        if (lineIdx === 0) {
+          // ensure headers are consistent
+          fileLineString = _.join(_.map(_.split(fileLineString, ','), _.camelCase));
+          log.debug(`incoming headers are: ${fileLineString}`)
+        }
+        log.debug(`incoming: ${fileLineString}`);
+        resolve(fileLineString);
+      })
+    })
+    .subscribe((jsonObj, index) => {
+      return new Promise((resolve, reject) => {
+        log.debug('next line...');
+        log.debug(index);
+        log.debug(jsonObj);
+        jsonObj.oid = `${args['crosswalk']}${index}`;
+        resolve();
+      });
+    })
+    .on('data', (jsonObj) => {
+      log.debug('have transformed data..');
+      switch (crosswalk) {
+        case 'knowledgeBase':
+          log.debug('in knowledgeBase...');
+          if (JSON.parse(jsonObj.toString())['source'] === 'knowledgeBase') {
+            log.debug(JSON.stringify(JSON.parse(jsonObj.toString())), null, 4);
+            records.push(JSON.parse(jsonObj.toString()));
+          }
+          break;
+        case 'pathway':
+          log.debug('in pathway...');
+          buildPathway(pathway, JSON.parse(jsonObj));
+          break;
+        default:
+          log.debug(JSON.stringify(JSON.parse(jsonObj.toString())), null, 4);
+          records.push(JSON.parse(jsonObj.toString()));
+      }
+    })
+    .on('error', (err) => {
+      console.log(err)
+    })
+    .on('end', () => {
+      console.log('Csv ingest is done!')
+    });
+  if (!_.isEmpty(pathway)) {
+    _.each(pathway, function(value, key) {
+      _.set(value, 'oid', key)
+      records.push(value)
+    });
+  }
+  return records;
+}
+
+async function migratePathway(records2) {
+  log.info('testing q and a...');
+  const qAPath = 'resources/questionsSample.json';
+  if (!fs.existsSync(qAPath)) {
+    throw new Error(`Unable to find source file: ${qAPath}`);
+  }
+  try {
+    const pathway = await fs.readJson(qAPath);
+    _.forEach(pathway, function (value, key) {
+      log.info(key);
+      value['oid'] = key;
+      value['QAcode'] = key;
+      records2.push(value);
+    });
+    return records2;
+  } catch (e) {
+    log.error("Unable to read json file;")
+  }
+}
+
+function dotRendererFn(graph) {
+  graph.setGraphVizPath("/usr/local/bin");
+  graph.output("png", "resources/test01.png");
+  log.info('done');
+}
+
+function errback(code, out, err) {
+  log.info('Reached renderer error');
+  throw new Error(err);
+}
+
+async function pocGraphLib() {
+  const graphLib = require("graphlib");
+  let graphJson = {
+    options: {
+      directed: true,
+      multigraph: false,
+      compound: true
+    }
+  };
+  var g = graphLib.json.read(graphJson);
+  for (const nextNode of ["q1", "q2", "q3"]) {
+    g.setNode(nextNode, {label: `question ${nextNode}`});
+  }
+  for (const nextNode of ["r1", "r2", "r3", "yes"]) {
+    g.setNode(nextNode, {label: `response ${nextNode}`});
+  }
+  _.forEach([{v: "q1", w: ["r1", "r2", "r3", "r4"]}, {v: ["r1", "r2", "r3"], w: "q2"}, {
+    v: "r4",
+    w: "s3"
+  }], function (nextEdge) {
+    for (const nextV of _.castArray(nextEdge.v)) {
+      for (const nextW of _.castArray(nextEdge.w)) {
+        //NB: the label has to have space in order for quotes to be kept
+        g.setEdge(nextV, nextW);
+      }
+    }
+  });
+  log.info(JSON.stringify(graphLib.json.write(g), null, 4));
+  log.info(`is acyclic: ${graphLib.alg.isAcyclic(g)}`);
+  const file = 'resources/output.json';
+  fs.outputJsonSync(file, graphLib.json.write(g));
+
+  const dot = require("graphlib-dot");
+  const file2 = 'resources/graph.dot';
+  fs.outputFileSync(file2, `${dot.write(g)}`);
+  fs.ensureFileSync('resources/graph.dot');
+  const graphviz = require("graphviz");
+  graphviz.parse(file2, dotRendererFn, errback);
 }
 
 
@@ -556,6 +700,14 @@ parser.addArgument(
   {
     help: 'Crosswalk (package type + workflow step). Leave empty for a list of available crosswalks.',
     defaultValue: 'dataset'
+  }
+);
+
+parser.addArgument(
+  ['-q', '--csv'],
+  {
+    help: 'csv ingest source.',
+    defaultValue: null
   }
 );
 

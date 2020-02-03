@@ -2,7 +2,9 @@
   "servers": {
     "source": {
       "packageTypes": [
-        "dataset"
+        "dataset",
+        "knowledgeBase",
+        "pathway"
       ],
       "crosswalks": {
         "dataset": {
@@ -12,7 +14,12 @@
         },
         "knowledgeBase": {
           "knowledgeBase": [
-            "dataRecord"
+            "knowledgeBase"
+          ]
+        },
+        "pathway": {
+          "pathway": [
+            "pathway"
           ]
         }
       }
@@ -20,10 +27,12 @@
     "Test2_0": {
       "version": "Redbox2",
       "baseURL": "http://localhost:1500",
-      "apiKey": "24e0273a-22fb-4707-b163-457e763b8919",
+      "apiKey": "",
+
       "packageTypes": [
         "data",
-        "dataRecord"
+        "knowledgeBase",
+        "pathway"
       ],
       "branding": "default",
       "portal": "rdmp"

@@ -14,4 +14,4 @@ test/diag
 test/storage
 temp/
 test.log
-resources/input*.*
+resources/

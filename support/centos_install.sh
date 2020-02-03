@@ -34,3 +34,7 @@ nvm install node --lts || exit 1
 
 echo "Installing dependencies for building native modules if needed..."
 sudo yum -y install gcc-c++ make || exit 1
+
+echo "Installing graphviz (dot) for rendering graphs..."
+sudo yum -y install graphviz
+ln -s /bin/dot /usr/local/bin/
