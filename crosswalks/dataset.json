@@ -72,7 +72,7 @@
     "Data custodian statewide": {
       "destinations": [
         {
-          "to": "name"
+          "to": "Name"
         }
       ],
       "type": "record",
@@ -82,7 +82,7 @@
     "Data custodian position details": {
       "destinations": [
         {
-          "to": "position"
+          "to": "Position"
         }
       ],
       "type": "record",
@@ -92,7 +92,7 @@
     "Contact tel": {
       "destinations": [
         {
-          "to": "telephone"
+          "to": "Telephone"
         }
       ],
       "type": "record",
@@ -102,7 +102,7 @@
     "Email": {
       "destinations": [
         {
-          "to": "email"
+          "to": "Email"
         }
       ],
       "type": "record",
@@ -112,7 +112,7 @@
     "Fax": {
       "destinations": [
         {
-          "to": "fax"
+          "to": "Fax"
         }
       ],
       "type": "record",

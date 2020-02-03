@@ -4,9 +4,9 @@ export class Custodian extends HandlerBase implements Handler {
 
   crosswalk(o: Object): Object | undefined {
     const result = {};
-    result['custodian'] = {};
+    result['Custodian'] = {};
     for (const dest of this.config['destinations']) {
-      result['custodian'][dest["to"]] = o;
+      result['Custodian'][dest["to"]] = o;
     }
     return result;
   }
