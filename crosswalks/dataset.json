@@ -34,7 +34,7 @@
   "fields": {
     "Record id": "_",
     "Col seq id": "_",
-    "Name": "Title",
+    "Name": "title",
     "Metadata type": "_",
     "Metadata subtype": "_",
     "Col status": "_",
@@ -44,7 +44,7 @@
     "Org name": "_",
     "Effective from": "_",
     "Effective to": "_",
-    "Description": "_",
+    "Description": "description",
     "Short name": "_",
     "Guide for use": "_",
     "Purpose": "_",
