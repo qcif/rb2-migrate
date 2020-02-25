@@ -44,3 +44,14 @@ export function getCountryName(countryCode) {
 export {
   htmlDescriptionFilter
 }
+
+export function mergeCustomizer(objValue, srcValue) {
+  // if existing object is an array, we want to ensure that its first indicies are not replaced by an incoming (src) array
+  if (_.isArray(objValue)) {
+    // console.log(`objValue is...`);
+    // console.dir(objValue);
+    // console.log(`srcValue is`);
+    // console.dir(srcValue);
+    return objValue.concat(srcValue);
+  }
+}
