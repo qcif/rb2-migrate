@@ -12,6 +12,8 @@
 // have an entry in the CROSSWALK dict: if they do, change
 // fieldname
 
+import {mergeCustomizer} from "./utils/helpers";
+
 const fs = require('fs-extra');
 const util = require('util');
 const _ = require('lodash');
@@ -177,15 +179,18 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                   }
                 }
               } else {
-                //console.log("Non-repeatable handler " + JSON.stringify(src[srcfield]));
+                // console.log("Non-repeatable handler " + JSON.stringify(src[srcfield]));
                 const isSourceFieldAnArray = _.isArray(src[srcfield]);
                 if (spec['handleAll']) {
                   const allHandled = apply_handler(h, src[srcfield]);
+                  // console.log(`current dest before is ${JSON.stringify(dest, null, 4)}`);
+                  // console.log(`all handled is: ${JSON.stringify(allHandled, null, 4)}`);
                   if (spec["additive"]) {
                     handleAdditive(dest, destfield, allHandled);
                   } else {
-                    _.merge(dest, allHandled);
+                    _.mergeWith(dest, allHandled, mergeCustomizer);
                   }
+                  // console.log(`current dest after is ${JSON.stringify(dest, null, 4)}`);
                 } else if (isSourceFieldAnArray) {
                   const first = src[srcfield][0]
                   //console.log("Got array, picking first item");

@@ -6,10 +6,10 @@ import {Redbox, Redbox1, Redbox2} from './Redbox';
 import {crosswalk, validate} from './crosswalk';
 import {ArgumentParser} from 'argparse';
 import {postwalk} from './postwalk';
-import * as FormData from "form-data";
 import {Redbox1CsvFiles} from "./Redbox/Redbox1CsvFiles";
+import {createPathwayGraph, outputGraph, validateGraph} from "./nodegraph";
 import csv = require('csvtojson');
-import json = Mocha.reporters.json;
+// import {pocGraphLib} from "./nodegraph";
 
 const MANDATORY_CW = [
   'idfield',
@@ -28,6 +28,9 @@ const winston = require('winston');
 const stringify = require('csv-stringify/lib/sync');
 const _ = require('lodash');
 const parse = require('csv-parse');
+
+const {format} = winston;
+const {combine, label, json} = format;
 
 function getlogger() {
   const logcfs = config.get('logs');
@@ -137,10 +140,10 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
       await pauseMigration();
 
       let oid = record['oid'];
-      console.log('record is now:');
-      console.log(record);
-      console.log('oid is:');
-      console.log(oid);
+      // console.log('record is now:');
+      // console.log(record);
+      // console.log('oid is:');
+      // console.log(oid);
       if (_.isEmpty(oid)) {
         oid = record['objectId'];
       }
@@ -172,7 +175,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
       const [mdu, md2] = crosswalk(cw, md, report);
       log.info('3. have md2');
-      console.dir(md2);
+      // console.dir(md2);
       updated[oid]['status'] = 'crosswalked';
       n_crosswalked += 1;
       var noid = 'new_' + oid;
@@ -198,10 +201,38 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         report('validate', '', '', 'valid', '');
       }
       if (!rbDest || args['index']) {
-        log.warn('6. No dest.');
+        log.warn('6a. No dest.');
         continue;
       }
-      log.info('6. dest present. continuing');
+      log.info('6a. dest present. continuing');
+
+      try {
+        if (args['crosswalk'] === 'pathway') {
+          console.log('Generating data structure and visual graph of pathway...');
+          const errorMessages = [];
+          const g = createPathwayGraph(md2, log, errorMessages);
+          console.log('Validating pathway graph...');
+          validateGraph(g, errorMessages);
+          // always create output (seeing what sinks,sources, cycles are if problems is useful)
+          outputGraph(g);
+          const reportTitle = 'validate pathway graph';
+          if (_.isEmpty(errorMessages)) {
+            report(reportTitle, '', '', 'valid', '');
+            log.info('6b. passed pathway graph validation.');
+          } else {
+            report(reportTitle, '', '', 'invalid', errorMessages);
+            log.error('6b. failed pathway graph validation...');
+            log.error(`error messages from graph validation: ${JSON.stringify(errorMessages, null, 4)}`);
+            continue;
+          }
+        }
+      } catch (e) {
+        log.error(e);
+        report('graphing pathway', '', '', 'failed', e);
+        await pauseMigration();
+        continue;
+      }
+
       try {
         log.debug('Creating data record...');
         noid = await rbDest.createRecord(md2, dest_type);
@@ -460,7 +491,7 @@ async function writeerrors(errors_o: Object, filename: string): Promise<void> {
 async function writereport(report: Object, fn: string): Promise<void> {
   log.info(`Writing csv to ${fn}: ${JSON.stringify(report[0])}`);
   const csvstr = stringify(report);
-  await fs.outputFile(fn, csvstr);
+  await fs.outputFile(path.normalize(fn), csvstr);
   log.info('Report done.');
 }
 
@@ -486,16 +517,16 @@ async function main(args) {
   }
   const inputCsv = args['csv'] || args['crosswalk'];
   const records = await ingestCsv(inputCsv, args['crosswalk']);
-  log.debug(`records are ${JSON.stringify(records, null, 4)}`);
+  // log.debug(`records are ${JSON.stringify(records, null, 4)}`);
   // log.debug('Migrating custodian and related data for searching...');
   if (args['crosswalk']) {
     const [updated_records, report] = await migrate(args, outdir, records);
+    log.debug(`updated records are: ${JSON.stringify(updated_records, null, 4)}`);
     await writeindex(updated_records, path.join(outdir, `index_${timestamp}.csv`));
     await writereport(report, path.join(outdir, `report_${timestamp}.csv`));
   } else {
     await writeindex(records, path.join(outdir, `index_${timestamp}.csv`));
   }
-
   // await pocGraphLib();
 }
 
@@ -513,39 +544,45 @@ async function ingestCsv(inputCsv, crosswalk) {
 
   function buildPathway(current, next) {
     const pNo = `p${next['pathway']}`;
-    let type, key, subType;
-    switch (next['type']) {
+    let type, key;
+    switch (_.camelCase(next['type'])) {
       case 'question':
         type = 'questions';
         key = `q${++qNo}`;
         break;
-      case 'tool tip':
+      // change all help types to 'type':'help' and rename original type as 'subType'
+      case 'toolTip':
       case 'popup':
       case 'help':
-      case 'local help':
+      case 'localHelp':
         type = 'help';
         key = `h${++hNo}`;
-        // subType = _.camelCase(next['type']);
+        if (next['type'] !== 'help') {
+          next['subType'] = _.camelCase(next['type']);
+          next['type'] = 'help';
+        }
         break;
       case 'response':
         type = 'responses';
         key = `r${++rNo}`;
-        let currentResponsesTracker = _.get(responsesTracker, pNo);
-        if (!currentResponsesTracker) {
-          currentResponsesTracker = [];
-          _.set(responsesTracker, pNo, currentResponsesTracker)
-        } else if (_.includes(currentResponsesTracker, next['content'])) {
-          log.warn(`${current[pNo][type]} already contains value: ${next['content']}`);
-          return;
-        }
-        currentResponsesTracker.push(next['content']);
+        // let currentResponsesTracker = _.get(responsesTracker, pNo);
+        // if (!currentResponsesTracker) {
+        //   currentResponsesTracker = [];
+        //   _.set(responsesTracker, pNo, currentResponsesTracker)
+        // } else if (_.includes(currentResponsesTracker, next['content'])) {
+        //   // don't ignore repeated content as they have different next steps - just warn for debug purposes
+        //   // log.warn(`${JSON.stringify(current[pNo][type], null, 4)} already contains value: ${next['content']}. Going ahead and adding again...`);
+        //   // return;
+        //
+        // }
+        // currentResponsesTracker.push(next['content']);
         break;
       case 'summary':
-        type = 'endOfPathSummary';
+        type = 'summary';
         key = `s${++sNo}`;
         break;
       default:
-        log.warn(`No handler for type: ${next['type']}. Skipping...`)
+        log.warn(`No handler for type: ${next['type']}. Skipping...`);
         return
     }
     let nextNode = `${pNo}.${type}.${key}`;
@@ -556,44 +593,71 @@ async function ingestCsv(inputCsv, crosswalk) {
     return _.capitalize(_.lowerCase(n));
   }
 
+
+  // TODO: complete knowledgeBase - pathway does not have all of the 'non' QandA nodes e.g., title, description etc. knowledge base should have everything.
   await csv()
     .fromFile(sourceFilePath)
     .preFileLine((fileLineString, lineIdx) => {
       return new Promise((resolve, reject) => {
         if (lineIdx === 0) {
           // ensure headers are consistent
-          fileLineString = _.join(_.map(_.split(fileLineString, ','), capitalizeAndSpace));
-          log.debug(`incoming headers are: ${fileLineString}`)
+          switch (args['crosswalk']) {
+            case 'pathway':
+              fileLineString = _.join(_.map(_.split(fileLineString, ','), _.camelCase));
+              break;
+            default:
+              fileLineString = _.join(_.map(_.split(fileLineString, ','), capitalizeAndSpace));
+              break;
+          }
+          // log.debug(`incoming headers are: ${fileLineString}`)
         }
-        log.debug(`incoming: ${fileLineString}`);
+        // log.debug(`incoming: ${fileLineString}`);
         resolve(fileLineString);
       })
     })
     .subscribe((jsonObj, index) => {
       return new Promise((resolve, reject) => {
-        log.debug('next line...');
-        log.debug(index);
-        log.debug(jsonObj);
+        // log.debug('next line...');
+        // log.debug(index);
+        // log.debug(JSON.stringify(jsonObj, null, 4));
         jsonObj.oid = `${args['crosswalk']}${index}`;
         resolve();
       });
     })
     .on('data', (jsonObj) => {
-      log.debug('have transformed data..');
+      // log.debug('have transformed data..');
       switch (crosswalk) {
         case 'knowledgeBase':
           log.debug('in knowledgeBase...');
+          // for poc using same pathway file - some of these do not have source as knowledgeBase
           if (JSON.parse(jsonObj.toString())['source'] === 'knowledgeBase') {
             log.debug(JSON.stringify(JSON.parse(jsonObj.toString())), null, 4);
             records.push(JSON.parse(jsonObj.toString()));
           }
           break;
         case 'pathway':
-          log.debug('in pathway...');
+          // log.debug('in pathway...');
           buildPathway(pathway, JSON.parse(jsonObj));
           break;
+        case 'dataset':
+          // log.debug(JSON.stringify(JSON.parse(jsonObj.toString())), null, 4);
+          const existing = JSON.parse(jsonObj.toString());
+          console.dir(existing);
+          const toPush = {};
+          const whitelist = ['oid', 'Name', 'Description', 'Data custodian statewide', 'Data custodian position details', 'Data custodian phone', 'Data custodian fax', 'Data custodian email', 'Application custodian phone', 'Application custodian fax', 'Application custodian email']
+          _.forEach(existing, function(nextValue, nextKey) {
+            console.log(`${nextKey}: ${nextValue}`);
+            // have existing object that will be used to just copy everything as is - we can extract the special cases from this main object.
+            if (!_.includes(whitelist, nextKey)) {
+              _.set(toPush, `data.${nextKey}`, nextValue);
+            } else {
+              _.set(toPush, nextKey, nextValue);
+            }
+          });
+          console.dir(toPush);
+          records.push(toPush);
+          break;
         default:
-          log.debug(JSON.stringify(JSON.parse(jsonObj.toString())), null, 4);
           records.push(JSON.parse(jsonObj.toString()));
       }
     })
@@ -604,85 +668,14 @@ async function ingestCsv(inputCsv, crosswalk) {
       console.log('Csv ingest is done!')
     });
   if (!_.isEmpty(pathway)) {
-    _.each(pathway, function(value, key) {
-      _.set(value, 'oid', key)
+    _.each(pathway, function (value, key) {
+      _.set(value, 'oid', key);
       records.push(value)
     });
   }
+  // await pocGraphLib(records);
   return records;
 }
-
-async function migratePathway(records2) {
-  log.info('testing q and a...');
-  const qAPath = 'resources/questionsSample.json';
-  if (!fs.existsSync(qAPath)) {
-    throw new Error(`Unable to find source file: ${qAPath}`);
-  }
-  try {
-    const pathway = await fs.readJson(qAPath);
-    _.forEach(pathway, function (value, key) {
-      log.info(key);
-      value['oid'] = key;
-      value['QAcode'] = key;
-      records2.push(value);
-    });
-    return records2;
-  } catch (e) {
-    log.error("Unable to read json file;")
-  }
-}
-
-function dotRendererFn(graph) {
-  graph.setGraphVizPath("/usr/local/bin");
-  graph.output("png", "resources/test01.png");
-  log.info('done');
-}
-
-function errback(code, out, err) {
-  log.info('Reached renderer error');
-  throw new Error(err);
-}
-
-async function pocGraphLib() {
-  const graphLib = require("graphlib");
-  let graphJson = {
-    options: {
-      directed: true,
-      multigraph: false,
-      compound: true
-    }
-  };
-  var g = graphLib.json.read(graphJson);
-  for (const nextNode of ["q1", "q2", "q3"]) {
-    g.setNode(nextNode, {label: `question ${nextNode}`});
-  }
-  for (const nextNode of ["r1", "r2", "r3", "yes"]) {
-    g.setNode(nextNode, {label: `response ${nextNode}`});
-  }
-  _.forEach([{v: "q1", w: ["r1", "r2", "r3", "r4"]}, {v: ["r1", "r2", "r3"], w: "q2"}, {
-    v: "r4",
-    w: "s3"
-  }], function (nextEdge) {
-    for (const nextV of _.castArray(nextEdge.v)) {
-      for (const nextW of _.castArray(nextEdge.w)) {
-        //NB: the label has to have space in order for quotes to be kept
-        g.setEdge(nextV, nextW);
-      }
-    }
-  });
-  log.info(JSON.stringify(graphLib.json.write(g), null, 4));
-  log.info(`is acyclic: ${graphLib.alg.isAcyclic(g)}`);
-  const file = 'resources/output.json';
-  fs.outputJsonSync(file, graphLib.json.write(g));
-
-  const dot = require("graphlib-dot");
-  const file2 = 'resources/graph.dot';
-  fs.outputFileSync(file2, `${dot.write(g)}`);
-  fs.ensureFileSync('resources/graph.dot');
-  const graphviz = require("graphviz");
-  graphviz.parse(file2, dotRendererFn, errback);
-}
-
 
 const sleep = ms => new Promise((r, j) => {
   log.info('Waiting for ' + ms + ' seconds');

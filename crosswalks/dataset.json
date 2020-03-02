@@ -32,43 +32,13 @@
   "ignore": [
   ],
   "fields": {
-    "Record id": "_",
-    "Col seq id": "_",
     "Name": "title",
-    "Metadata type": "_",
-    "Metadata subtype": "_",
-    "Col status": "_",
-    "Col status date": "_",
-    "Col approv type": "_",
-    "Security class": "_",
-    "Org name": "_",
-    "Effective from": "_",
-    "Effective to": "_",
     "Description": "description",
-    "Short name": "_",
-    "Guide for use": "_",
-    "Purpose": "_",
-    "Coverage": "_",
-    "Content": "_",
-    "Site implemented": "_",
-    "Published output": "_",
-    "Frequency": "_",
-    "Accessibility": "_",
-    "Access constraint": "_",
-    "Use constraint": "_",
-    "Methodology": "_",
-    "Statistical unit": "_",
-    "Reporting requirements": "_",
-    "Reporting req freq": "_",
-    "General comments": "_",
-    "System name": "_",
-    "Source organisation": "_",
-    "Source document": "_",
-    "Date last reviewed": "_",
-    "Keywords": "_",
-    "Application custodian": "_",
-    "Application custodian position details": "_",
-    "Qhdd metadata structure complete": "_",
+    "data" : {
+      "type": "record",
+      "handleAll": true,
+      "handler": "DefaultDataset"
+    },
     "Data custodian statewide": {
       "destinations": [
         {
@@ -89,7 +59,7 @@
       "handleAll": true,
       "handler": "Custodian"
     },
-    "Contact tel": {
+    "Data custodian phone": {
       "destinations": [
         {
           "to": "Telephone"
@@ -99,7 +69,7 @@
       "handleAll": true,
       "handler": "Custodian"
     },
-    "Email": {
+    "Data custodian fax": {
       "destinations": [
         {
           "to": "Email"
@@ -109,7 +79,7 @@
       "handleAll": true,
       "handler": "Custodian"
     },
-    "Fax": {
+    "Data custodian email": {
       "destinations": [
         {
           "to": "Fax"
@@ -118,6 +88,36 @@
       "type": "record",
       "handleAll": true,
       "handler": "Custodian"
+    },
+    "Application custodian phone": {
+      "destinations": [
+        {
+          "to": "Telephone"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "ApplicationCustodian"
+    },
+    "Application custodian fax": {
+      "destinations": [
+        {
+          "to": "Email"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "ApplicationCustodian"
+    },
+    "Application custodian email": {
+      "destinations": [
+        {
+          "to": "Fax"
+        }
+      ],
+      "type": "record",
+      "handleAll": true,
+      "handler": "ApplicationCustodian"
     }
   }
 }

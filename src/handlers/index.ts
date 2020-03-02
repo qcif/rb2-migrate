@@ -33,6 +33,8 @@ export {CitationSimplePublicationDate} from './CitationSimplePublicationDate';
 export {ResearchThemes} from './ResearchThemes';
 export {Country} from './Country';
 export {Custodian} from './Custodian';
+export {ApplicationCustodian} from './ApplicationCustodian';
 export {KnowledgeBase} from './KnowledgeBase';
 export {Pathway} from './Pathway';
+export {DefaultDataset} from './DefaultDataset';
 
