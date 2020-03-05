@@ -642,7 +642,7 @@ async function ingestCsv(inputCsv, crosswalk) {
         case 'dataset':
           // log.debug(JSON.stringify(JSON.parse(jsonObj.toString())), null, 4);
           const existing = JSON.parse(jsonObj.toString());
-          console.dir(existing);
+          // console.dir(existing);
           const toPush = {};
           const whitelist = ['oid', 'Name', 'Description', 'Data custodian statewide', 'Data custodian position details', 'Data custodian phone', 'Data custodian fax', 'Data custodian email', 'Application custodian phone', 'Application custodian fax', 'Application custodian email']
           _.forEach(existing, function(nextValue, nextKey) {
@@ -654,7 +654,7 @@ async function ingestCsv(inputCsv, crosswalk) {
               _.set(toPush, nextKey, nextValue);
             }
           });
-          console.dir(toPush);
+          // console.dir(toPush);
           records.push(toPush);
           break;
         default:
