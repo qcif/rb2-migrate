@@ -362,7 +362,7 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
       //TODO: check that can get record owner email details into migration (from database -> may need to export and read into migration)
       log.debug('Checking for record owner...');
-      if (_.isEmpty(record['owner'])) {
+      if (_.isEmpty(_.get(record, 'owner'))) {
         log.info('4. No owner. Will use CI data...');
         if (_.get(md2, 'contributor_ci.text_full_name')) {
           record['owner'] = md2['contributor_ci']['text_full_name'];
@@ -387,9 +387,9 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
           readStream = await fs.createReadStream(recordOwnerCsvFilePath);
           parser = csv(['id', 'owner', 'email', 'text_full_name']);
           parser.on('data', (row) => {
-            log.debug('Reading next row...');
+            // log.debug('Reading next row...');
             const nextOwner = _.get(row, 'owner');
-            log.debug(`Next owner for ${JSON.stringify(row, null, 4)} is: ${nextOwner}`);
+            // log.debug(`Next owner for ${JSON.stringify(row, null, 4)} is: ${nextOwner}`);
             if (!_.isEmpty(nextOwner) && nextOwner === record['owner']) {
               log.debug(`Found match: ${JSON.stringify(row, null, 4)}`);
               md2['contributor_ci']['email'] = row['email'];
@@ -421,9 +421,11 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         }
         log.debug('CI email replacement completed.');
         log.info(`CI data now is: ${JSON.stringify(md2['contributor_ci'], null, 4)}`);
+        log.info(`DM data now is: ${JSON.stringify(_.get(md2, 'contributor_data_manager'), null, 4)}`);
       }
       const errors = validate(record['owner'], cw['required'], md2, report);
-
+      console.log('Record owner is');
+      console.dir(_.get(record, 'owner'));
       if (errors.length > 0) {
         report('validate', '', '', 'invalid', errors.join('; '));
         log.error('5. failed validation.');
@@ -647,9 +649,10 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
 
 }
 
-async function pauseMigration() {
-  if (args['wait']) {
-    const waitPeriod = args['wait'];
+async function pauseMigration(override = undefined) {
+  const waitPeriod = !_.isEmpty(override) ? override : _.get(args, 'wait');
+  console.dir(waitPeriod);
+  if (!_.isEmpty(waitPeriod)) {
     const waited = await sleep(waitPeriod);
     log.debug('continue...');
   }
@@ -720,6 +723,9 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
       workflowMetadata = await rbSource.readDatastream(id, "attachments.metadata", {});
     }
     log.verbose(JSON.stringify(workflowMetadata));
+    if (_.isEmpty(workflowMetadata)) {
+      log.info("There was a problem finding both 'workflow.metadata' and 'attachments.metadata'");
+    }
     let form = new FormData();
     form.append('attachmentFields', data);
     log.info('Waiting for upload to complete...');
@@ -751,8 +757,8 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
           accessRights: _.get(workflowMetadata, 'formData.access_rights'),
           attachmentType: _.get(workflowMetadata, 'formData.attachment_type')
         }, _.isEmpty);
-        console.log('built next data location:');
-        console.dir(nextLocation);
+        // console.log('built next data location:');
+        // console.dir(nextLocation);
         dataLocations.push(nextLocation);
         // report on each successful upload, so upload errors, only, can be thrown afterwards.
         try {

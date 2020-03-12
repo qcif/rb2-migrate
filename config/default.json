@@ -41,6 +41,10 @@
           "metadata-review": [
             "dataRecord",
             "dataPublication"
+          ],
+          "final-review": [
+            "dataRecord",
+            "dataPublication"
           ]
         }
       }

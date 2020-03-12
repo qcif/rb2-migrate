@@ -17,7 +17,7 @@ echo "Installing dependencies for rb2-migrate..."
 #which yarn && exit 1
 echo "Ensuring there are no current node installations..."
 which node && exit 1
-which nvm && exit 1
+#which nvm && exit 1
 
 echo "Installing yarn..."
 curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo || exit 1

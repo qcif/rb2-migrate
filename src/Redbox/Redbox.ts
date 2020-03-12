@@ -208,10 +208,10 @@ export abstract class BaseRedbox {
         return response.data;
       }
     } catch (e) {
-      console.trace("\n\nPut error " + String(e));
-      console.log("URL: " + url);
-      console.log("payload: " + JSON.stringify(payload).slice(0, 40));
-      console.log("config:" + JSON.stringify(config));
+      // console.trace("\n\nPut error " + String(e));
+      // console.log("URL: " + url);
+      // console.log("payload: " + JSON.stringify(payload).slice(0, 40));
+      // console.log("config:" + JSON.stringify(config));
       return undefined;
     }
   }

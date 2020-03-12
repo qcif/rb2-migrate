@@ -195,7 +195,7 @@ export function crosswalk(cwjson: Object, original: any, logger: LogCallback): O
                   // do not overwrite unless explicit config
                   // console.log('spec is');
                   // console.dir(spec);
-                  if (!dest[destfield] || spec["overwrite"]) {
+                  if (_.isEmpty(dest[destfield]) || spec["overwrite"]) {
                     dest[destfield] = apply_handler(h, src[srcfield]);
                   }
                 }
@@ -445,15 +445,19 @@ export function validate(owner: string, required: string[], js: Object, logger: 
   }
 
   const dm = js['contributor_data_manager'];
-
-  if (!dm) {
+  if (_.isEmpty(dm)) {
     logger('validate', '', 'contributor_data_manager', 'No data manager', '');
     console.log('No DM in validation.');
   } else {
-    if (!dm['email']) {
+    if (_.isEmpty(_.get(dm, 'email'))) {
       logger('validate', '', 'contributor_data_manager', 'Data manager without email', '');
       console.log('No DM email in validation.');
     }
+  }
+  //By this point there should have already been an email replacement of CI email by record owner email if it existed - missing email for both CI and DM causes rbportal post hook assign permissions to fail and portal to fall over :( Avoid for now
+  if (_.isEmpty(_.get(ci, 'email')) && _.isEmpty(_.get(dm, 'email'))) {
+    console.log('Both CI email and  DM email are empty in validation. This will cause Portal to fail on hook assignPermissions if record gets created.');
+    errors.push('Both CI email and DM email are missing.');
   }
 
   required.map((f) => {
@@ -466,25 +470,6 @@ export function validate(owner: string, required: string[], js: Object, logger: 
   return errors;
 }
 
-
-// this is the first validate, and I really don't know what I was thinking
-
-export function validate_old(required: string[], js: Object, logger: LogCallback): boolean {
-  var r = _.clone(required);
-  var ok = true;
-  for (var key in js) {
-    if (key.match(/\./)) {
-      ok = false;
-      logger("validate", "", key, "invalid character", ".");
-    }
-    _.pull(r, key);
-  }
-  if (r.length > 0) {
-    r.map(rf => logger("validate", "", rf, "missing", ""));
-    ok = false;
-  }
-  return ok;
-}
 
 function valuemap(spec: Object, srcfield: string, destfield: string, srcval: string, logger: LogCallback): string {
   if ("map" in spec) {
