@@ -4,6 +4,7 @@
 
 import axios from 'axios';
 import {AxiosInstance} from 'axios';
+import * as https from "https";
 
 const qs = require('qs');
 const util = require('util');
@@ -84,6 +85,9 @@ export abstract class BaseRedbox {
         "Authorization": "Bearer " + this.apiKey,
         "Content-Type": "application/json"
       },
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+      }),
       paramsSerializer: function (params) {
         return qs.stringify(params, {encode: false});
       }

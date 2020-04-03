@@ -257,7 +257,7 @@
       }
     },
     "jcu:research.themes.tropicalEcoSystems": {
-      "name": "research_theme",
+      "name": "research_themes",
       "theme": "tropicalEcoSystems",
       "type": "record",
       "additive": true,
@@ -265,7 +265,7 @@
       "handler": "ResearchThemes"
     },
     "jcu:research.themes.industriesEconomies": {
-      "name": "research_theme",
+      "name": "research_themes",
       "theme": "industriesEconomies",
       "type": "record",
       "additive": true,
@@ -273,7 +273,7 @@
       "handler": "ResearchThemes"
     },
     "jcu:research.themes.peopleSocieties": {
-      "name": "research_theme",
+      "name": "research_themes",
       "theme": "peopleSocieties",
       "type": "record",
       "additive": true,
@@ -281,7 +281,7 @@
       "handler": "ResearchThemes"
     },
     "jcu:research.themes.tropicalHealth": {
-      "name": "research_theme",
+      "name": "research_themes",
       "theme": "tropicalHealth",
       "type": "record",
       "additive": true,
@@ -289,7 +289,7 @@
       "handler": "ResearchThemes"
     },
     "jcu:research.themes.notAligned": {
-      "name": "research_theme",
+      "name": "research_themes",
       "theme": "notAligned",
       "type": "record",
       "additive": true,
