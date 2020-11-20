@@ -443,6 +443,8 @@ async function migrate(options: Object, outdir: string, records: Object[]): Prom
         continue;
       }
       log.info('6. dest present. continuing');
+      // legacyId needed for solr index in RB2 for redirecting to new portal
+      md2["legacyId"] = oid;
       try {
         log.debug('Creating data record...');
         noid = await rbDest.createRecord(md2, dest_type);
