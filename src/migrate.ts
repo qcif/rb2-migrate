@@ -763,15 +763,15 @@ async function uploadAttachments(rbSource: Redbox, rbDest: Redbox, noid: string,
         // report on each successful upload, so upload errors, only, can be thrown afterwards.
         try {
           // update data location for Redbox2 dataRecord metadata: dataLocations
-          redbox2Record['dataLocations'] = dataLocations;
+          redbox2Record['contractualObligations_licences'] = dataLocations;
           const metadataResult = await rbDest.updateRecordMetadata(noid, redbox2Record);
           log.verbose('Metadata update result is: ', metadataResult);
           // update data location for Redbox2 dataPublication metadata: dataLocations
-          redbox2PubRecord['dataLocations'] = dataLocations;
+          redbox2PubRecord['contractualObligations_licences'] = dataLocations;
           const metadataPubResult = await rbDest.updateRecordMetadata(pubOid, redbox2PubRecord);
           log.verbose('Metadata publication update result is: ', metadataPubResult);
           let metaMetadataObject = await rbDest.getRecordMetadata(noid);
-          metaMetadataObject['attachmentFields'] = ["dataLocations"];
+          metaMetadataObject['attachmentFields'] = ["contractualObligations_licences"];
           log.verbose('Uploading metaMetadata: ');
           // log.verbose(JSON.stringify(metaMetadataObject));
           const updateMetaMetaDataResult = await (<Redbox2>rbDest).updateRecordObjectMetadata(noid, metaMetadataObject);
