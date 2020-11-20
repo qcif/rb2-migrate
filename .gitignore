@@ -1,6 +1,4 @@
 .DS_Store
-config/default.json
-config/production.json
 ~$*.xls*
 .idea
 node_modules
@@ -15,3 +13,4 @@ test/storage
 temp/
 test.log
 resources/JCU_record_owners.csv
+config/
