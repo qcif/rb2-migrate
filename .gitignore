@@ -14,3 +14,4 @@ test/diag
 test/storage
 temp/
 test.log
+resources/JCU_record_owners.csv

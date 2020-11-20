@@ -152,6 +152,7 @@
       "type": "record",
       "handler": "Person",
       "role": "Advisor",
+      "repeatable": 1,
       "fields": {
         "dc:identifier": "dc:identifier",
         "foaf:title": "honorific",
