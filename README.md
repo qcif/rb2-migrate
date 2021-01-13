@@ -242,3 +242,27 @@ A handler to map Person values from RB1.9 to RB2.0
 ### FundingBody
 
 A handler to map funding bodies from RB1.9 to RB2.0.
+
+
+## Rb2-migrate by example:
+### Redbox1 install
+* Rb2-migrate needs to know the source and destination. The `destination` will be the publicly available URL of your new Redbox 2 instance.
+* Your `source` will be either the original redbox1 or, a copy of this (remembering that you are going to be migrating potentially thousands of records - it may not be ideal to tie up the actual production instance API of redbox1 with this migration).
+  * Clone the 'storage', 'solr' and 'home' directories (ignoring the usual guff such as log directories)
+and make availabe
+    * Consider that the cloned storage may take up a few GB and you will need to run a redbox1 instance against the source, so you will need to consider where to put this. It may be useful to place redbox1 on another vm and tunnel to it from the redbox2 instance
+  * Download the latest copy of redbox1 from nexus and setup to use the cloned storage, solr and home (remember to change certain values such as server url to a local instance with ports not already being used).
+  * Remove the `solr` folder from your redbox1 instance and replace with the `solr` from source clone
+  * Add `storage` from the source clone to your redbox1 instance
+  * Update the `server/tf_env.sh` with ports (unique to vm) and installation path of your redbox1
+* Start your redbox1 server and confirm the website comes up without errors
+  * Add an api key to your redbox1 server through the Admin menu (or at `data/security/apiKeys.json` and restart)
+### Rb2-migrate
+* Use `config/default.json` for the migration (you can create another config file but you'll then need to `export NODE_ENV=<config_file_basename>`)
+* Update:
+  * `baseURL` and `apiKey` for both:
+    * `Test1_9` and `Test2_0` : these are your redbox1 and redbox2 installations
+    * for `Test1_9` use the apiKey you created earlier
+    * for `Test2_0` ensure you have the latest apikey from redbox2
+  * `solrURL` for `Test1_9`
+  
